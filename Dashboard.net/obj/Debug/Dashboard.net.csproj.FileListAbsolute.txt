@@ -1,0 +1,54 @@
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.exe.config
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.exe
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.pdb
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\FRC.NetworkTables.dll
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Context.dll
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Coordination.dll
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Tasks.dll
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.Collections.Deque.dll
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.Disposables.dll
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\FRC.NetworkTables.xml
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Context.xml
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Coordination.xml
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Tasks.xml
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.Collections.Deque.xml
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.Disposables.xml
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csprojResolveAssemblyReference.cache
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\MainWindow.g.cs
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\App.g.cs
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net_MarkupCompile.cache
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net_MarkupCompile.lref
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\MainWindow.baml
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.g.resources
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.Properties.Resources.resources
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csproj.GenerateResource.Cache
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csproj.CoreCompileInputs.cache
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.exe
+E:\AUE Mic SD\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.pdb
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.exe.config
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.exe
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.pdb
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\FRC.NetworkTables.dll
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Context.dll
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Coordination.dll
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Tasks.dll
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.Collections.Deque.dll
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.Disposables.dll
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\FRC.NetworkTables.xml
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Context.xml
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Coordination.xml
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Tasks.xml
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.Collections.Deque.xml
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.Disposables.xml
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csprojResolveAssemblyReference.cache
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\MainWindow.g.cs
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\App.g.cs
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net_MarkupCompile.cache
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net_MarkupCompile.lref
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\MainWindow.baml
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.g.resources
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.Properties.Resources.resources
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csproj.GenerateResource.Cache
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csproj.CoreCompileInputs.cache
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.exe
+D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.pdb
