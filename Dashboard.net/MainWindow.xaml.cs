@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Data;
+using System.Windows.Media;
 using NetworkTables;
 
 namespace Dashboard.net
@@ -12,34 +14,36 @@ namespace Dashboard.net
         public MainWindow()
         {
             InitializeComponent();
+
+            ((Master)Grid.DataContext)._Dashboard_NT.Connected += OnRobotConnected;
+            ((Master)Grid.DataContext)._MainWindow = this;
+
+            StatusBox.Foreground = Brushes.Red;
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        // TODO get this working in XAML only
+        private void OnRobotConnected(object sender, bool connected)
         {
-            NetworkTable.SetPort(1735);
-            NetworkTable.SetIPAddress("10.27.6.2");
-            NetworkTable.SetClientMode();
-            NetworkTable.Initialize();
-            NetworkTable smartDashboard = NetworkTable.GetTable("SmartDashboard");
+            if (connected) StatusBox.Foreground = Brushes.Green;
+            else StatusBox.Foreground = Brushes.Red;
+        }
+    }
 
-            //while (!smartDashboard.IsConnected)
-            //{
-            //    Console.WriteLine("Robot Not Connected");
-            //}
-
-
-            while (!smartDashboard.IsConnected)
+    public class ValueConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (null != value)
             {
-
+                if (value.ToString() == "1")
+                    return true;
             }
-
-            Console.WriteLine(smartDashboard.GetString("test", "Null"));
-            smartDashboard.PutString("test2", "hi");
+            return false;
         }
 
-        private void OnConnectButtonClicked(object sender, RoutedEventArgs e)
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-
+            return null;
         }
     }
 }

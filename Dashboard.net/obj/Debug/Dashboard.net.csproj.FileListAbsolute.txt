@@ -52,3 +52,33 @@ D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net
 D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csproj.CoreCompileInputs.cache
 D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.exe
 D:\Programming\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.pdb
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.exe.config
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.exe
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.pdb
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\FRC.NetworkTables.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Context.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Coordination.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Tasks.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Nito.Collections.Deque.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Nito.Disposables.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\FRC.NetworkTables.xml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Context.xml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Coordination.xml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Tasks.xml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Nito.Collections.Deque.xml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Nito.Disposables.xml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csprojResolveAssemblyReference.cache
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\MainWindow.g.cs
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\App.g.cs
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net_MarkupCompile.cache
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net_MarkupCompile.lref
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\MainWindow.baml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.g.resources
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.Properties.Resources.resources
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csproj.GenerateResource.Cache
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csproj.CoreCompileInputs.cache
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.exe
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.pdb
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Newtonsoft.Json.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Newtonsoft.Json.xml

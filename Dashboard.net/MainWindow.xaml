@@ -7,9 +7,33 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525" ResizeMode="CanResizeWithGrip">
     <Viewbox Stretch="Uniform">
-        <Grid Height="277" Width="443">
-            <Button x:Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" Height="23" Margin="363,10,0,0" VerticalAlignment="Top" Width="70" Click="OnConnectButtonClicked" Background="#FF6E00FF" Foreground="White"/>
+        <Grid x:Name="Grid" Height="277" Width="443">
+            <Grid.Resources>
+                <local:ValueConverter x:Key="ValueConverter"></local:ValueConverter>
+            </Grid.Resources>
+            <Grid.DataContext>
+                <local:Master/>
+            </Grid.DataContext>
+            <Button x:Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" Height="23" Margin="363,10,0,0" VerticalAlignment="Top" Width="70" Background="#FF6E00FF" Foreground="White" Command="{Binding _Dashboard_NT.OnConnect, Mode=OneWay}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}"/>
             <TextBox x:Name="ConnectAddressBox" HorizontalAlignment="Left" Height="23" Margin="247,10,0,0" TextWrapping="Wrap" Text="roboRIO-2706-FRC.local" VerticalAlignment="Top" Width="116" FontSize="10"/>
+            <TextBlock x:Name="StatusBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding _Dashboard_NT.StatusMessage, Mode=OneWay, TargetNullValue=UNKNOWN, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="133,10,0,0" Height="19" Width="85" TextAlignment="Center">
+                <TextBlock.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding _Dashboard_NT.IsConnected, Converter={StaticResource ValueConverter} , UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                <Setter Property="TextBlock.Foreground" Value="Green"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding _Dashboard_NT.IsConnected, Converter={StaticResource ValueConverter}, UpdateSourceTrigger=PropertyChanged}" Value="False">
+                                <Setter Property="TextBlock.Foreground" Value="Red"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <ListBox x:Name="AutoList" HorizontalAlignment="Left" Height="135" Margin="338,132,0,0" VerticalAlignment="Top" Width="95" ItemsSource="{Binding _AutoSelector.AutoModes.Values}"/>
+            <RadioButton x:Name="Center_Select" Content="Center" HorizontalAlignment="Left" Height="15" Margin="196,190,0,0" VerticalAlignment="Top" Width="88" GroupName="side"/>
+            <RadioButton x:Name="Right_Select" Content="Right" HorizontalAlignment="Left" Height="15" Margin="196,210,0,0" VerticalAlignment="Top" Width="88" GroupName="side"/>
+            <RadioButton x:Name="Left_Select" Content="Left" HorizontalAlignment="Left" Height="15" Margin="196,170,0,0" VerticalAlignment="Top" Width="88" GroupName="side"/>
 
         </Grid>
     </Viewbox>
