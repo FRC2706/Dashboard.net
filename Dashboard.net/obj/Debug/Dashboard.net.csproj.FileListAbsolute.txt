@@ -82,3 +82,4 @@ D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.pdb
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\GeneratedInternalTypeHelper.g.cs
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Newtonsoft.Json.dll
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Newtonsoft.Json.xml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\ListViewDragDropManager.dll

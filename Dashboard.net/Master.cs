@@ -1,8 +1,24 @@
-﻿namespace Dashboard.net
+﻿using System;
+
+namespace Dashboard.net
 {
     public class Master
     {
-        public MainWindow _MainWindow;
+        public event EventHandler MainWindowSet;
+
+        private MainWindow masterWindow;
+        public MainWindow _MainWindow
+        {
+            get
+            {
+                return masterWindow;
+            }
+            set
+            {
+                masterWindow = value;
+                MainWindowSet?.Invoke(this, new EventArgs());
+            }
+        }
 
         public SmartDashboard _Dashboard_NT { get; private set; }
         public AutonomousSelector _AutoSelector { get; private set; }
