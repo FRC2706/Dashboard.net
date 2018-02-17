@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Dashboard.net"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="846.024" ResizeMode="CanResizeWithGrip">
+        Title="MainWindow" Height="350" Width="846.024" ResizeMode="CanResizeWithGrip" Background="Black" FontFamily="Century Gothic" Icon="Icons/2706.ico">
     <Viewbox Stretch="Uniform" Margin="5">
         <Grid x:Name="Grid" Height="277" Width="733">
             <Grid.Resources>
@@ -16,16 +16,17 @@
                 <RowDefinition Height="197*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="361*"/>
+                <ColumnDefinition Width="210*"/>
+                <ColumnDefinition Width="151*"/>
                 <ColumnDefinition Width="217*"/>
                 <ColumnDefinition Width="155*"/>
             </Grid.ColumnDefinitions>
             <Grid.DataContext>
                 <local:Master/>
             </Grid.DataContext>
-            <Button x:Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" Height="23" Margin="147,13,0,0" VerticalAlignment="Top" Width="70" Background="#FF6E00FF" Foreground="White" Command="{Binding _Dashboard_NT.OnConnect, Mode=OneWay}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}" Grid.Column="1"/>
-            <TextBox x:Name="ConnectAddressBox" HorizontalAlignment="Left" Height="23" Margin="10,13,0,0" TextWrapping="Wrap" Text="roboRIO-2706-FRC.local" VerticalAlignment="Top" Width="137" FontSize="10" Grid.Column="1"/>
-            <TextBlock x:Name="StatusBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding _Dashboard_NT.StatusMessage, Mode=OneWay, TargetNullValue=UNKNOWN, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="10,41,0,0" Height="29" Width="197" TextAlignment="Center" Grid.Column="1" FontSize="20">
+            <Button x:Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" Height="23" Margin="147,13,0,0" VerticalAlignment="Top" Width="70" Background="#FF6E00FF" Foreground="White" Command="{Binding _Dashboard_NT.OnConnect, Mode=OneWay}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}" Grid.Column="2"/>
+            <TextBox x:Name="ConnectAddressBox" HorizontalAlignment="Left" Height="23" Margin="10,13,0,0" TextWrapping="Wrap" Text="roboRIO-2706-FRC.local" VerticalAlignment="Top" Width="137" FontSize="10" Grid.Column="2"/>
+            <TextBlock x:Name="StatusBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding _Dashboard_NT.StatusMessage, Mode=OneWay, TargetNullValue=UNKNOWN, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="10,41,0,0" Height="29" Width="197" TextAlignment="Center" Grid.Column="2" FontSize="20">
                 <TextBlock.Style>
                     <Style>
                         <Style.Triggers>
@@ -39,10 +40,11 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-            <ListView x:Name="AutoList" Margin="0" ItemsSource="{Binding _AutoSelector.AutoModes, Mode=Default}" DisplayMemberPath="Item2" AllowDrop="True" Grid.Column="2" Grid.Row="1"/>
-            <RadioButton x:Name="Center_Select" Content="Center" HorizontalAlignment="Left" Height="15" Margin="10,30,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="2"/>
-            <RadioButton x:Name="Right_Select" Content="Right" HorizontalAlignment="Left" Height="15" Margin="10,50,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="2"/>
-            <RadioButton x:Name="Left_Select" Content="Left" HorizontalAlignment="Left" Height="15" Margin="10,10,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="2"/>
+            <ListView x:Name="AutoList" Margin="0" ItemsSource="{Binding _AutoSelector.AutoModes, Mode=Default}" DisplayMemberPath="Item2" AllowDrop="True" Grid.Column="3" Grid.Row="1"/>
+            <RadioButton x:Name="Center_Select" Content="Center" HorizontalAlignment="Left" Height="15" Margin="10,30,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Foreground="White" BorderBrush="White" Background="Black"/>
+            <RadioButton x:Name="Right_Select" Content="Right" HorizontalAlignment="Left" Height="15" Margin="10,50,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Background="Black" BorderBrush="White" Foreground="White"/>
+            <RadioButton x:Name="Left_Select" Content="Left" HorizontalAlignment="Left" Height="15" Margin="10,10,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Background="Black" BorderBrush="White" Foreground="White"/>
+            <TextBlock x:Name="Timer" Margin="10,10,0,0" TextWrapping="Wrap" Text="{Binding _Timer.Time, Mode=OneWay}" FontSize="48" TextAlignment="Center" Foreground="#FF6E00FF" FontWeight="Bold"/>
 
         </Grid>
     </Viewbox>

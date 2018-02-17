@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using NetworkTables;
+using WPF.JoshSmith.ServiceProviders.UI;
 
 namespace Dashboard.net
 {
@@ -15,7 +15,7 @@ namespace Dashboard.net
         {
             InitializeComponent();
 
-            ((Master)Grid.DataContext)._Dashboard_NT.Connected += OnRobotConnected;
+            ((Master)Grid.DataContext)._Dashboard_NT.ConnectionEvent += OnRobotConnected;
             ((Master)Grid.DataContext)._MainWindow = this;
 
             // Set width and height based on screen size
