@@ -18,6 +18,10 @@ namespace Dashboard.net
             ((Master)Grid.DataContext)._Dashboard_NT.Connected += OnRobotConnected;
             ((Master)Grid.DataContext)._MainWindow = this;
 
+            // Set width and height based on screen size
+            Height = SystemParameters.FullPrimaryScreenHeight * 0.7;
+            Width = SystemParameters.FullPrimaryScreenWidth;
+
             StatusBox.Foreground = Brushes.Red;
         }
 

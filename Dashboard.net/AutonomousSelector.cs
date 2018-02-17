@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.ComponentModel;
 using WPF.JoshSmith.ServiceProviders.UI;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace Dashboard.net
 {
@@ -14,9 +15,17 @@ namespace Dashboard.net
     {
         private Master master;
 
+
+        #region NetworkTables keys
+        private static readonly string SELECTED_SIDE_KEY = "selected_position";
+        private static readonly string SELECTED_MODES_KEY = "selected_modes";
+        private static readonly string POSTED_MODES_KEY = "auto_modes";
+        #endregion
+
         public event EventHandler<ObservableCollection<Tuple<string, string>>> AutoModesChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
+        #region GUI elements
 
         private ListView _AutoList;
         
@@ -33,12 +42,53 @@ namespace Dashboard.net
             set
             {
                 _AutoList = value;
-                //_AutoList.PreviewMouseLeftButtonDown += OnPreviewMouseLeftButtonDown;
-                //_AutoList.Drop += OnDrop;
-
                 new ListViewDragDropManager<Tuple<string, string>>(_AutoList).ProcessDrop += OnDrop;
             }
         }
+
+        private RadioButton _LeftSelect;
+        private RadioButton LeftSelect
+        {
+            get
+            {
+                return _LeftSelect;
+            }
+            set
+            {
+                _LeftSelect = value;
+                _LeftSelect.Checked += OnSideSelect;
+            }
+        }
+
+        private RadioButton _RightSelect;
+        private RadioButton RightSelect
+        {
+            get
+            {
+                return _RightSelect;
+            }
+            set
+            {
+                _RightSelect = value;
+                _RightSelect.Checked += OnSideSelect;
+            }
+        }
+
+        private RadioButton _CentreSelect;
+        private RadioButton CentreSelect
+        {
+            get
+            {
+                return _CentreSelect;
+            }
+            set
+            {
+                _CentreSelect = value;
+                _CentreSelect.Checked += OnSideSelect;
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// The autonomous network table, a subtable of SmartDashboard
@@ -72,7 +122,7 @@ namespace Dashboard.net
         #endregion
 
 
-        #region EventListeners For Setup
+        #region Event Listeners
         /// <summary>
         /// Called when the dashboard connects to the networktables.
         /// </summary>
@@ -92,49 +142,31 @@ namespace Dashboard.net
         {
             // Get the auto list object from the mainwindow to be able to work with id.
             AutoList = master._MainWindow.AutoList;
+
+            RightSelect = master._MainWindow.Right_Select;
+            LeftSelect = master._MainWindow.Left_Select;
+            CentreSelect = master._MainWindow.Center_Select;
+        }
+
+        private void OnSideSelect(object sender, RoutedEventArgs e)
+        {
+            string side;
+
+            if (RightSelect.IsChecked == true) side = "r";
+            else if (LeftSelect.IsChecked == true) side = "l";
+            else side = "c";
+
+            SendSelectedSide(side); 
         }
 
         #endregion
-
-        ///// <summary>
-        ///// Method fired when the autonomous mode is actually dropped.
-        ///// This method is in charge of actually moving the autonomous mode.
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void OnDrop(object sender, DragEventArgs e)
-        //{
-        //    Refresh();
-        //}
-
-        ///// <summary>
-        ///// Function fired on the preview down button of the drag and drop mechanism.
-        ///// Once the left button is released, the drag and drop event is manually called to perform the action.
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        //{
-        //    // Make sure the sender is the right type of object.
-        //    if (sender is ListBox)
-        //    {
-        //        // Get the item being dragged
-        //        Selector draggedItem = ((ListBox)sender).SelectedItem;
-
-        //        // Do the drag and drop on that item.
-        //        DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
-
-        //        // Maked the newly dropped item selected
-        //        draggedItem.IsSelected = true;
-        //    }
-        //}
 
 
         #region NetworkTables Handlers
 
         private void OnAutoKeyChanged(ITable arg1, string key, Value value, NotifyFlags arg4)
         {
-            if (key == "auto_modes") OnAutoModesChanged();
+            if (key == POSTED_MODES_KEY) OnAutoModesChanged();
         }
 
         /// <summary>
@@ -156,7 +188,16 @@ namespace Dashboard.net
             }
 
             // Encode and send auto modes
-            AutonomousNT.PutString("selected_modes", JsonConvert.SerializeObject(topThreeAutos));
+            AutonomousNT?.PutString(SELECTED_MODES_KEY, JsonConvert.SerializeObject(topThreeAutos));
+        }
+
+        /// <summary>
+        /// Function that sends the selected start position to the networktables.
+        /// </summary>
+        /// <param name="side">The Robot's Starting side</param>
+        private void SendSelectedSide(string side)
+        {
+            AutonomousNT?.PutString(SELECTED_SIDE_KEY, side);
         }
 
         public ObservableCollection<Tuple<string, string>> AutoModes { get; private set; } 
