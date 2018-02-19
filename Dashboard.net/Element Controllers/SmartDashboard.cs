@@ -3,6 +3,7 @@ using NetworkTables.Tables;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
@@ -13,10 +14,7 @@ namespace Dashboard.net.Element_Controllers
         public string ConnectedAddress { get; private set; }
 
 
-        public RelayCommand OnConnect { get; private set; } = new RelayCommand
-        {
-            CanExecuteDeterminer = () => true
-        };
+        public RelayCommand OnConnect { get; private set; } = new RelayCommand();
 
         public event EventHandler<bool> ConnectionEvent;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -31,11 +29,14 @@ namespace Dashboard.net.Element_Controllers
             }
         }
 
+        public bool IsConnecting { get; private set; } = false;
+
         public string StatusMessage
         {
             get
             {
                 if (IsConnected) return "CONNECTED";
+                else if (IsConnecting) return "CONNECTING";
                 else return "OFFLINE";
             }
         }
@@ -60,11 +61,15 @@ namespace Dashboard.net.Element_Controllers
 
         public SmartDashboard(Master controller) : base(controller)
         {
+            // Function to execute is onConnect click
             OnConnect.FunctionToExecute = OnConnectClick;
+
+            // If we're in the middle of connecting, disable the button
+            OnConnect.CanExecuteDeterminer = () => !IsConnecting;
             master.MainWindowSet += OnMainWindowSet;
         }
 
-        public async Task<bool> Connect()
+        async Task<bool> ConnectAsync(CancellationToken ct)
         {
             NetworkTable.SetPort(1735);
             NetworkTable.SetIPAddress(ConnectedAddress);
@@ -73,13 +78,19 @@ namespace Dashboard.net.Element_Controllers
 
             _SmartDashboard = NetworkTable.GetTable("SmartDashboard");
 
-            // TODO do the connection stuff in a different thread.
-            while (!_SmartDashboard.IsConnected) { }
+            /* Wait 10 seconds before we declare that the connection failed
+             * If we connect early, exit loop
+             */
+            for (int loop = 0; loop < 10; loop++)
+            {
+                await Task.Delay(1000);
+                if (IsConnected) break;
+            }
 
-            await Task.Delay(0);
 
-            return true;
+            if (!IsConnected) NetworkTable.Shutdown();
 
+            return IsConnected;
         }
 
         private Dictionary<string, Action<Value>> ListenerFunctions 
@@ -122,14 +133,24 @@ namespace Dashboard.net.Element_Controllers
 
         public async void OnConnectClick(object connectAddress)
         {
+            IsConnecting = true;
+            PropertyChanged(this, new PropertyChangedEventArgs("StatusMessage"));
+            OnConnect.RaiseCanExecuteChanged();
+
             ConnectedAddress = connectAddress.ToString();
-            bool connected = await Task.Run(Connect);
 
-            if (!connected) return;
 
-            ConnectionEvent?.Invoke(this, true);
+            CancellationTokenSource cts = new CancellationTokenSource();
+            bool connected = await Task.Run<bool>(() => ConnectAsync(cts.Token));
+
+            IsConnecting = false;
+            OnConnect.RaiseCanExecuteChanged();
+
             PropertyChanged(this, new PropertyChangedEventArgs("IsConnected"));
             PropertyChanged(this, new PropertyChangedEventArgs("StatusMessage"));
+            if (!IsConnected) return;
+
+            ConnectionEvent?.Invoke(this, true);
         }
 
         /// <summary>

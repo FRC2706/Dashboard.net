@@ -88,6 +88,7 @@
     <Compile Include="Element Controllers\AutonomousSelector.cs" />
     <Compile Include="Element Controllers\Camera.cs" />
     <Compile Include="Element Controllers\Controller.cs" />
+    <Compile Include="Element Controllers\Lift.cs" />
     <Compile Include="Master.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Element Controllers\SmartDashboard.cs" />

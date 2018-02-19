@@ -64,6 +64,7 @@
             <RadioButton x:Name="Right_Select" Content="Right" HorizontalAlignment="Left" Height="15" Margin="10,50,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Background="Black" BorderBrush="White" Foreground="White"/>
             <RadioButton x:Name="Left_Select" Content="Left" HorizontalAlignment="Left" Height="15" Margin="10,10,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Background="Black" BorderBrush="White" Foreground="White"/>
             <TextBlock x:Name="Timer" Margin="10,10,0,0" TextWrapping="Wrap" Text="{Binding _Timer.Time, Mode=OneWay}" FontSize="48" TextAlignment="Center" Foreground="#FF6E00FF" FontWeight="Bold"/>
+            <Slider x:Name="LiftDiagram" Grid.Column="2" HorizontalAlignment="Left" Height="129" Margin="37,58,0,0" Grid.Row="1" VerticalAlignment="Top" Width="28" Orientation="Vertical" Background="{x:Null}" BorderBrush="{x:Null}" Maximum="100" Value="{Binding _Lift.SliderValue, Mode=OneWay}"/>
 
         </Grid>
     </Viewbox>

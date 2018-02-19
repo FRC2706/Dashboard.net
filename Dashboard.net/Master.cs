@@ -25,6 +25,7 @@ namespace Dashboard.net
         public AutonomousSelector _AutoSelector { get; private set; }
         public Timer _Timer { get; private set; }
         public Accelerometer _Accelerometer { get; private set; }
+        public Lift _Lift { get; private set; }
 
         public Master()
         {
@@ -32,6 +33,7 @@ namespace Dashboard.net
             _AutoSelector = new AutonomousSelector(this);
             _Timer = new Timer(this);
             _Accelerometer = new Accelerometer(this);
+            _Lift = new Lift(this);
         }
     }
 }

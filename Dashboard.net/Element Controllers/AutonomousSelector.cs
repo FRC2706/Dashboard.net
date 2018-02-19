@@ -141,13 +141,6 @@ namespace Dashboard.net.Element_Controllers
             LeftSelect = master._MainWindow.Left_Select;
             CentreSelect = master._MainWindow.Center_Select;
 
-            AutoModes.Add(new Tuple<string, string>("_1", "1"));
-            AutoModes.Add(new Tuple<string, string>("_2", "2"));
-            AutoModes.Add(new Tuple<string, string>("_3", "3"));
-            AutoModes.Add(new Tuple<string, string>("_4", "4"));
-
-            AutoModesChanged?.Invoke(this, AutoModes);
-
             // Set the dispatcher so we can use it to call stuff from the GUI thread
             masterDispatcher = master._MainWindow.Dispatcher;
         }

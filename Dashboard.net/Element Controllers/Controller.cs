@@ -9,7 +9,6 @@ namespace Dashboard.net.Element_Controllers
         public Controller(Master controller)
         {
             master = controller;
-
             master.MainWindowSet += OnMainWindowSet;
         }
 
