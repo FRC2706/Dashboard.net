@@ -24,12 +24,14 @@ namespace Dashboard.net
         public SmartDashboard _Dashboard_NT { get; private set; }
         public AutonomousSelector _AutoSelector { get; private set; }
         public Timer _Timer { get; private set; }
+        public Accelerometer _Accelerometer { get; private set; }
 
         public Master()
         {
             _Dashboard_NT = new SmartDashboard(this);
             _AutoSelector = new AutonomousSelector(this);
             _Timer = new Timer(this);
+            _Accelerometer = new Accelerometer(this);
         }
     }
 }

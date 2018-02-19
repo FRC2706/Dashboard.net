@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
         xmlns:local="clr-namespace:Dashboard.net"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="846.024" ResizeMode="CanResizeWithGrip" Background="Black" FontFamily="Century Gothic" Icon="Icons/2706.ico">
+        Title="MainWindow" Height="350" Width="846.024" ResizeMode="CanResizeWithGrip" Background="Black" FontFamily="Century Gothic" Icon="Icons/2706.ico" WindowStartupLocation="CenterScreen">
     <Viewbox Stretch="Uniform" Margin="5">
         <Grid x:Name="Grid" Height="277" Width="733">
             <Grid.Resources>
@@ -24,8 +25,26 @@
             <Grid.DataContext>
                 <local:Master/>
             </Grid.DataContext>
+            <Grid x:Name="SpeedometerZone" Grid.Row="1" Grid.Column="2" Margin="70,75,5,0">
+                <Grid Margin="0">
+                    <ed:Arc StartAngle="-120" EndAngle="120" Stretch="None" StrokeThickness="13"      
+                    StrokeDashArray=".25" Stroke="#FF484D5F"/>
+                    <ed:Arc StartAngle="-120" EndAngle="{Binding _Accelerometer.Degrees, Mode=OneWay}" Stretch="None" StrokeThickness="13"
+                    StrokeDashArray=".25" Stroke="Turquoise"/>
+                </Grid>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="48,39,47,25" Width="47">
+                    <TextBlock Text="m/s" Foreground="#FF878A9F" HorizontalAlignment="Center"
+                        FontSize="12"/>
+                    <TextBlock Text="{Binding _Accelerometer.Velocity, Mode=OneWay}" Foreground="White" HorizontalAlignment="Center"
+                        FontSize="40 px" FontWeight="Light" Margin="0,-5,0,0"/>
+                </StackPanel>
+            </Grid>
             <Button x:Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" Height="23" Margin="147,13,0,0" VerticalAlignment="Top" Width="70" Background="#FF6E00FF" Foreground="White" Command="{Binding _Dashboard_NT.OnConnect, Mode=OneWay}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}" Grid.Column="2"/>
-            <TextBox x:Name="ConnectAddressBox" HorizontalAlignment="Left" Height="23" Margin="10,13,0,0" TextWrapping="Wrap" Text="roboRIO-2706-FRC.local" VerticalAlignment="Top" Width="137" FontSize="10" Grid.Column="2"/>
+            <TextBox x:Name="ConnectAddressBox" HorizontalAlignment="Left" Height="23" Margin="10,13,0,0" TextWrapping="Wrap" Text="roboRIO-2706-FRC.local" VerticalAlignment="Top" Width="137" FontSize="10" Grid.Column="2">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Return" Command="{Binding _Dashboard_NT.OnConnect, Mode=OneWay}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}"/>
+                </TextBox.InputBindings>
+            </TextBox>
             <TextBlock x:Name="StatusBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding _Dashboard_NT.StatusMessage, Mode=OneWay, TargetNullValue=UNKNOWN, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="10,41,0,0" Height="29" Width="197" TextAlignment="Center" Grid.Column="2" FontSize="20">
                 <TextBlock.Style>
                     <Style>

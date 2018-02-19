@@ -83,3 +83,6 @@ D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\GeneratedInternal
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Newtonsoft.Json.dll
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Newtonsoft.Json.xml
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\ListViewDragDropManager.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\CSCore.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Microsoft.Expression.Drawing.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\CSCore.xml
