@@ -86,3 +86,8 @@ D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\ListViewDragDropM
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\CSCore.dll
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Microsoft.Expression.Drawing.dll
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\CSCore.xml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.exe.manifest
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.application
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.TrustInfo.xml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.exe.manifest
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.application

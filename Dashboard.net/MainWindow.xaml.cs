@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using WPF.JoshSmith.ServiceProviders.UI;
 
 namespace Dashboard.net
 {
