@@ -46,7 +46,7 @@ namespace Dashboard.net.Element_Controllers
 
         public Lift(Master controller) : base(controller)
         {
-            master._Dashboard_NT.AddKeyListener(LIFTHEIGHTPATH, OnLiftHeightChanged);
+            master._Dashboard_NT.AddSmartDashboardKeyListener(LIFTHEIGHTPATH, OnLiftHeightChanged);
         }
 
         #region Event listeners

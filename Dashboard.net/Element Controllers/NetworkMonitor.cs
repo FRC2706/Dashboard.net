@@ -20,8 +20,8 @@ namespace Dashboard.net.Element_Controllers
         {
             get
             {
-                return BytesSentPerfCounter.RawValue + BytesReceivedPerfCounter.RawValue;
-                //return 0;
+                //return BytesSentPerfCounter.RawValue + BytesReceivedPerfCounter.RawValue;
+                return 0;
             }
         }
 

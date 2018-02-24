@@ -30,7 +30,7 @@ namespace Dashboard.net.Element_Controllers
 
         public Timer(Master controller) : base(controller)
         {
-            master._Dashboard_NT.AddKeyListener("time_running", OnNTKeyChanged);
+            master._Dashboard_NT.AddSmartDashboardKeyListener("time_running", OnNTKeyChanged);
         }
 
         private void OnNTKeyChanged(Value startValue)

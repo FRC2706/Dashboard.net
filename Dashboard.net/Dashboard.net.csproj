@@ -46,11 +46,14 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSCore, Version=1.2.1.2, Culture=neutral, PublicKeyToken=5a08f2b6f4415dea, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSCore.1.2.1.2\lib\net35-client\CSCore.dll</HintPath>
+    <Reference Include="FRC.CameraServer, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FRC.CameraServer.1.0.2\lib\net45\FRC.CameraServer.dll</HintPath>
     </Reference>
     <Reference Include="FRC.NetworkTables, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FRC.NetworkTables.3.1.8\lib\net46\FRC.NetworkTables.dll</HintPath>
+    </Reference>
+    <Reference Include="FRC.OpenCvSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FRC.OpenCvSharp.1.0.3\lib\net45\FRC.OpenCvSharp.dll</HintPath>
     </Reference>
     <Reference Include="ListViewDragDropManager, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ListViewDragDropManager.1.2.0\lib\net45\ListViewDragDropManager.dll</HintPath>
@@ -58,8 +61,14 @@
     <Reference Include="Microsoft.Expression.Drawing, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Expression.Drawing.3.0.0\lib\net45\Microsoft.Expression.Drawing.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="MjpegProcessor, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MJPEG-Decoder.1.2\lib\net35\MjpegProcessor.dll</HintPath>
+    </Reference>
+    <Reference Include="NativeLibraryUtilities, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NativeLibraryUtilities.1.0.3\lib\net45\NativeLibraryUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Nito.AsyncEx.Context, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nito.AsyncEx.Context.1.1.0\lib\net46\Nito.AsyncEx.Context.dll</HintPath>
@@ -78,6 +87,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -96,6 +106,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Element Controllers\Checklist.cs" />
+    <Compile Include="Checklist\ChecklistEditor.xaml.cs">
+      <DependentUpon>ChecklistEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DataDealer.cs" />
     <Compile Include="Element Controllers\Accelerometer.cs" />
     <Compile Include="Element Controllers\AutonomousSelector.cs" />
     <Compile Include="Element Controllers\Camera.cs" />
@@ -103,9 +118,13 @@
     <Compile Include="Element Controllers\Lift.cs" />
     <Compile Include="Element Controllers\NetworkMonitor.cs" />
     <Compile Include="Master.cs" />
+    <Compile Include="NTInterface.cs" />
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="Element Controllers\SmartDashboard.cs" />
     <Compile Include="Element Controllers\Timer.cs" />
+    <Page Include="Checklist\ChecklistEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

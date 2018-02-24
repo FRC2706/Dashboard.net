@@ -1,0 +1,1224 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FRC.CameraServer</name>
+    </assembly>
+    <members>
+        <member name="T:CSCore.AxisCamera">
+            <summary>
+            A source that represents an Axis IP Camera.
+            </summary>
+        </member>
+        <member name="M:CSCore.AxisCamera.#ctor(System.String,System.String)">
+            <summary>
+            Create a source for an Axis IP Camera.
+            </summary>
+            <param name="name">The source name (arbitrary unique identifier)</param>
+            <param name="host">Camera host IP or DNS name</param>
+        </member>
+        <member name="M:CSCore.AxisCamera.#ctor(System.String,System.Collections.Generic.ICollection{System.String})">
+            <summary>
+            Create a source for an Axis IP Camera
+            </summary>
+            <param name="name">The source name (arbitrary unique identifier)</param>
+            <param name="hosts">List of host names to try and connect to (IP/DNS names)</param>
+        </member>
+        <member name="T:CSCore.CvSink">
+            <summary>
+            A sink for user code to accept video frames as OpenCV images
+            </summary>
+        </member>
+        <member name="M:CSCore.CvSink.#ctor(System.String)">
+            <summary>
+            Create a sink for accepting OpenCV images
+            </summary>
+            <remarks>
+            GrabFrame must be called on the created sink to get
+            each new frame
+            </remarks>
+            <param name="name">Source name (arbitrary unique identifier</param>
+        </member>
+        <member name="P:CSCore.CvSink.Description">
+            <summary>
+            Sets the description for this sink
+            </summary>
+        </member>
+        <member name="M:CSCore.CvSink.GrabFrame(OpenCvSharp.Mat)">
+            <summary>
+            Wait for the next frame and get the image, timing out after 0.225 seconds, returning 0
+            </summary>
+            <remarks>
+            The provided image will have three 3-bit channels stored in BGR order
+            </remarks>
+            <param name="image">The <see cref="T:OpenCvSharp.Mat"/> to store the image in</param>
+            <returns>Frame time, or 0 on error (call <see cref="M:CSCore.CvSink.GetError"/> to obtain 
+            the error message</returns>
+        </member>
+        <member name="M:CSCore.CvSink.GrabFrame(OpenCvSharp.Mat,System.Double)">
+            <summary>
+            Wait for the next frame and get the image, timing out after specified seconds
+            </summary>
+            <remarks>
+            The provided image will have three 3-bit channels stored in BGR order. 
+            Upon a timeout, returns 0.
+            </remarks>
+            <param name="image">The <see cref="T:OpenCvSharp.Mat"/> to store the image in</param>
+            <param name="timeout">Timeout in seconds</param>
+            <returns>Frame time, or 0 on error (call <see cref="M:CSCore.CvSink.GetError"/> to obtain 
+            the error message</returns>
+        </member>
+        <member name="M:CSCore.CvSink.GrabFrameNoTimeout(OpenCvSharp.Mat)">
+            <summary>
+            Wait for the next frame and get the image.
+            </summary>
+            <remarks>
+            The provided image will have three 3-bit channels stored in BGR order
+            </remarks>
+            <param name="image">The <see cref="T:OpenCvSharp.Mat"/> to store the image in</param>
+            <returns>Frame time, or 0 on error (call <see cref="M:CSCore.CvSink.GetError"/> to obtain 
+            the error message</returns>
+        </member>
+        <member name="M:CSCore.CvSink.GetError">
+            <summary>
+            Get the latest error string. 
+            </summary>
+            <remarks>
+            Call if GrabFrame returns 0 to determine what the error is
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="P:CSCore.CvSink.Enabled">
+            <summary>
+            Enable or disable getting new frames
+            </summary>
+            <remarks>
+            Disabling will cause GrabFrame to not return. This can
+            be used to save processor resources when frames are not needed
+            </remarks>
+        </member>
+        <member name="T:CSCore.CvSource">
+            <summary>
+            A source that allows setting OpenCV images as the frame source
+            </summary>
+        </member>
+        <member name="M:CSCore.CvSource.#ctor(System.String,CSCore.VideoMode)">
+            <summary>
+            Creates an OpenCV Source.
+            </summary>
+            <param name="name">Source name (arbitrary unique identifier)</param>
+            <param name="mode"><see cref="T:CSCore.VideoMode"/> to be generated</param>
+        </member>
+        <member name="M:CSCore.CvSource.#ctor(System.String,CSCore.PixelFormat,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Create an OpenCV Source.
+            </summary>
+            <param name="name">Source name (arbitrary unique identifier)</param>
+            <param name="pixelFormat"><see cref="T:CSCore.PixelFormat"/> to generate</param>
+            <param name="width">Width to generate</param>
+            <param name="height">Height to generate</param>
+            <param name="fps">FPS to generate</param>
+        </member>
+        <member name="M:CSCore.CvSource.PutFrame(OpenCvSharp.Mat)">
+            <summary>
+            Put an OpenCV Image and notify sinks.
+            </summary>
+            <remarks>
+            Only 8-bit single channel or 3-channel (with BGR channel order) images
+            are supported. If the format, depth, or channel are wrong, use
+            <see cref="M:OpenCvSharp.Mat.ConvertTo(OpenCvSharp.Mat,OpenCvSharp.MatType,System.Double,System.Double)"/> or <see cref="M:OpenCvSharp.Cv2.CvtColor(OpenCvSharp.InputArray,OpenCvSharp.OutputArray,OpenCvSharp.ColorConversionCodes,System.Int32)"/> to convert
+            it first.
+            </remarks>
+            <param name="image">The OpenCV image to put</param>
+        </member>
+        <member name="M:CSCore.CvSource.NotifyError(System.String)">
+            <summary>
+            Signal sinks that an error has occured.
+            </summary>
+            <param name="msg">The message to notify sinks with</param>
+        </member>
+        <member name="P:CSCore.CvSource.Connected">
+            <summary>
+            Sets the source connection status
+            </summary>
+        </member>
+        <member name="P:CSCore.CvSource.Description">
+            <summary>
+            Sets the source description
+            </summary>
+        </member>
+        <member name="M:CSCore.CvSource.CreateProperty(System.String,CSCore.PropertyKind,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a <see cref="T:CSCore.VideoProperty"/>
+            </summary>
+            <param name="name">Property name</param>
+            <param name="kind">Property kind</param>
+            <param name="minimum">Minimum value</param>
+            <param name="maximum">Maximum value</param>
+            <param name="step">Step value</param>
+            <param name="defaultValue">Default value</param>
+            <param name="value">Current value</param>
+            <returns>The created <see cref="T:CSCore.VideoProperty"/></returns>
+        </member>
+        <member name="M:CSCore.CvSource.SetEnumPropertyChoices(CSCore.VideoProperty,System.Collections.Generic.IList{System.String})">
+            <summary>
+            Configure enum property choices
+            </summary>
+            <param name="property">The property to set</param>
+            <param name="choices">The property choices</param>
+        </member>
+        <member name="T:CSCore.StatusValue">
+            <summary>
+            Error status values returned from native methods
+            </summary>
+        </member>
+        <member name="F:CSCore.StatusValue.PropertyWriteFailed">
+            <summary>
+            Writing a property failed
+            </summary>
+        </member>
+        <member name="F:CSCore.StatusValue.Ok">
+            <summary>
+            No Errors
+            </summary>
+        </member>
+        <member name="F:CSCore.StatusValue.InvalidHandle">
+            <summary>
+            A handle was invalid or does not exist
+            </summary>
+        </member>
+        <member name="F:CSCore.StatusValue.WrongHandleSubtype">
+            <summary>
+            A handle had a wrong subtype
+            </summary>
+        </member>
+        <member name="F:CSCore.StatusValue.InvalidProperty">
+            <summary>
+            An invalid property was passed
+            </summary>
+        </member>
+        <member name="F:CSCore.StatusValue.WrongPropertyType">
+            <summary>
+            A wrong property type was passed
+            </summary>
+        </member>
+        <member name="F:CSCore.StatusValue.PropertyReadFailed">
+            <summary>
+            A property could not be read
+            </summary>
+        </member>
+        <member name="F:CSCore.StatusValue.SourceIsDisconnected">
+            <summary>
+            A source is disconnected
+            </summary>
+        </member>
+        <member name="F:CSCore.StatusValue.EmptyValue">
+            <summary>
+            A camera was given an empty value
+            </summary>
+        </member>
+        <member name="F:CSCore.StatusValue.BadUrl">
+            <summary>
+            An HTTP camera was given a bad URL
+            </summary>
+        </member>
+        <member name="T:CSCore.PixelFormat">
+            <summary>
+            The Pixel Format for cameras
+            </summary>
+        </member>
+        <member name="F:CSCore.PixelFormat.Unknown">
+            <summary>
+            The format is unknwon
+            </summary>
+        </member>
+        <member name="F:CSCore.PixelFormat.Mjpeg">
+            <summary>
+            MJPEG
+            </summary>
+        </member>
+        <member name="F:CSCore.PixelFormat.YUYV">
+            <summary>
+            YUYV
+            </summary>
+        </member>
+        <member name="F:CSCore.PixelFormat.RGB565">
+            <summary>
+            RGB565
+            </summary>
+        </member>
+        <member name="F:CSCore.PixelFormat.BGR">
+            <summary>
+            BGR
+            </summary>
+        </member>
+        <member name="F:CSCore.PixelFormat.GRAY">
+            <summary>
+            Grayscale
+            </summary>
+        </member>
+        <member name="T:CSCore.LogLevel">
+            <summary>
+            The log level to use for the logger
+            </summary>
+        </member>
+        <member name="F:CSCore.LogLevel.LogCritical">
+            
+        </member>
+        <member name="F:CSCore.LogLevel.LogError">
+            
+        </member>
+        <member name="F:CSCore.LogLevel.LogWarning">
+            
+        </member>
+        <member name="F:CSCore.LogLevel.LogInfo">
+            
+        </member>
+        <member name="F:CSCore.LogLevel.LogDebug">
+            
+        </member>
+        <member name="F:CSCore.LogLevel.LogDebug1">
+            
+        </member>
+        <member name="F:CSCore.LogLevel.LogDebug2">
+            
+        </member>
+        <member name="F:CSCore.LogLevel.LogDebug3">
+            
+        </member>
+        <member name="F:CSCore.LogLevel.LogDebug4">
+            
+        </member>
+        <member name="T:CSCore.PropertyKind">
+            <summary>
+            The kind of the property
+            </summary>
+        </member>
+        <member name="F:CSCore.PropertyKind.None">
+            <summary>
+            None set
+            </summary>
+        </member>
+        <member name="F:CSCore.PropertyKind.Boolean">
+            <summary>
+            Bool type
+            </summary>
+        </member>
+        <member name="F:CSCore.PropertyKind.Integer">
+            <summary>
+            Integer type
+            </summary>
+        </member>
+        <member name="F:CSCore.PropertyKind.String">
+            <summary>
+            String type
+            </summary>
+        </member>
+        <member name="F:CSCore.PropertyKind.Enum">
+            <summary>
+            Enum type
+            </summary>
+        </member>
+        <member name="T:CSCore.SourceKind">
+            <summary>
+            The kind of source
+            </summary>
+        </member>
+        <member name="F:CSCore.SourceKind.Unknown">
+            <summary>
+            Unknown
+            </summary>
+        </member>
+        <member name="F:CSCore.SourceKind.Usb">
+            <summary>
+            A USB camera
+            </summary>
+        </member>
+        <member name="F:CSCore.SourceKind.Http">
+            <summary>
+            An HTTP Camera or stream
+            </summary>
+        </member>
+        <member name="F:CSCore.SourceKind.CV">
+            <summary>
+            An OpenCV image source
+            </summary>
+        </member>
+        <member name="T:CSCore.HttpCameraKind">
+            <summary>
+            The kind of HTTP stream
+            </summary>
+        </member>
+        <member name="F:CSCore.HttpCameraKind.Unknown">
+            <summary>
+            Unknown
+            </summary>
+        </member>
+        <member name="F:CSCore.HttpCameraKind.MjpegStreamer">
+            <summary>
+            Coming from MJPEGStreamer
+            </summary>
+        </member>
+        <member name="F:CSCore.HttpCameraKind.CsCore">
+            <summary>
+            Coming from CsCore
+            </summary>
+        </member>
+        <member name="F:CSCore.HttpCameraKind.Axis">
+            <summary>
+            Coming from an Axis camera
+            </summary>
+        </member>
+        <member name="T:CSCore.SinkKind">
+            <summary>
+            The kind of sink
+            </summary>
+        </member>
+        <member name="F:CSCore.SinkKind.Unknown">
+            <summary>
+            Unknown
+            </summary>
+        </member>
+        <member name="F:CSCore.SinkKind.Mjpeg">
+            <summary>
+            MJPEG Stream
+            </summary>
+        </member>
+        <member name="F:CSCore.SinkKind.CV">
+            <summary>
+            OpenCV output
+            </summary>
+        </member>
+        <member name="T:CSCore.EventKind">
+            <summary>
+            The kind of event that occured
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SourceCreated">
+            <summary>
+            A source was created
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SourceDestroyed">
+            <summary>
+            A source was destroyed
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SourceConnected">
+            <summary>
+            A source was connected
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SourceDisconnected">
+            <summary>
+            A source was disconnected
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SourceVideoModesUpdated">
+            <summary>
+            The video modes of a source were updated
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SourceVideoModeChanged">
+            <summary>
+            The video mode of a source was changed
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SourcePropertyCreated">
+            <summary>
+            A new source property was created
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SourcePropertyValueUpdated">
+            <summary>
+            A source property was updated
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SourcePropertyChoicesUpdated">
+            <summary>
+            The choices for a source property were updated
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SinkSourceChanged">
+            <summary>
+            A sinks source was changed
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SinkCreated">
+            <summary>
+            A sink was created
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SinkDestroyed">
+            <summary>
+            A sink was destroyed
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SinkEnabled">
+            <summary>
+            A sink was enabled
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.SinkDisabled">
+            <summary>
+            A sink was disabled
+            </summary>
+        </member>
+        <member name="F:CSCore.EventKind.NetworkInterfacesChanged">
+            <summary>
+            The system network interfaces were changed
+            </summary>
+        </member>
+        <member name="T:CSCore.SourceEvent">
+            <summary>
+            Source event kind
+            </summary>
+        </member>
+        <member name="F:CSCore.SourceEvent.SourceCreated">
+            <summary>
+            A source was created
+            </summary>
+        </member>
+        <member name="F:CSCore.SourceEvent.SourceDestroyed">
+            <summary>
+            A source was destroyed
+            </summary>
+        </member>
+        <member name="F:CSCore.SourceEvent.SourceConnected">
+            <summary>
+            A source was connected
+            </summary>
+        </member>
+        <member name="F:CSCore.SourceEvent.SourceDisconnected">
+            <summary>
+            A source was disconnected
+            </summary>
+        </member>
+        <member name="T:CSCore.SinkEvent">
+            <summary>
+            Sink event kind
+            </summary>
+        </member>
+        <member name="F:CSCore.SinkEvent.SinkCreated">
+            <summary>
+            A sink was created
+            </summary>
+        </member>
+        <member name="F:CSCore.SinkEvent.SinkDestroyed">
+            <summary>
+            A sink was destroyed
+            </summary>
+        </member>
+        <member name="F:CSCore.SinkEvent.SinkEnabled">
+            <summary>
+            A sink was enabled
+            </summary>
+        </member>
+        <member name="F:CSCore.SinkEvent.SinkDisabled">
+            <summary>
+            A sink was disabled
+            </summary>
+        </member>
+        <member name="T:CSCore.HttpCamera">
+            <summary>
+            A sources that represents an MJPEG-over-HTTP (IP) camera
+            </summary>
+        </member>
+        <member name="M:CSCore.HttpCamera.#ctor(System.String,System.String)">
+            <summary>
+            Create a source for a MJPEG-over-HTTP (IP) camera.
+            </summary>
+            <param name="name">Source name (arbitrary unique identifier)</param>
+            <param name="url">Camera URL (e.g. "http://10.x.y.11/video/stream.mjpg")</param>
+        </member>
+        <member name="M:CSCore.HttpCamera.#ctor(System.String,System.String,CSCore.HttpCameraKind)">
+            <summary>
+            Create a source for a MJPEG-over-HTTP (IP) camera.
+            </summary>
+            <param name="name">Source name (arbitrary unique identifier)</param>
+            <param name="url">Camera URL (e.g. "http://10.x.y.11/video/stream.mjpg")</param>
+            <param name="kind">The camera kind</param>
+        </member>
+        <member name="M:CSCore.HttpCamera.#ctor(System.String,System.Collections.Generic.IList{System.String})">
+            <summary>
+            Create a source for a MJPEG-over-HTTP (IP) camera.
+            </summary>
+            <param name="name">Source name (arbitrary unique identifier)</param>
+            <param name="urls">Array of camera URLs</param>
+        </member>
+        <member name="M:CSCore.HttpCamera.#ctor(System.String,System.Collections.Generic.IList{System.String},CSCore.HttpCameraKind)">
+            <summary>
+            Create a source for a MJPEG-over-HTTP (IP) camera.
+            </summary>
+            <param name="name">Source name (arbitrary unique identifier)</param>
+            <param name="urls">Array of camera URLs</param>
+            <param name="kind">The camera kind</param>
+        </member>
+        <member name="P:CSCore.HttpCamera.CameraKind">
+            <summary>
+            Gets the kind of HTTP camera.
+            </summary>
+            <remarks>
+            Note that autodetection can result in returning a different value then
+            the camera was created with
+            </remarks>
+        </member>
+        <member name="M:CSCore.HttpCamera.SetUrls(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Change the URLs used to connect to the camera.
+            </summary>
+            <param name="urls"></param>
+        </member>
+        <member name="M:CSCore.HttpCamera.GetUrls">
+            <summary>
+            Gets the URLs used to connect to the camera.
+            </summary>
+            <returns>A list of urls that can connect to the camera</returns>
+        </member>
+        <member name="T:CSCore.MjpegServer">
+            <summary>
+            A sink that acts as a MJPEG-over-HTTP network server.
+            </summary>
+        </member>
+        <member name="M:CSCore.MjpegServer.#ctor(System.String,System.String,System.Int32)">
+            <summary>
+            Create an MJPEG-over-HTTP server sink
+            </summary>
+            <param name="name">Sink name (arbitrary unique identifier)</param>
+            <param name="listenAddress">TCP listen address (emptry string for all addresses)</param>
+            <param name="port">TCP port number</param>
+        </member>
+        <member name="M:CSCore.MjpegServer.#ctor(System.String,System.Int32)">
+            <summary>
+            Create a MJPEG-over-HTTP server sink.
+            </summary>
+            <param name="name">Sink name (arbitrary unique identifier)</param>
+            <param name="port">TCP port number</param>
+        </member>
+        <member name="P:CSCore.MjpegServer.ListenAddress">
+            <summary>
+            Get the listen address of the server
+            </summary>
+        </member>
+        <member name="P:CSCore.MjpegServer.Port">
+            <summary>
+            Get the port number of the server
+            </summary>
+        </member>
+        <member name="T:CSCore.LogFunc">
+            <summary>
+            This delegate is use to specify the log function called back from the library
+            </summary>
+            <param name="level">The level of the current log</param>
+            <param name="file">The file the log was called from</param>
+            <param name="line">The line the log was called from</param>
+            <param name="msg">The message of the log</param>
+        </member>
+        <member name="T:CSCore.NativeMethods">
+            <summary>
+            Low level access to all the native cscore functionality.
+            </summary>
+        </member>
+        <member name="M:CSCore.NativeMethods.SetLogger(CSCore.LogFunc,CSCore.LogLevel)">
+            <summary>
+            Assigns a method to be called whenever a log statement occurs in the internal
+            network table library.
+            </summary>
+            <param name="func">The log function to assign.</param>
+            <param name="minLevel">The minimum level to log.</param>
+        </member>
+        <member name="T:CSCore.UsbCamera">
+            <summary>
+            A source that represents a USB camera.
+            </summary>
+        </member>
+        <member name="M:CSCore.UsbCamera.#ctor(System.String,System.Int32)">
+            <summary>
+            Create a source for a USB camera based on device number.
+            </summary>
+            <param name="name">Source name (arbitrary unique identifier)</param>
+            <param name="dev">Devices number (e.g. 0 for /dev/video0)</param>
+        </member>
+        <member name="M:CSCore.UsbCamera.#ctor(System.String,System.String)">
+            <summary>
+            Create a source for a USB camera based on device path.
+            </summary>
+            <param name="name">Source name (arbitrary device identifier)</param>
+            <param name="path">Path to device (e.g. "/dev/video0" on linux)</param>
+        </member>
+        <member name="M:CSCore.UsbCamera.EnumerateUsbCameras">
+            <summary>
+            Enumerate USB cameras on the local system
+            </summary>
+            <returns>List of USB Camera information (one for each camera)</returns>
+        </member>
+        <member name="P:CSCore.UsbCamera.Path">
+            <summary>
+            Gets the path to the device
+            </summary>
+        </member>
+        <member name="T:CSCore.UsbCameraInfo">
+            <summary>
+            Info for a USB camera
+            </summary>
+        </member>
+        <member name="P:CSCore.UsbCameraInfo.Device">
+            <summary>
+            The device id (e.g. N in "/dev/videoN" on linux)
+            </summary>
+        </member>
+        <member name="P:CSCore.UsbCameraInfo.Path">
+            <summary>
+            The path to the device (e.g "/dev/video0" on linux)
+            </summary>
+        </member>
+        <member name="P:CSCore.UsbCameraInfo.Name">
+            <summary>
+            The name of the device as provided by the vendor and driver
+            </summary>
+        </member>
+        <member name="M:CSCore.UsbCameraInfo.#ctor(System.Int32,System.String,System.String)">
+            <summary>
+            Create a new USBCameraInfo
+            </summary>
+            <param name="device">The device ID</param>
+            <param name="path">The device path</param>
+            <param name="name">The device name</param>
+        </member>
+        <member name="T:CSCore.VideoCamera">
+            <summary>
+            A source that represents a video camera.
+            </summary>
+        </member>
+        <member name="T:CSCore.VideoCamera.WhiteBalance">
+            <summary>
+            Constants for camera white balance
+            </summary>
+        </member>
+        <member name="F:CSCore.VideoCamera.WhiteBalance.FixedIndoor">
+            <summary>
+            Fixed indoor
+            </summary>
+        </member>
+        <member name="F:CSCore.VideoCamera.WhiteBalance.FixedOutdoor1">
+            <summary>
+            Fixed outdoor 1
+            </summary>
+        </member>
+        <member name="F:CSCore.VideoCamera.WhiteBalance.FixedOutdoor2">
+            <summary>
+            Fixed outdoor 2
+            </summary>
+        </member>
+        <member name="F:CSCore.VideoCamera.WhiteBalance.FixedFluorescent1">
+            <summary>
+            Fixed Flourescent 1
+            </summary>
+        </member>
+        <member name="F:CSCore.VideoCamera.WhiteBalance.FixedFlourescent2">
+            <summary>
+            Fixed Flourescent 2
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoCamera.#ctor(System.Int32)">
+            <summary>
+            Creates a VideoCamera from a handle
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoCamera.Brightness">
+            <summary>
+            Gets or sets the brightness, as a percentage (0-100).
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoCamera.SetWhiteBalanceAuto">
+            <summary>
+            Set the white balance to auto.
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoCamera.SetWhiteBalanceHoldCurrent">
+            <summary>
+            Set the white balance to hold current.
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoCamera.SetWhiteBalanceManual(System.Int32)">
+            <summary>
+            Set the white balance to manual, with specified color temperature.
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoCamera.SetExposureAuto">
+            <summary>
+            Set the exposure to auto aperture.
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoCamera.SetExposureHoldCurrent">
+            <summary>
+            Set the exposure to hold current.
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoCamera.SetExposureManual(System.Int32)">
+            <summary>
+            Set the exposure to manual, as a percentage (0-100).
+            </summary>
+        </member>
+        <member name="T:CSCore.VideoEvent">
+            <summary>
+            A video event
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoEvent.Kind">
+            <summary>
+            The event kind
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoEvent.SourceHandle">
+            <summary>
+            The source handle if the event happened on a source
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoEvent.SinkHandle">
+            <summary>
+            The sink handle if the event happened on a sink
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoEvent.Name">
+            <summary>
+            The sink/source name
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoEvent.Mode">
+            <summary>
+            The <see cref="T:CSCore.VideoMode"/> for a <see cref="F:CSCore.EventKind.SourceVideoModeChanged"/> event
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoEvent.PropertyHandle">
+            <summary>
+            The property handle for a SourceProperty event
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoEvent.PropertyKind">
+            <summary>
+            The property kind for a SourceProperty event
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoEvent.Value">
+            <summary>
+            The value for a SourceProperty event
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoEvent.ValueStr">
+            <summary>
+            The string version of a SourceProperty event
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoEvent.GetSource">
+            <summary>
+            Gets a VideoSource from an event
+            </summary>
+            <returns>The VideoSource of the event</returns>
+        </member>
+        <member name="M:CSCore.VideoEvent.GetSink">
+            <summary>
+            Gets a VideoSink from an event
+            </summary>
+            <returns>The VideoSink of the event</returns>
+        </member>
+        <member name="M:CSCore.VideoEvent.GetProperty">
+            <summary>
+            Gets a <see cref="T:CSCore.VideoProperty"/> from the event
+            </summary>
+            <returns>The VideoProperty of the event</returns>
+        </member>
+        <member name="T:CSCore.VideoException">
+            <summary>
+            Exception raised by the CameraServer
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoException.#ctor(System.String)">
+            <summary>
+            Creates a new VideoException
+            </summary>
+            <param name="msg">The message for the exception</param>
+        </member>
+        <member name="M:CSCore.VideoException.ToString">
+            <summary>
+            Prints the exception as a string
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CSCore.VideoListener">
+            <summary>
+            An event listener for camera events
+            </summary>
+            <remarks>
+            This calls the designated callback when an event matching the specified
+            mask is generated by the library
+            </remarks>
+        </member>
+        <member name="M:CSCore.VideoListener.#ctor(System.Action{CSCore.VideoEvent},CSCore.EventKind,System.Boolean)">
+            <summary>
+            Creates a new event listener
+            </summary>
+            <param name="listener">The callback function</param>
+            <param name="eventMask">A bitmask of <see cref="T:CSCore.EventKind"/> to listen for</param>
+            <param name="immediateNotify">Whether callback should be called immediately for all requested events</param>
+        </member>
+        <member name="M:CSCore.VideoListener.Dispose">
+            <summary>
+            Disposes of the Listener
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoListener.IsValid">
+            <summary>
+            Gets if the listener is valid and enabled
+            </summary>
+        </member>
+        <member name="T:CSCore.VideoMode">
+            <summary>
+            VideoModes for Sinks and Sources
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoMode.PixelFormat">
+            <summary>
+            The PixelFormat for the video
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoMode.Width">
+            <summary>
+            The width for the video
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoMode.Height">
+            <summary>
+            The height for the video
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoMode.FPS">
+            <summary>
+            The FPS of the video
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoMode.#ctor(CSCore.PixelFormat,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new VideoMode
+            </summary>
+            <param name="format">The PixelFormat</param>
+            <param name="w">The width</param>
+            <param name="h">The height</param>
+            <param name="f">The FPS</param>
+        </member>
+        <member name="T:CSCore.VideoProperty">
+            <summary>
+            Video Properties for sources
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoProperty.Name">
+            <summary>
+            The name of the property
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoProperty.Kind">
+            <summary>
+            The kind of property
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoProperty.IsValid">
+            <summary>
+            If the property is valid
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoProperty.IsBoolean">
+            <summary>
+            If the property is bool type
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoProperty.IsInteger">
+            <summary>
+            If the property is integer type
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoProperty.IsString">
+            <summary>
+            If the property is string type
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoProperty.IsEnum">
+            <summary>
+            If the property is enum type
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoProperty.Get">
+            <summary>
+            Gets the current value of the property
+            </summary>
+            <returns>The integer representation of the property</returns>
+        </member>
+        <member name="M:CSCore.VideoProperty.Set(System.Int32)">
+            <summary>
+            Sets the current value of the property
+            </summary>
+            <param name="value">The integer value to set the property to</param>
+        </member>
+        <member name="M:CSCore.VideoProperty.GetMin">
+            <summary>
+            Gets the minimum value of the property
+            </summary>
+            <returns>The minimum value</returns>
+        </member>
+        <member name="M:CSCore.VideoProperty.GetMax">
+            <summary>
+            Gets the maximum value of the property
+            </summary>
+            <returns>The maximum value</returns>
+        </member>
+        <member name="M:CSCore.VideoProperty.GetStep">
+            <summary>
+            Gets the step value of the property
+            </summary>
+            <returns>The step value</returns>
+        </member>
+        <member name="M:CSCore.VideoProperty.GetDefault">
+            <summary>
+            Gets the default value of the property
+            </summary>
+            <returns>The default value</returns>
+        </member>
+        <member name="M:CSCore.VideoProperty.GetString">
+            <summary>
+            Gets the string representation of the property
+            </summary>
+            <returns>The string value</returns>
+        </member>
+        <member name="M:CSCore.VideoProperty.SetString(System.String)">
+            <summary>
+            Sets the string representation of the property
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:CSCore.VideoProperty.GetChoices">
+            <summary>
+            Gets a list of choices for the property
+            </summary>
+            <returns>List of property choices</returns>
+        </member>
+        <member name="T:CSCore.VideoSink">
+            <summary>
+            A sink for video that provides a sequence of frames
+            </summary>
+            <remarks>
+            Each frame may consist of multiple images (e.g. from a stereo or depth camera); 
+            these are called channels
+            </remarks>
+        </member>
+        <member name="P:CSCore.VideoSink.IsValid">
+            <summary>
+            Gets if the sink is valid
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoSink.Handle">
+            <summary>
+            Gets the handle associated with this sink
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoSink.#ctor(System.Int32)">
+            <summary>
+            Creates a new VideoSink
+            </summary>
+            <param name="handle">The handle to create from</param>
+        </member>
+        <member name="M:CSCore.VideoSink.Dispose">
+            <summary>
+            Disposes of the sink
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoSink.Equals(System.Object)">
+            <summary>
+            Checks if the 2 objects are equal
+            </summary>
+            <param name="other">The other object to check</param>
+            <returns>True if the objects are equal</returns>
+        </member>
+        <member name="M:CSCore.VideoSink.GetHashCode">
+            <summary>
+            Gets the HashCode for this object
+            </summary>
+            <returns>The hashcode (the handle is the hash code)</returns>
+        </member>
+        <member name="P:CSCore.VideoSink.Kind">
+            <summary>
+            Gets the kind of this sink
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoSink.Name">
+            <summary>
+            Gets or sets the name of this sink
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoSink.Description">
+            <summary>
+            Gets or sets the description of this sink
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoSink.Source">
+            <summary>
+            Gets or sets the <see cref="T:CSCore.VideoSource"/> attached to this sink
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoSink.GetSourceProperty(System.String)">
+            <summary>
+            Gets a VideoProperty from this sink
+            </summary>
+            <param name="name">The property to get</param>
+            <returns>The property</returns>
+        </member>
+        <member name="M:CSCore.VideoSink.EnumerateSinks">
+            <summary>
+            Enumerates all existing sinks
+            </summary>
+            <returns>A list of all existing sinks</returns>
+        </member>
+        <member name="T:CSCore.VideoSource">
+            <summary>
+            A sink for video that provides a sequence of frames
+            </summary>
+            <remarks>
+            Each frame may consist of multiple images (e.g. from a stereo or depth camera); 
+            these are called channels
+            </remarks>
+        </member>
+        <member name="M:CSCore.VideoSource.#ctor(System.Int32)">
+            <summary>
+            Creates a new VideoSource from a handle
+            </summary>
+            <param name="handle">The handle to create from</param>
+        </member>
+        <member name="M:CSCore.VideoSource.Dispose">
+            <summary>
+            Disposes of the source
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoSource.IsValid">
+            <summary>
+            Gets if the sink is valid
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoSource.Handle">
+            <summary>
+            Gets the handle associated with this sink
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoSource.Equals(System.Object)">
+            <summary>
+            Checks if the 2 objects are equal
+            </summary>
+            <param name="other">The other object to check</param>
+            <returns>True if the objects are equal</returns>
+        </member>
+        <member name="M:CSCore.VideoSource.GetHashCode">
+            <summary>
+            Gets the HashCode for this object
+            </summary>
+            <returns>The hashcode (the handle is the hash code)</returns>
+        </member>
+        <member name="P:CSCore.VideoSource.Kind">
+            <summary>
+            Gets the kind of this source
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoSource.Name">
+            <summary>
+            Gets or sets the name of this source
+            </summary>
+        </member>
+        <member name="P:CSCore.VideoSource.Description">
+            <summary>
+            Gets or sets the decription of this source
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoSource.GetLastFrameTime">
+            <summary>
+            Get the last time a frame was captured
+            </summary>
+            <returns>Relative time of the last frame captured</returns>
+        </member>
+        <member name="P:CSCore.VideoSource.Connected">
+            <summary>
+            Gets or sets if the source is currently connected and providing images
+            </summary>
+        </member>
+        <member name="M:CSCore.VideoSource.GetProperty(System.String)">
+            <summary>
+            Gets a VideoProperty from this sink
+            </summary>
+            <param name="name">The property to get</param>
+            <returns>The property</returns>
+        </member>
+        <member name="M:CSCore.VideoSource.EnumerateProperties">
+            <summary>
+            Enumerates all properties for this sink
+            </summary>
+            <returns>List of all properties</returns>
+        </member>
+        <member name="M:CSCore.VideoSource.GetVideoMode">
+            <summary>
+            Gets the current video mode
+            </summary>
+            <returns>The current video mode</returns>
+        </member>
+        <member name="M:CSCore.VideoSource.SetVideoMode(CSCore.VideoMode)">
+            <summary>
+            Sets the video mode
+            </summary>
+            <param name="mode">The video mode to set</param>
+            <returns>True on success</returns>
+        </member>
+        <member name="M:CSCore.VideoSource.SetVideoMode(CSCore.PixelFormat,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Sets the video mode
+            </summary>
+            <param name="pixelFormat">The PixelFormat</param>
+            <param name="width">The width</param>
+            <param name="height">The height</param>
+            <param name="fps">The fps</param>
+            <returns>True on success</returns>
+        </member>
+        <member name="M:CSCore.VideoSource.SetPixelFormat(CSCore.PixelFormat)">
+            <summary>
+            Sets the pixel format
+            </summary>
+            <param name="format">The PixelFormat</param>
+            <returns>True on success</returns>
+        </member>
+        <member name="M:CSCore.VideoSource.SetResolution(System.Int32,System.Int32)">
+            <summary>
+            Sets the resolution
+            </summary>
+            <param name="width">The width</param>
+            <param name="height">The height</param>
+            <returns>True on success</returns>
+        </member>
+        <member name="M:CSCore.VideoSource.SetFPS(System.Int32)">
+            <summary>
+            Sets the FPS
+            </summary>
+            <param name="fps">The fps</param>
+            <returns>True on success</returns>
+        </member>
+        <member name="M:CSCore.VideoSource.EnumerateVideoModes">
+            <summary>
+            Enumerate all known video modes for this source.
+            </summary>
+            <returns>A list of all video modes for this source</returns>
+        </member>
+        <member name="M:CSCore.VideoSource.EnumerateSinks">
+            <summary>
+            Enumerate all sinks connected to this source.
+            </summary>
+            <returns>A list of sinks</returns>
+        </member>
+        <member name="M:CSCore.VideoSource.EnumerateSources">
+            <summary>
+            Enumerate all existing sources
+            </summary>
+            <returns>A list of sources</returns>
+        </member>
+    </members>
+</doc>

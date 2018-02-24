@@ -35,7 +35,7 @@ namespace Dashboard.net.Element_Controllers
 
         public Accelerometer(Master controller) : base(controller)
         {
-            master._Dashboard_NT.AddKeyListener(VELOCITYKEY, OnKeyChange);
+            master._Dashboard_NT.AddSmartDashboardKeyListener(VELOCITYKEY, OnKeyChange);
         }
 
         /// <summary>

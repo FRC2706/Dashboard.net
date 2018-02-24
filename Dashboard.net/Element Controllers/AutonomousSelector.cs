@@ -126,10 +126,9 @@ namespace Dashboard.net.Element_Controllers
         {
             if (!connected) return;
 
-            AutonomousNT = (master._Dashboard_NT._SmartDashboard != null) ?
-                master._Dashboard_NT._SmartDashboard.GetSubTable("autonomous") : null;
-
-            AutonomousNT?.AddTableListener(OnAutoKeyChanged);
+            // Set autonomousNT and then add the key listener for the posted modes
+            AutonomousNT = master._Dashboard_NT.AutonomousTable;
+            master._Dashboard_NT.AddAutonomousKeyListener(POSTED_MODES_KEY, OnAutoModesChanged);
         }
 
         protected override void OnMainWindowSet(object sender, EventArgs e)
@@ -160,14 +159,6 @@ namespace Dashboard.net.Element_Controllers
 
 
         #region NetworkTables Handlers
-
-        private void OnAutoKeyChanged(ITable arg1, string key, Value value, NotifyFlags arg4)
-        {
-            if (key == POSTED_MODES_KEY)
-            {
-                masterDispatcher.Invoke(() => OnAutoModesChanged());
-            }
-        }
 
         /// <summary>
         /// Function to send the top three auto modes to the NetworktTables
@@ -206,13 +197,14 @@ namespace Dashboard.net.Element_Controllers
         /// <summary>
         /// Function called by the NetworkTables listener when the autonomous modes key changes.
         /// </summary>
-        private void OnAutoModesChanged()
+        /// <param name="newAutoModes">The new value of the automodes key</param>
+        private void OnAutoModesChanged(Value newAutoModes)
         {
             Dictionary<string, string> tempAutoModes;
             // If they're not read properly, error.
             try
             {
-                tempAutoModes = JsonConvert.DeserializeObject<Dictionary<string, string>>(AutonomousNT.GetString("auto_modes", ""));
+                tempAutoModes = JsonConvert.DeserializeObject<Dictionary<string, string>>(newAutoModes.GetString());
             }
             catch (JsonReaderException)
             {
