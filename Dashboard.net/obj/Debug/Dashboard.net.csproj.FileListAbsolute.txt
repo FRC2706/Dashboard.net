@@ -89,12 +89,10 @@ D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.app
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.TrustInfo.xml
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.exe.manifest
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.application
-D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\FRC.CameraServer.dll
-D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\FRC.OpenCvSharp.dll
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\NativeLibraryUtilities.dll
-D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\FRC.CameraServer.xml
-D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\FRC.OpenCvSharp.xml
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\NativeLibraryUtilities.xml
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Checklist\ChecklistEditor.g.cs
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Checklist\ChecklistEditor.baml
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\MjpegProcessor.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Camera\CameraNewWindow.g.cs
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Camera\CameraNewWindow.baml

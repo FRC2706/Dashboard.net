@@ -26,8 +26,9 @@ namespace Dashboard.net
         public Timer _Timer { get; private set; }
         public Accelerometer _Accelerometer { get; private set; }
         public Lift _Lift { get; private set; }
-        public Camera _Camera { get; private set; }
+        public Element_Controllers.Camera _Camera { get; private set; }
         public NetworkMonitor _Monitor { get; private set; }
+        public ConnectionUI _ConnectionUI { get; private set; }
         public Element_Controllers.Checklist ChecklistHandler { get; private set; }
         public DataDealer _DataFileIO { get; private set; } = new DataDealer();
 
@@ -39,7 +40,8 @@ namespace Dashboard.net
             _Accelerometer = new Accelerometer(this);
             _Lift = new Lift(this);
             _Monitor = new NetworkMonitor(this);
-            _Camera = new Camera(this);
+            _Camera = new Element_Controllers.Camera(this);
+            _ConnectionUI = new ConnectionUI(this);
             ChecklistHandler = new Element_Controllers.Checklist(this);
         }
     }

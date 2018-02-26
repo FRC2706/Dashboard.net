@@ -46,14 +46,8 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FRC.CameraServer, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FRC.CameraServer.1.0.2\lib\net45\FRC.CameraServer.dll</HintPath>
-    </Reference>
     <Reference Include="FRC.NetworkTables, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FRC.NetworkTables.3.1.8\lib\net46\FRC.NetworkTables.dll</HintPath>
-    </Reference>
-    <Reference Include="FRC.OpenCvSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FRC.OpenCvSharp.1.0.3\lib\net45\FRC.OpenCvSharp.dll</HintPath>
     </Reference>
     <Reference Include="ListViewDragDropManager, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ListViewDragDropManager.1.2.0\lib\net45\ListViewDragDropManager.dll</HintPath>
@@ -106,6 +100,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Camera\CameraNewWindow.xaml.cs">
+      <DependentUpon>CameraNewWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Element Controllers\Checklist.cs" />
     <Compile Include="Checklist\ChecklistEditor.xaml.cs">
       <DependentUpon>ChecklistEditor.xaml</DependentUpon>
@@ -114,6 +111,7 @@
     <Compile Include="Element Controllers\Accelerometer.cs" />
     <Compile Include="Element Controllers\AutonomousSelector.cs" />
     <Compile Include="Element Controllers\Camera.cs" />
+    <Compile Include="Element Controllers\ConnectionUI.cs" />
     <Compile Include="Element Controllers\Controller.cs" />
     <Compile Include="Element Controllers\Lift.cs" />
     <Compile Include="Element Controllers\NetworkMonitor.cs" />
@@ -121,6 +119,10 @@
     <Compile Include="NTInterface.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Element Controllers\Timer.cs" />
+    <Page Include="Camera\CameraNewWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Checklist\ChecklistEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -33,9 +33,9 @@ namespace Dashboard.net
 
         public DataDealer()
         {
-            if (Debugger.IsAttached) DataLocation = Environment.CurrentDirectory;
-            else DataLocation = Path.Combine(Environment.
+            DataLocation = Path.Combine(Environment.
                 GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dashboard.net Data");
+            if (Debugger.IsAttached || !Directory.Exists(DataLocation)) DataLocation = Environment.CurrentDirectory;
 
             // Set the data file location.
             DataFileLocation = Path.Combine(DataLocation, "data.json");

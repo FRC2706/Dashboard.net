@@ -14,21 +14,11 @@ namespace Dashboard.net
         {
             InitializeComponent();
 
-            ((Master)Grid.DataContext)._Dashboard_NT.ConnectionEvent += OnRobotConnected;
             ((Master)Grid.DataContext)._MainWindow = this;
 
             // Set width and height based on screen size
             Height = SystemParameters.FullPrimaryScreenHeight * 0.7;
             Width = SystemParameters.FullPrimaryScreenWidth;
-
-            StatusBox.Foreground = Brushes.Red;
-        }
-
-        // TODO get this working in XAML only
-        private void OnRobotConnected(object sender, bool connected)
-        {
-            if (connected) StatusBox.Foreground = Brushes.Green;
-            else StatusBox.Foreground = Brushes.Red;
         }
     }
 

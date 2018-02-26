@@ -11,7 +11,7 @@ using System.Windows.Threading;
 
 namespace Dashboard.net
 {
-    public class NTInterface : INotifyPropertyChanged
+    public class NTInterface
     {
 
         /// <summary>
@@ -22,11 +22,7 @@ namespace Dashboard.net
 
         Master master;
 
-
-        public RelayCommand OnConnect { get; private set; } = new RelayCommand();
-
         public event EventHandler<bool> ConnectionEvent;
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private Dispatcher mainDispatcher;
 
@@ -39,16 +35,6 @@ namespace Dashboard.net
         }
 
         public bool IsConnecting { get; private set; } = false;
-
-        public string StatusMessage
-        {
-            get
-            {
-                if (IsConnected) return "CONNECTED";
-                else if (IsConnecting) return "CONNECTING";
-                else return "OFFLINE";
-            }
-        }
 
         /// <summary>
         /// The actual SmartDashboard object for getting, setting and dealing with values
@@ -87,11 +73,6 @@ namespace Dashboard.net
         public NTInterface(Master controller)
         {
             master = controller;
-            // Function to execute is onConnect click
-            OnConnect.FunctionToExecute = OnConnectClick;
-
-            // If we're in the middle of connecting, disable the button
-            OnConnect.CanExecuteDeterminer = () => !IsConnecting;
             master.MainWindowSet += OnMainWindowSet;
         }
 
@@ -100,6 +81,7 @@ namespace Dashboard.net
             NetworkTable.SetPort(1735);
 
             string goodAddress = GetIPV4FromMDNS(ConnectedAddress);
+            if (string.IsNullOrEmpty(goodAddress)) return IsConnected;
 
             NetworkTable.SetIPAddress(goodAddress);
             NetworkTable.SetClientMode();
@@ -117,9 +99,17 @@ namespace Dashboard.net
             }
 
 
-            if (!IsConnected) NetworkTable.Shutdown();
+            if (!IsConnected) Disconnect();
 
             return IsConnected;
+        }
+
+        /// <summary>
+        /// Disconnects the dashboard from the robot.
+        /// </summary>
+        public void Disconnect()
+        {
+            NetworkTable.Shutdown();
         }
 
         private Dictionary<string, Action<Value>> ListenerFunctions 
@@ -173,11 +163,13 @@ namespace Dashboard.net
         }
 
 
-        public async void OnConnectClick(object connectAddress)
+        /// <summary>
+        /// Connects the dashboard to the robot with the given address.
+        /// </summary>
+        /// <param name="connectAddress">The address to try connecting to.</param>
+        public async void Connect(string connectAddress)
         {
             IsConnecting = true;
-            PropertyChanged(this, new PropertyChangedEventArgs("StatusMessage"));
-            OnConnect.RaiseCanExecuteChanged();
 
             ConnectedAddress = connectAddress.ToString();
 
@@ -186,13 +178,8 @@ namespace Dashboard.net
             bool connected = await Task.Run<bool>(() => ConnectAsync(cts.Token));
 
             IsConnecting = false;
-            OnConnect.RaiseCanExecuteChanged();
 
-            PropertyChanged(this, new PropertyChangedEventArgs("IsConnected"));
-            PropertyChanged(this, new PropertyChangedEventArgs("StatusMessage"));
-            if (!IsConnected) return;
-
-            ConnectionEvent?.Invoke(this, true);
+            ConnectionEvent?.Invoke(this, IsConnected);
         }
 
         /// <summary>
@@ -203,8 +190,8 @@ namespace Dashboard.net
         /// <param name="arg3"></param>
         private void OnConnectionEvent(IRemote arg1, ConnectionInfo arg2, bool arg3)
         {
-            //ConnectionEvent?.Invoke(this, IsConnected);
-            // TODO make this work
+            // Call the connected event from the main thread.
+            mainDispatcher.Invoke(() => ConnectionEvent?.Invoke(this, IsConnected));
         }
 
         protected void OnMainWindowSet(object sender, EventArgs e)
@@ -217,8 +204,16 @@ namespace Dashboard.net
 
         public static string GetIPV4FromMDNS(string mdsnAddress)
         {
-            // Convert the MDNS address if it is an mdns address to ipv4.
-            IPAddress[] addresses = Dns.GetHostAddresses(mdsnAddress);
+            IPAddress[] addresses;
+            try
+            {
+                // Convert the MDNS address if it is an mdns address to ipv4.
+                addresses = Dns.GetHostAddresses(mdsnAddress);
+            }
+            catch (SocketException)
+            {
+                return "";
+            }
 
             // Get the proper IPV4 address from the dns address
             string goodAddress = mdsnAddress;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -11,7 +12,7 @@ namespace Dashboard.net.Checklist
     /// <summary>
     /// Interaction logic for ChecklistEditor.xaml
     /// </summary>
-    public partial class ChecklistEditor : Window, INotifyPropertyChanged
+    public partial class ChecklistEditor : Window
     {
         /// <summary>
         /// The list of checkboxes to 
@@ -21,10 +22,28 @@ namespace Dashboard.net.Checklist
 
         private static readonly string DefaultTODO = "TODO: Add stuff to this checklist!";
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public RelayCommand DeleteItemCommand { get; private set; }
         public RelayCommand AddItemCommand { get; private set; }
+
+        #region events
+        /// <summary>
+        /// Fired when an item is added to the checklist
+        /// String that is sent is the text of the item added.
+        /// </summary>
+        public event EventHandler<string> ItemAdded;
+
+        /// <summary>
+        /// Fired when items are removed from the checklist
+        /// String list that is sent is the text of the items removed.
+        /// </summary>
+        public event EventHandler<List<string>> ItemsDeleted;
+
+        /// <summary>
+        /// Fired when an item is checked or unchecked.
+        /// String that is sent is the text of the item checked/unchecked.
+        /// </summary>
+        public event EventHandler<string> ItemToggled;
+        #endregion
 
         /// <summary>
         /// Automatically sets the observablecollection being displayed on the window.
@@ -43,14 +62,11 @@ namespace Dashboard.net.Checklist
                         Content = content
                     });
                 }
-
-                // Tell the GUI To update.
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CheckListList"));
             }
             get
             {
-                return (List<string>)CheckListList.Select(checkbox => checkbox.Content.ToString())
-                    .ToList<string>();
+                return CheckListList.Select(checkbox => checkbox.Content.ToString())
+                    .ToList();
             }
         }
 
@@ -89,7 +105,7 @@ namespace Dashboard.net.Checklist
             DeleteItemCommand = new RelayCommand()
             {
                 CanExecuteDeterminer = () => true,
-                FunctionToExecute = DeleteItem
+                FunctionToExecute = DeleteItems
             };
             AddItemCommand = new RelayCommand()
             {
@@ -102,13 +118,27 @@ namespace Dashboard.net.Checklist
         /// Deletes the given checkbox item.
         /// </summary>
         /// <param name="checkbox"></param>
-        private void DeleteItem(object checkbox)
+        private void DeleteItems(object checkboxes)
         {
-            CheckBox box = (CheckBox)checkbox;
-            if (box == null || box.Content.ToString() == DefaultTODO) return;
-            CheckListList.Remove(box);
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CheckListList"));
+            IList boxes = (IList)checkboxes;
+            if (boxes == null) return;
+
+            List<CheckBox> convertedBoxes = new List<CheckBox>(boxes.Cast<CheckBox>());
+
+            // Loop around removing the checkboxes selected, but not if they're text is the default text.
+            foreach (CheckBox box in convertedBoxes)
+            {
+                if (box.Content.ToString() == DefaultTODO) continue;
+                CheckListList.Remove(box);
+            }
+
             dataFileIO.WriteChecklistData(CheckListItems);
+
+            // Make sure that there's always a default todo
+            if (CheckListList.Count <= 0) CheckListList.Add(MakeCheckBoxForItem(DefaultTODO));
+
+            // Fire the event.
+            ItemsDeleted?.Invoke(this, convertedBoxes.Select(checkbox => checkbox.Content.ToString()).ToList());
         }
 
         /// <summary>
@@ -117,13 +147,44 @@ namespace Dashboard.net.Checklist
         /// <param name="text">The text on the checkbox</param>
         private void AddItem(object text)
         {
-            if (CheckListItems.Count == 1 && CheckListList.ElementAt(0).Content.ToString() == DefaultTODO)
+            string itemText = text.ToString();
+            // Error validatation. If the default to-do is there still, remove it. If it's empty, return
+            if (string.IsNullOrWhiteSpace(text.ToString())) return;
+            else if (CheckListItems.Count == 1 && CheckListList.ElementAt(0).Content.ToString() == DefaultTODO)
                 CheckListList.RemoveAt(0);
-            List<string> checklist = new List<string>(CheckListItems);
-            checklist.Add(text.ToString());
-            CheckListItems = checklist;
+
+            // Make a checkbox for the item and add it.
+            CheckListList.Add(MakeCheckBoxForItem(itemText));
             AddTextBox.Clear();
+
+            // Save the newly created item.
             dataFileIO.WriteChecklistData(CheckListItems);
+
+            // Fire the event.
+            ItemAdded?.Invoke(this, itemText);
+        }
+
+        /// <summary>
+        /// Creates a checkbox for the given checklist item.
+        /// </summary>
+        /// <param name="text">The text to put on the checkbutton</param>
+        /// <returns>A checkbutton with the given text as the content.</returns>
+        private CheckBox MakeCheckBoxForItem(string text)
+        {
+            CheckBox returnValue = new CheckBox()
+            {
+                Content = text
+            };
+            // Subscribe to events
+            returnValue.Checked += OnToggledCheckbox;
+            returnValue.Unchecked += OnToggledCheckbox;
+
+            return returnValue;
+        }
+
+        private void OnToggledCheckbox(object sender, RoutedEventArgs e)
+        {
+            
         }
 
         /// <summary>

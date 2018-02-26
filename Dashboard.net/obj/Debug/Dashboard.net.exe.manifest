@@ -42,26 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Dashboard.net.exe" size="128512">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Dashboard.net.exe" size="132608">
       <assemblyIdentity name="Dashboard.net" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>33DYWMui06WTW39/Pc6jynYlWpJTw6cK881e1hwpN6Y=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="FRC.CameraServer.dll" size="50176">
-      <assemblyIdentity name="FRC.CameraServer" version="1.0.2.0" language="neutral" processorArchitecture="msil" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>MbR3ubT56s404REwjcXRpC87Osd5/beFZKLr8AwzPQQ=</dsig:DigestValue>
+        <dsig:DigestValue>rME6ib7BCbyN/vKuTegjn2+MtgWGrGoZ7bJd6rq2dfo=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -74,18 +62,6 @@
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
         <dsig:DigestValue>7v9yDHBmdhxO2P1UMEURBfeG35yMj2B1dTYcZByhlZ4=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="FRC.OpenCvSharp.dll" size="1295360">
-      <assemblyIdentity name="FRC.OpenCvSharp" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>PlKEjbpJcG+YJ2DxJkK2wUEc35Yr+2PWXm7IkYM06vc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
