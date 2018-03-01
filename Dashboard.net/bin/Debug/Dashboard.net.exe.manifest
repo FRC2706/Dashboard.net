@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Dashboard.net.exe" size="132608">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Dashboard.net.exe" size="134656">
       <assemblyIdentity name="Dashboard.net" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>rME6ib7BCbyN/vKuTegjn2+MtgWGrGoZ7bJd6rq2dfo=</dsig:DigestValue>
+        <dsig:DigestValue>7XVnjUD83FrrTpBL8C1pcPVWa0sdkJBSV9MnpSvrRK0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
