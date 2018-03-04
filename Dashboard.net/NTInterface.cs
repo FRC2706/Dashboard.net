@@ -30,7 +30,7 @@ namespace Dashboard.net
         {
             get
             {
-                return (_SmartDashboard != null && _SmartDashboard.IsConnected);
+                return (SmartDashboard != null && SmartDashboard.IsConnected);
             }
         }
 
@@ -39,33 +39,23 @@ namespace Dashboard.net
         /// <summary>
         /// The actual SmartDashboard object for getting, setting and dealing with values
         /// </summary>
-        private NetworkTable __SmartDashboard;
-        public NetworkTable _SmartDashboard
+        private NetworkTable _SmartDashboard;
+        public NetworkTable SmartDashboard
         {
             get
             {
-                return __SmartDashboard;
+                return _SmartDashboard;
             }
             set
             {
-                __SmartDashboard = value;
-                __SmartDashboard.AddConnectionListener(OnConnectionEvent, false);
+                _SmartDashboard = value;
+                _SmartDashboard.AddConnectionListener(OnConnectionEvent, false);
                 _SmartDashboard.AddTableListener(OnTableValuesChanged);
-            }
-        }
-        private ITable _AutonomousTable;
-        public ITable AutonomousTable
-        {
-            get
-            {
-                // If the auto table is null, set it if we're connected
-                if (_AutonomousTable == null && IsConnected) _AutonomousTable = _SmartDashboard.GetSubTable(AutoTableLoc);
-                return _AutonomousTable;
-            }
-            set
-            {
-                _AutonomousTable = value;
-                _AutonomousTable.AddSubTableListener(OnTableValuesChanged);
+
+                // Add the smartdashboard to the Tables dictionary
+                string tableName = GetTableName(_SmartDashboard);
+                if (!Tables.ContainsKey(tableName)) Tables.Add(GetTableName(_SmartDashboard), _SmartDashboard);
+                else Tables[tableName] = _SmartDashboard;
             }
         }
         #endregion
@@ -99,6 +89,49 @@ namespace Dashboard.net
 
             return goodAddress;
         }
+
+        public static bool IsValidValue(Value value)
+        {
+            return (value.Type != NtType.Unassigned);
+        }
+
+        /// <summary>
+        /// Gets the table name at the beginning of the path
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string GetTableName(string path)
+        {
+            return path.Split('/')[0];
+        }
+
+        /// <summary>
+        /// Gets the table's name from the table object
+        /// </summary>
+        /// <param name="table">The table to get the name from</param>
+        /// <returns>The string name of the table.</returns>
+        public static string GetTableName(ITable table)
+        {
+            // Get the string value of the table
+            string tableString = table.ToString();
+
+            // Get rid of the part we don't want.
+            int goodIndex = tableString.IndexOf('/') + 1;
+            string goodName = tableString.Substring(goodIndex, tableString.Length - goodIndex);
+
+            return goodName;
+        }
+
+        /// <summary>
+        /// Removes the table part from the given path
+        /// </summary>
+        /// <param name="path">The given path</param>
+        /// <returns>The path without the table name</returns>
+        public static Tuple<string, string> SeperateTableFromPath(string path)
+        {
+            int goodIndex = path.IndexOf('/') + 1;
+            return new Tuple<string, string>(path.Substring(0, goodIndex - 1), path.Substring(goodIndex));
+        }
         #endregion
 
         #region connection functions
@@ -113,7 +146,7 @@ namespace Dashboard.net
             NetworkTable.SetClientMode();
             NetworkTable.Initialize();
 
-            _SmartDashboard = NetworkTable.GetTable("SmartDashboard");
+            SmartDashboard = NetworkTable.GetTable("SmartDashboard");
 
             /* Wait 10 seconds before we declare that the connection failed
              * If we connect early, exit loop
@@ -131,6 +164,36 @@ namespace Dashboard.net
         }
 
         /// <summary>
+        /// Populates tables in the Tables dictionary asynchronously so that they're not null
+        /// </summary>
+        private async Task PopulateTablesAsync()
+        {
+            List<string> keys = new List<string>(Tables.Keys);
+            // Add the connection listeners to the tables in the Tables dictionary and add the table to the Tables Dictionary
+            foreach (string key in keys)
+            {
+                if (Tables[key] != null) continue;
+                ITable table = GetTable(key);
+                table.AddTableListener(OnTableValuesChanged);
+                Tables[key] = table;
+            }
+
+            await Task.Delay(0);
+        }
+
+        /// <summary>
+        /// Calls the changed event for all the subscribed functions
+        /// </summary>
+        private void CallChangedMethodsForAll()
+        {
+            // Call all the values changes events in the list so that the change function is called on connect.
+            foreach (KeyValuePair<string, Action<Value>> kv in ListenerFunctions)
+            {
+                kv.Value(GetValue(kv.Key));
+            }
+        }
+
+        /// <summary>
         /// Connects the dashboard to the robot with the given address.
         /// </summary>
         /// <param name="connectAddress">The address to try connecting to.</param>
@@ -138,7 +201,9 @@ namespace Dashboard.net
         {
             IsConnecting = true;
 
+            // Make it a string and trim so this works properly
             ConnectedAddress = connectAddress.ToString();
+            ConnectedAddress = ConnectedAddress.Trim();
 
 
             CancellationTokenSource cts = new CancellationTokenSource();
@@ -146,8 +211,13 @@ namespace Dashboard.net
 
             IsConnecting = false;
 
-            // Only call the event if we're not connected since it will be called elsewhere if we do succeed in connecting.
-            if (!IsConnected) ConnectionEvent?.Invoke(this, IsConnected);
+            ConnectionEvent?.Invoke(this, IsConnected);
+
+            // Populate the Tables dictionary
+            if (connected) await Task.Run(PopulateTablesAsync);
+
+            // Call changed events
+            CallChangedMethodsForAll();
         }
 
         /// <summary>
@@ -155,34 +225,49 @@ namespace Dashboard.net
         /// </summary>
         public void Disconnect()
         {
+            // Get the previous connection state
+            bool previousConnectionState = IsConnected;
             NetworkTable.Shutdown();
+
+            // If we were connected before disconnect, notify elements
+            if (previousConnectionState) ConnectionEvent?.Invoke(this, IsConnected);
         }
         #endregion
 
         private Dictionary<string, Action<Value>> ListenerFunctions 
             = new Dictionary<string, Action<Value>>();
+        private Dictionary<string, ITable> Tables = 
+            new Dictionary<string, ITable>();
         /// <summary>
         /// Function that listens for the given key to change and then calls
         /// the given function when it changes within the smart dashboard table.
         /// </summary>
-        /// <param name="key">The key location to monitor. If it exists in a sub-table
-        /// of smart dashboard, the format should be [sub table key]/[value key]</param>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
         /// <param name="functionToExecute">The function to fire when the value changes.</param>
-        public void AddSmartDashboardKeyListener(string key, Action<Value> functionToExecute)
+        public void AddKeyListener(string key, Action<Value> functionToExecute)
         {
             // Don't allow the same key to have two listeners TODO allow this functionality later on?
             if (ListenerFunctions.ContainsKey(key)) return;
-            ListenerFunctions.Add(key, functionToExecute);
-        }
+            string tableKey = GetTableName(key);
 
-        /// <summary>
-        /// Adds a key listener in the SmartDashboard/autonomous table
-        /// </summary>
-        /// <param name="key">The key to monitor.</param>
-        /// <param name="functionToExecute">The function to fire when the value changes.</param>
-        public void AddAutonomousKeyListener(string key, Action<Value> functionToExecute)
-        {
-            AddSmartDashboardKeyListener(string.Format("{0}/{1}", AutoTableLoc, key), functionToExecute);
+            // Add it to the listener array
+            ListenerFunctions.Add(key, functionToExecute);
+
+            // If we're not connected, we'll add the key but keep the table null. It will be filled in when we connect.
+            if (!IsConnected)
+            {
+                if (!Tables.ContainsKey(tableKey)) Tables.Add(tableKey, null);
+                return;
+            }
+
+            ITable table = GetTable(tableKey);
+
+            // If the table is not on our list, add it and subscribe to its change event.
+            if (!Tables.ContainsKey(tableKey))
+            {
+                Tables.Add(tableKey, table);
+                table.AddTableListener(OnTableValuesChanged);
+            }
         }
 
 
@@ -196,8 +281,8 @@ namespace Dashboard.net
         /// <param name="arg4"></param>
         private void OnTableValuesChanged(ITable table, string key, Value value, NotifyFlags arg4)
         {
+            key = string.Format("{0}/{1}", GetTableName(table), key);
             if (!ListenerFunctions.ContainsKey(key)) return;
-            if (table == AutonomousTable) key = string.Format("{0}/{1}", AutoTableLoc, key);
             mainDispatcher.Invoke(() => NTValueChanged(key, value));
         }
 
@@ -211,16 +296,21 @@ namespace Dashboard.net
             ListenerFunctions[key](value);
         }
 
+        private bool previousConnectedState = false;
         /// <summary>
-        /// Fired on connect and disconnect events.
+        /// Fired on connect and disconnect events by NetworkTables itself
         /// </summary>
         /// <param name="arg1"></param>
         /// <param name="arg2"></param>
         /// <param name="arg3"></param>
         private void OnConnectionEvent(IRemote arg1, ConnectionInfo arg2, bool arg3)
         {
-            // Call the connected event from the main thread.
-            mainDispatcher.Invoke(() => ConnectionEvent?.Invoke(this, IsConnected));
+            /*Call the connected event from the main thread.
+             * Only notify of disconnects, connects are handled elsewhere in the Connect() method.
+             */
+            if (previousConnectedState == arg3) return;
+            else previousConnectedState = arg3;
+            if (!arg3) mainDispatcher.Invoke(() => ConnectionEvent?.Invoke(this, IsConnected));
         }
 
         protected void OnMainWindowSet(object sender, EventArgs e)
@@ -235,7 +325,7 @@ namespace Dashboard.net
         /// </summary>
         /// <param name="path">The table path including the key, seperated by /.</param>
         /// <returns>Tuple containing the key at index 1, the list of table paths at index 2 and the path string without the value at index 3.
-        /// For example, if path is SmartDashboard/autonomous/auto_modes will return [auto_modes, SmartDashboard, autonomous]</returns>
+        /// For example, if path is SmartDashboard/autonomous/auto_modes will return (key, [auto_modes, SmartDashboard, autonomous], SmartDashboard/autonomous)</returns>
         private Tuple<string, string[], string> ExtractTables(string path)
         {
             int keyLocation = path.LastIndexOf("/");
@@ -256,6 +346,20 @@ namespace Dashboard.net
             return new Tuple<string, string[], string>(keyWithoutPath, tableKeys, path);
         }
 
+        #region Table get set operations
+
+        /// <summary>
+        /// Gets the given table from the root directory. Returns null if it doesn't exist.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>The table corresponding to the given path</returns>
+        public ITable GetTable(string name)
+        {
+            if (Tables.ContainsKey(name) && Tables[name] != null) return Tables[name];
+            else if (IsConnected) return NetworkTable.GetTable(name);
+            else return null;
+        }
+
         /// <summary>
         /// Return the table at the given path.
         /// </summary>
@@ -263,53 +367,69 @@ namespace Dashboard.net
         /// <returns>The table at that given path.</returns>
         public ITable GetTable(string[] path)
         {
-            // The last table that was opened.
-            ITable LastTable = null;
-            // Loop around opening the tables
-            foreach (string table in path)
-            {
-                // If the LastTable is null, open up the table. It's null when no tables have been opened yet.
-                if (LastTable == null) LastTable = NetworkTable.GetTable(table);
-                else LastTable = LastTable.GetSubTable(table);
-            }
-
-            return LastTable;
+            // Joing the string together and go.
+            return GetTable(string.Join("/", path));
         }
-
-
-        /// <summary>
-        /// All the tables and subtables that are opened are stored here for quick access.
-        /// </summary>
-        private Dictionary<string, ITable> OpenedTables;
-
-        #region Table get set operations
         /// <summary>
         /// Gets the value at the specified networktables path
         /// Example paths are SmartDashboard/autonomous/selected_modes
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">The path to that value. Example: SmartDashboard/autonomous/selected_modes</param>
         /// <returns></returns>
-        public Value GetValue(string path) // TODO error handling.
+        public Value GetValue(string path)
         {
-            Tuple<string, string[], string> extracted = ExtractTables(path);
+            if (!path.Contains("/")) throw new ArgumentException("Invalid path provided to GetValue function.");
+            // If we're not connected, return
+            else if (!IsConnected) return new Value();
 
-            // Get the table path and the key string.
-            string keyWithoutPath = extracted.Item1;
+            Tuple<string, string> seperatedPath = SeperateTableFromPath(path);
+            string table = seperatedPath.Item1, key = seperatedPath.Item2;
 
-            string[] tableKeys = extracted.Item2;
-
-            // The path without the value key in it.
-            path = extracted.Item3;
-
-            if (OpenedTables.ContainsKey(path)) return OpenedTables[path].GetValue(keyWithoutPath);
-
-            ITable table = GetTable(tableKeys);
-            
-            // Add to the opened tables for quick access
-            OpenedTables.Add(path, table);
-            // Now that we've looped around, return the value
-            return table.GetValue(keyWithoutPath);
+            // Open the table and get the value
+            Value value = GetTable(table).GetValue(key, new Value());
+            if (value.Type == NtType.Unassigned) return null;
+            return value;
         }
+
+        /// <summary>
+        /// Gets the double value at the specified networktables path
+        /// Example paths are SmartDashboard/autonomous/selected_modes
+        /// </summary>
+        /// <param name="path">The path to that value. Example: SmartDashboard/autonomous/selected_modes</param>
+        /// <returns>A double representing the value at that path. Returns 0 if not connected</returns>
+        public double GetDouble(string path)
+        {
+            Value value = GetValue(path);
+            double doubleValue = (value != null && value.Type != NtType.Unassigned) ? value.GetDouble() : 0;
+            return doubleValue;
+        }
+
+        /// <summary>
+        /// Gets the string value at the specified networktables path
+        /// Example paths are SmartDashboard/autonomous/selected_modes
+        /// </summary>
+        /// <param name="path">The path to that value. Example: SmartDashboard/autonomous/selected_modes</param>
+        /// <returns>A string representing the value at that path. Returns empty string if not connected</returns>
+        public string GetString(string path)
+        {
+            Value value = GetValue(path);
+            string stringValue = (value != null && value.Type != NtType.Unassigned) ? value.GetString() : "";
+            return stringValue;
+        }
+
+        /// <summary>
+        /// Gets the boolean value at the specified networktables path
+        /// Example paths are SmartDashboard/autonomous/selected_modes
+        /// </summary>
+        /// <param name="path">The path to that value. Example: SmartDashboard/autonomous/selected_modes</param>
+        /// <returns>A boolean  representing the value at that path. Returns false if not connected</returns>
+        public bool GetBool(string path)
+        {
+            Value value = GetValue(path);
+            bool boolValue = (value != null && value.Type != NtType.Unassigned) ? value.GetBoolean() : false;
+            return boolValue;
+        }
+
 
         /// <summary>
         /// Sets the value at the given path.
@@ -318,25 +438,77 @@ namespace Dashboard.net
         /// <param name="value">The new value for the path.</param>
         public void SetValue(string path, Value value) // TODO error handling 
         {
+            if (!IsConnected) return;
             // Get the information for this path.
-            Tuple<string, string[], string> extracted = ExtractTables(path);
-            path = extracted.Item3;
-            string key = extracted.Item1;
-            string[] tablePath = extracted.Item2;
 
-            if (OpenedTables.ContainsKey(path))
+
+            Tuple<string, string> seperated = SeperateTableFromPath(path);
+            
+            // Set the value
+            GetTable(seperated.Item1).PutValue(seperated.Item2, value);
+        }
+
+        /// <summary>
+        /// Sets the string value at the given path
+        /// </summary>
+        /// <param name="path">The path for the value. Example: SmartDashboard/autonomous/selected_positon</param>
+        /// <param name="value">The new value for the path.</param>
+        public void SetString(string path, string value)
+        {
+            SetValue(path, Value.MakeString(value));
+        }
+        /// <summary>
+        /// Sets the double value at the given path
+        /// </summary>
+        /// <param name="path">The path for the value. Example: SmartDashboard/autonomous/selected_positon</param>
+        /// <param name="value">The new value for the path.</param>
+        public void SetDouble(string path, double value)
+        {
+            SetValue(path, Value.MakeDouble(value));
+        }
+        /// <summary>
+        /// Sets the boolean value at the given path
+        /// </summary>
+        /// <param name="path">The path for the value. Example: SmartDashboard/autonomous/selected_positon</param>
+        /// <param name="value">The new value for the path.</param>
+        public void SetBool(string path, bool value)
+        {
+            SetValue(path, Value.MakeBoolean(value));
+        }
+
+        /// <summary>
+        /// Retrieves all the keys and values in the given table. Note that this will not search sub tables.
+        /// </summary>
+        /// <param name="path">The path to the sub table or table where you want to get all values</param>
+        public Dictionary<string, Value> GetAllValuesInTable(string path)
+        {
+            ITable table = GetTable(path);
+
+            // Get all the keys in the table
+            HashSet<string> keys = table.GetKeys();
+
+            // Create the dictionary object that will be returned.
+            Dictionary<string, Value> valuesInTable = new Dictionary<string, Value>();
+
+            foreach (string key in keys)
             {
-                OpenedTables[path].PutValue(key, value);
-                return;
+                valuesInTable.Add(key, table.GetValue(key));
             }
 
-            // Set the value.
-            ITable table = GetTable(tablePath);
-            table.PutValue(key, value);
-
-            // Add to the OpenedTables for quick access
-            OpenedTables.Add(path, table);
+            return valuesInTable;
         }
+
+        /// <summary>
+        /// Gets the subtables in the given table
+        /// </summary>
+        /// <param name="tablePath">The path to the table to look through</param>
+        /// <returns>A string list of the subtables available in that table.</returns>
+        public HashSet<string> GetSubTables(string tablePath)
+        {
+            ITable table = GetTable(tablePath);
+            return table.GetSubTables();
+        }
+
         #endregion 
     }
 }

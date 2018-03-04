@@ -17,9 +17,9 @@ namespace Dashboard.net.Element_Controllers
 
 
         #region NetworkTables keys
-        private static readonly string SELECTED_SIDE_KEY = "selected_position";
-        private static readonly string SELECTED_MODES_KEY = "selected_modes";
-        private static readonly string POSTED_MODES_KEY = "auto_modes";
+        private static readonly string SELECTED_SIDE_KEY = "SmartDashboard/autonomous/selected_position";
+        private static readonly string SELECTED_MODES_KEY = "SmartDashboard/autonomous/selected_modes";
+        private static readonly string POSTED_MODES_KEY = "SmartDashboard/autonomous/auto_modes";
         #endregion
 
         public event EventHandler<ObservableCollection<Tuple<string, string>>> AutoModesChanged;
@@ -93,14 +93,10 @@ namespace Dashboard.net.Element_Controllers
 
         #endregion
 
-        /// <summary>
-        /// The autonomous network table, a subtable of SmartDashboard
-        /// </summary>
-        public ITable AutonomousNT { get; private set; }
-
         public AutonomousSelector(Master controller) : base(controller)
         {
-            master._Dashboard_NT.ConnectionEvent += OnConnect;
+            // Set autonomousNT and then add the key listener for the posted modes
+            master._Dashboard_NT.AddKeyListener(POSTED_MODES_KEY, OnAutoModesChanged);
         }
 
         #region List Dealers
@@ -117,20 +113,6 @@ namespace Dashboard.net.Element_Controllers
 
 
         #region Event Listeners
-        /// <summary>
-        /// Called when the dashboard connects to the networktables.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="connected"></param>
-        private void OnConnect(object sender, bool connected)
-        {
-            if (!connected) return;
-
-            // Set autonomousNT and then add the key listener for the posted modes
-            AutonomousNT = master._Dashboard_NT.AutonomousTable;
-            master._Dashboard_NT.AddAutonomousKeyListener(POSTED_MODES_KEY, OnAutoModesChanged);
-        }
-
         protected override void OnMainWindowSet(object sender, EventArgs e)
         {
             // Get the auto list object from the mainwindow to be able to work with id.
@@ -179,7 +161,7 @@ namespace Dashboard.net.Element_Controllers
             }
 
             // Encode and send auto modes
-            AutonomousNT?.PutString(SELECTED_MODES_KEY, JsonConvert.SerializeObject(topThreeAutos));
+            master._Dashboard_NT?.SetString(SELECTED_MODES_KEY, JsonConvert.SerializeObject(topThreeAutos));
         }
 
         /// <summary>
@@ -188,7 +170,7 @@ namespace Dashboard.net.Element_Controllers
         /// <param name="side">The Robot's Starting side</param>
         private void SendSelectedSide(string side)
         {
-            AutonomousNT?.PutString(SELECTED_SIDE_KEY, side);
+            master._Dashboard_NT.SetString(SELECTED_SIDE_KEY, side);
         }
 
         public ObservableCollection<Tuple<string, string>> AutoModes { get; private set; } 
@@ -200,6 +182,7 @@ namespace Dashboard.net.Element_Controllers
         /// <param name="newAutoModes">The new value of the automodes key</param>
         private void OnAutoModesChanged(Value newAutoModes)
         {
+            if (newAutoModes == null || !NTInterface.IsValidValue(newAutoModes)) return;
             Dictionary<string, string> tempAutoModes;
             // If they're not read properly, error.
             try

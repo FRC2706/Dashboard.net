@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Dashboard.net.Checklist"
         mc:Ignorable="d"
-        Title="Checklist" Height="300" Width="300" ResizeMode="CanResizeWithGrip" Icon="/Dashboard.net;component/Icons/2706.ico">
+        Title="Checklist" Height="300" Width="300" ResizeMode="CanResizeWithGrip" Icon="/Dashboard.net;component/Icons/2706.ico" Background="Black">
     <Viewbox Stretch="Uniform">
         <Grid Width="300" Height="300">
             <Grid.ColumnDefinitions>
@@ -19,7 +19,7 @@
                 <RowDefinition Height="10*"/>
                 <RowDefinition Height="10*"/>
             </Grid.RowDefinitions>
-            <ListView x:Name="CheckListViewer" Margin="0,0,0,10" BorderBrush="{x:Null}" ItemsSource="{Binding CheckListList, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ChecklistEditor}}}" Grid.ColumnSpan="4"/>
+            <ListView x:Name="CheckListViewer" Margin="0,0,0,10" BorderBrush="{x:Null}" ItemsSource="{Binding CheckListList, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ChecklistEditor}}}" Grid.ColumnSpan="4" Background="LightGray" Foreground="#FF6E00FF"/>
             <Button x:Name="DeleteButton" Content="Delete" Grid.Column="0" Margin="0" Grid.Row="1" Background="Red" Foreground="White" Command="{Binding DeleteItemCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ChecklistEditor}}}" CommandParameter="{Binding SelectedItems, ElementName=CheckListViewer}"/>
             <Button x:Name="AddButton" Content="Add" Margin="0" Grid.Row="2" Background="Lime" Command ="{Binding AddItemCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ChecklistEditor}}}" CommandParameter="{Binding Text, ElementName=AddTextBox}"/>
             <TextBox x:Name="AddTextBox" Grid.ColumnSpan="3" Grid.Column="1" Margin="10,5,10,2" Grid.Row="2" TextWrapping="Wrap">

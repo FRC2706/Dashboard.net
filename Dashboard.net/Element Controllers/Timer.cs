@@ -1,7 +1,6 @@
 ﻿using NetworkTables;
 using System;
 using System.ComponentModel;
-using System.Threading;
 using System.Windows.Threading;
 
 namespace Dashboard.net.Element_Controllers
@@ -30,11 +29,24 @@ namespace Dashboard.net.Element_Controllers
 
         public Timer(Master controller) : base(controller)
         {
-            master._Dashboard_NT.AddSmartDashboardKeyListener("time_running", OnNTKeyChanged);
+            master._Dashboard_NT.AddKeyListener("SmartDashboard/time_running", OnNTKeyChanged);
+            master._Dashboard_NT.ConnectionEvent += _Dashboard_NT_ConnectionEvent;
+        }
+
+        /// <summary>
+        /// Fired on connection events called by the networktables interface
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _Dashboard_NT_ConnectionEvent(object sender, bool e)
+        {
+            // if not connected, stop and reset the timer
+            if (!e) StopAndReset();
         }
 
         private void OnNTKeyChanged(Value startValue)
         {
+            if (startValue == null || !NTInterface.IsValidValue(startValue)) return;
             bool shouldStart;
             if (startValue.Type == NtType.String) shouldStart = (startValue.ToString() == "true");
             else shouldStart = startValue.GetBoolean();
@@ -45,21 +57,21 @@ namespace Dashboard.net.Element_Controllers
                 return;
             }
             else if (!shouldStart) return;
+            else if (IsRunning) return;
 
             Start();
         }
 
         #region Control Methods
         public void Start()
-        { 
+        {
+            if (IsRunning) return;
             IsRunning = true;
 
             caller = new DispatcherTimer();
             caller.Tick += new EventHandler(Run);
             caller.Interval = new TimeSpan(0, 0, 1);
             caller.Start();
-
-            Console.WriteLine(caller.IsEnabled);
         }
 
         public void Stop()

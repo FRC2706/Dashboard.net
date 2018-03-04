@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using NetworkTables;
 
@@ -15,7 +11,7 @@ namespace Dashboard.net.Element_Controllers
     public class Lift : Controller, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private static readonly string LIFTHEIGHTPATH = "lift_height";
+        private static readonly string LIFTHEIGHTPATH = "SmartDashboard/lift_height";
 
 
         private Slider heightSlider;
@@ -29,7 +25,7 @@ namespace Dashboard.net.Element_Controllers
         {
             get
             {
-                return master._Dashboard_NT._SmartDashboard.GetNumber(LIFTHEIGHTPATH, 0);
+                return master._Dashboard_NT.GetDouble(LIFTHEIGHTPATH);
             }
         }
 
@@ -46,7 +42,7 @@ namespace Dashboard.net.Element_Controllers
 
         public Lift(Master controller) : base(controller)
         {
-            master._Dashboard_NT.AddSmartDashboardKeyListener(LIFTHEIGHTPATH, OnLiftHeightChanged);
+            master._Dashboard_NT.AddKeyListener(LIFTHEIGHTPATH, OnLiftHeightChanged);
         }
 
         #region Event listeners

@@ -6,7 +6,7 @@ namespace Dashboard.net.Element_Controllers
 {
     public class Accelerometer : Controller, INotifyPropertyChanged
     {
-        public static readonly string VELOCITYKEY = "velocity";
+        public static readonly string VELOCITYKEY = "SmartDashboard/velocity";
         public static readonly double MAXVELOCITY = 100;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -24,18 +24,17 @@ namespace Dashboard.net.Element_Controllers
         /// <summary>
         /// The robot's velocity, as recorded by the networktables
         /// </summary>
-        public int Velocity
+        public double Velocity
         {
             get
             {
-                return master._Dashboard_NT._SmartDashboard != null ?
-                    (int)master._Dashboard_NT._SmartDashboard.GetNumber(VELOCITYKEY, 0) : 0;
+                return master._Dashboard_NT.GetDouble(VELOCITYKEY);
             }
         }
 
         public Accelerometer(Master controller) : base(controller)
         {
-            master._Dashboard_NT.AddSmartDashboardKeyListener(VELOCITYKEY, OnKeyChange);
+            master._Dashboard_NT.AddKeyListener(VELOCITYKEY, OnKeyChange);
         }
 
         /// <summary>

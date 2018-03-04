@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Media;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Dashboard.net.Element_Controllers
