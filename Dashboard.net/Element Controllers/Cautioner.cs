@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
@@ -17,18 +16,31 @@ namespace Dashboard.net.Element_Controllers
         private static readonly string DEFAULTCONTENT = "Master Caution";
 
         private string _warningMessage = DEFAULTCONTENT;
+        /// <summary>
+        /// The current warning message being displayed on the warning button
+        /// </summary>
         public string WarningMessage
         {
             get
             {
                 return _warningMessage;
             }
-            set
+            private set
             {
                 _warningMessage = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("WarningMessage"));
             }
         }
+
+        /// <summary>
+        /// RelayCommand for handling what happens if the user clicks the warning button
+        /// </summary>
+        public RelayCommand CautionerClicked { get; private set; }
+
+        /// <summary>
+        /// Whether or not the animaton is enabled, as determined by the user.
+        /// </summary>
+        private bool IsEnabled { get; set; } = true;
  
         /// <summary>
         /// True when there is a warning currently being displayed, false otherwise.
@@ -52,7 +64,7 @@ namespace Dashboard.net.Element_Controllers
                 {
                     _caller = new DispatcherTimer
                     {
-                        Interval = new TimeSpan(0, 0, 3)
+                        Interval = new TimeSpan(0, 0, 0, 1, 500)
                     };
                     _caller.Tick += Execute;
                 }
@@ -67,6 +79,16 @@ namespace Dashboard.net.Element_Controllers
             WarningList = new ObservableCollection<string>();
 
             WarningList.CollectionChanged += Refresh;
+
+            CautionerClicked = new RelayCommand()
+            {
+                CanExecuteDeterminer = () => true,
+                FunctionToExecute = (object parameter) => 
+                {
+                    IsEnabled = !IsEnabled;
+                    SetAnimation(true);
+                }
+            };
         }
 
         /// <summary>
@@ -86,11 +108,22 @@ namespace Dashboard.net.Element_Controllers
         /// the execute method over and over again later on.</param>
         private void StartExecuting(bool startCaller = true)
         {
+            if (storyboard == null) return;
             // Start caller
             if (startCaller) Caller.Start();
 
-            // Start animation
-            storyboard.Begin();
+            // Turn on the animation
+            SetAnimation(true);
+        }
+
+        /// <summary>
+        /// Attempts to turn on the animation, but only if all conditions are met for it.
+        /// </summary>
+        /// <param name="on">Whether or not to turn the animation on or off</param>
+        private void SetAnimation(bool on)
+        {
+            if (on && IsEnabled) storyboard.Begin();
+            else storyboard.Stop();
         }
 
 
@@ -109,8 +142,8 @@ namespace Dashboard.net.Element_Controllers
         private void StopAnimation()
         {
             WarningMessage = DEFAULTCONTENT;
-            // Stop the storyboard 
-            storyboard.Stop();
+            // Stop the animation
+            SetAnimation(false);
             StopExecuting();
         }
 
@@ -121,7 +154,7 @@ namespace Dashboard.net.Element_Controllers
         /// <summary>
         /// Called in order to change the text being displayed on the warning.
         /// </summary>
-        private void Execute(object sender, EventArgs e)
+        private void Execute(object sender = null, EventArgs e = null)
         {
             // Increment the counter.
             counter++;
@@ -143,7 +176,16 @@ namespace Dashboard.net.Element_Controllers
             if (WarningList.Contains(text)) return;
             WarningList.Add(text);
 
-            if (WarningList.Count > 1) StartExecuting();
+            // Set the counter so that this warning is displayed next.
+            counter = WarningList.IndexOf(text) - 1;
+
+            if (WarningList.Count > 1)
+            {
+                // Execute once to start right away
+                Execute();
+
+                StartExecuting();
+            }
             else
             {
                 WarningMessage = text;

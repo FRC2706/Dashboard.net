@@ -72,7 +72,7 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-            <Button x:Name="Master_Caution" Background="Yellow" Content="{Binding _Cautioner.WarningMessage}" FontSize="20" Grid.Row="1" Margin="0,0,5,185" Foreground="Black" FontWeight="Bold" BorderBrush="{x:Null}" Visibility="{Binding _Cautioner.IsWarning, Converter={StaticResource BoolToVis}}"/>
+            <Button x:Name="Master_Caution" Background="Yellow" Content="{Binding _Cautioner.WarningMessage}" FontSize="20" Grid.Row="1" Margin="0,0,5,185" Foreground="Black" FontWeight="Bold" BorderBrush="{x:Null}" Visibility="{Binding _Cautioner.IsWarning, Converter={StaticResource BoolToVis}}" Command="{Binding _Cautioner.CautionerClicked}"/>
             <ListView x:Name="AutoList" Margin="0" ItemsSource="{Binding _AutoSelector.AutoModes, Mode=Default}" DisplayMemberPath="Item2" AllowDrop="True" Grid.Column="3" Grid.Row="1"/>
             <RadioButton x:Name="Center_Select" Content="Center" HorizontalAlignment="Left" Height="15" Margin="10,17,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Foreground="White" BorderBrush="White" Background="Black"/>
             <RadioButton x:Name="Right_Select" Content="Right" HorizontalAlignment="Left" Height="15" Margin="10,37,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Background="Black" BorderBrush="White" Foreground="White"/>
