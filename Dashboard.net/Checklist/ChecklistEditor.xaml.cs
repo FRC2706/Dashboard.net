@@ -57,10 +57,7 @@ namespace Dashboard.net.Checklist
                 // Loop around and make new checkboxes.
                 foreach (string content in value)
                 {
-                    CheckListList.Add(new CheckBox()
-                    {
-                        Content = content
-                    });
+                    CheckListList.Add(MakeCheckBoxForItem(content));
                 }
             }
             get
@@ -184,7 +181,7 @@ namespace Dashboard.net.Checklist
 
         private void OnToggledCheckbox(object sender, RoutedEventArgs e)
         {
-            
+            ItemToggled?.Invoke(this, ((CheckBox)(e.Source)).Content.ToString());
         }
 
         /// <summary>

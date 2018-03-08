@@ -63,8 +63,13 @@ namespace Dashboard.net.Element_Controllers
         }
 
         #region Control Methods
+
+        /// <summary>
+        /// Starts the timer
+        /// </summary>
         public void Start()
         {
+            Reset();
             if (IsRunning) return;
             IsRunning = true;
 
@@ -74,12 +79,18 @@ namespace Dashboard.net.Element_Controllers
             caller.Start();
         }
 
+        /// <summary>
+        /// Stops the timer
+        /// </summary>
         public void Stop()
         {
             caller?.Stop();
             IsRunning = false;
         }
 
+        /// <summary>
+        /// Stops the countdown and resets the timer to the default time
+        /// </summary>
         public void StopAndReset()
         {
             Stop();
@@ -97,10 +108,16 @@ namespace Dashboard.net.Element_Controllers
         #endregion
 
 
+        /// <summary>
+        /// Runs the timer, subtracting the seconds and refreshing the GUI
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void Run(object sender, EventArgs e)
         {
             Seconds--;
             Refresh();
+            if (Seconds == 0) Stop();
         }
 
         private void Refresh()

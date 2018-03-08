@@ -7,33 +7,38 @@
         xmlns:local="clr-namespace:Dashboard.net"
         mc:Ignorable="d"
         Title="2706 Dashboard.Net" Height="350" Width="846.024" ResizeMode="CanResizeWithGrip" Background="Black" FontFamily="Century Gothic" Icon="Icons/2706.ico" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <local:ValueConverter x:Key="ValueConverter"/>
+        <Storyboard x:Key="animate_caution" x:Name="animate_caution">
+            <DoubleAnimation From="1.0" To="0.5" Duration="0:0:0.25" AutoReverse="True" RepeatBehavior="Forever" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Master_Caution"/>
+        </Storyboard>
+    </Window.Resources>
     <Viewbox Stretch="Uniform" Margin="5">
         <Grid x:Name="Grid" Height="278" Width="798" Background="Black">
             <Grid.Resources>
                 <local:ValueConverter x:Key="ValueConverter"></local:ValueConverter>
             </Grid.Resources>
             <Grid.RowDefinitions>
-                <RowDefinition Height="71*"/>
-                <RowDefinition Height="207*"/>
+                <RowDefinition Height="29*"/>
+                <RowDefinition Height="110*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="210*"/>
-                <ColumnDefinition Width="151*"/>
-                <ColumnDefinition Width="217*"/>
-                <ColumnDefinition Width="155*"/>
+                <ColumnDefinition Width="276*"/>
+                <ColumnDefinition Width="117*"/>
+                <ColumnDefinition Width="236*"/>
+                <ColumnDefinition Width="169*"/>
             </Grid.ColumnDefinitions>
             <Grid.DataContext>
                 <local:Master/>
             </Grid.DataContext>
-            <DockPanel LastChildFill="False" Grid.ColumnSpan="4" Margin="0,0,0,50">
-                <Menu HorizontalAlignment="Left" VerticalAlignment="Top" DockPanel.Dock="Top" Background="#FF6E00FF" Foreground="White">
-                    <MenuItem Header="Options" Foreground="White">
-                        <MenuItem x:Name="Checklist" Header="Checklist" Command="{Binding ChecklistHandler.OpenChecklist}" Background="Black" Foreground="White"/>
-                        <MenuItem x:Name="CameraNewWindow" Header="Pop out camera" Background="Black" Command="{Binding _Camera.OpenNewWindow}"/>
-                    </MenuItem>
-                </Menu>
-            </DockPanel>
-            <Grid x:Name="SpeedometerZone" Grid.Row="1" Grid.Column="2" Margin="70,75,5,0">
+            <Menu HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF6E00FF" Foreground="White" Height="18" Width="56">
+                <MenuItem Header="Options" Foreground="White">
+                    <MenuItem x:Name="Checklist" Header="Checklist" Command="{Binding ChecklistHandler.OpenChecklist}" Background="Black" Foreground="White"/>
+                    <MenuItem x:Name="CameraNewWindow" Header="Pop out camera" Background="Black" Command="{Binding _Camera.OpenNewWindow}"/>
+                </MenuItem>
+            </Menu>
+            <Grid x:Name="SpeedometerZone" Grid.Row="1" Margin="10,40,120,55">
                 <Grid Margin="0">
                     <ed:Arc StartAngle="-120" EndAngle="120" Stretch="None" StrokeThickness="13"      
                     StrokeDashArray=".25" Stroke="#FF484D5F"/>
@@ -47,13 +52,13 @@
                         FontSize="40 px" FontWeight="Light" Margin="0,-5,0,0"/>
                 </StackPanel>
             </Grid>
-            <Button x:Name="ConnectButton" Content="{Binding _ConnectionUI.ConnectButtonLabel}" HorizontalAlignment="Left" Height="23" Margin="147,13,0,0" VerticalAlignment="Top" Width="70" Background="{Binding _ConnectionUI.ConnectButtonColour}" Foreground="White" Command="{Binding _ConnectionUI.OnConnect}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}" Grid.Column="2"/>
-            <TextBox x:Name="ConnectAddressBox" HorizontalAlignment="Left" Height="23" Margin="10,13,0,0" TextWrapping="Wrap" Text="roboRIO-2706-FRC.local" VerticalAlignment="Top" Width="137" FontSize="10" Grid.Column="2">
+            <Button x:Name="ConnectButton" Content="{Binding _ConnectionUI.ConnectButtonLabel}" HorizontalAlignment="Left" Height="23" Margin="164,-1,0,0" VerticalAlignment="Top" Width="70" Background="{Binding _ConnectionUI.ConnectButtonColour}" Foreground="White" Command="{Binding _ConnectionUI.OnConnect}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}" Grid.Column="2"/>
+            <TextBox x:Name="ConnectAddressBox" HorizontalAlignment="Left" Height="23" Margin="27,-1,0,0" TextWrapping="Wrap" Text="roboRIO-2706-FRC.local" VerticalAlignment="Top" Width="137" FontSize="10" Grid.Column="2">
                 <TextBox.InputBindings>
                     <KeyBinding Key="Return" Command="{Binding _ConnectionUI.OnConnect}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}"/>
                 </TextBox.InputBindings>
             </TextBox>
-            <TextBlock x:Name="StatusBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding _ConnectionUI.StatusMessage, TargetNullValue=UNKNOWN}" VerticalAlignment="Top" Margin="10,41,0,0" Height="29" Width="197" TextAlignment="Center" Grid.Column="2" FontSize="20" Foreground="{Binding _ConnectionUI.StatusBoxColour}">
+            <TextBlock x:Name="StatusBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding _ConnectionUI.StatusMessage, TargetNullValue=UNKNOWN}" VerticalAlignment="Top" Margin="29,27,0,0" Height="29" Width="197" TextAlignment="Center" Grid.Column="2" FontSize="20" Foreground="{Binding _ConnectionUI.StatusBoxColour}">
                 <TextBlock.Style>
                     <Style>
                         <Style.Triggers>
@@ -67,15 +72,16 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
+            <Button x:Name="Master_Caution" Background="Yellow" Content="{Binding _Cautioner.WarningMessage}" FontSize="20" Grid.Row="1" Margin="0,0,5,185" Foreground="Black" FontWeight="Bold" BorderBrush="{x:Null}" Visibility="{Binding _Cautioner.IsWarning, Converter={StaticResource BoolToVis}}"/>
             <ListView x:Name="AutoList" Margin="0" ItemsSource="{Binding _AutoSelector.AutoModes, Mode=Default}" DisplayMemberPath="Item2" AllowDrop="True" Grid.Column="3" Grid.Row="1"/>
-            <RadioButton x:Name="Center_Select" Content="Center" HorizontalAlignment="Left" Height="15" Margin="10,30,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Foreground="White" BorderBrush="White" Background="Black"/>
-            <RadioButton x:Name="Right_Select" Content="Right" HorizontalAlignment="Left" Height="15" Margin="10,50,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Background="Black" BorderBrush="White" Foreground="White"/>
-            <RadioButton x:Name="Left_Select" Content="Left" HorizontalAlignment="Left" Height="15" Margin="10,10,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Background="Black" BorderBrush="White" Foreground="White"/>
-            <TextBlock x:Name="Timer" Margin="60,0,0.5,20" TextWrapping="Wrap" Text="{Binding _Timer.Time, Mode=OneWay}" FontSize="48" TextAlignment="Center" Foreground="#FF6E00FF" FontWeight="Bold"/>
-            <Slider x:Name="LiftDiagram" Grid.Column="2" HorizontalAlignment="Left" Height="129" Margin="37,58,0,0" Grid.Row="1" VerticalAlignment="Top" Width="28" Orientation="Vertical" Background="{x:Null}" BorderBrush="{x:Null}" Maximum="100" Value="{Binding _Lift.SliderValue, Mode=OneWay}" IsEnabled="False"/>
-            <TextBlock x:Name="NetworkUsageBox" Grid.Column="3" HorizontalAlignment="Left" Height="26" Margin="85,10,0,0" TextWrapping="Wrap" Text="{Binding _Monitor.Display, Mode=OneWay}" VerticalAlignment="Top" Width="60" Foreground="White"/>
-            <Image x:Name="CameraBox" Grid.ColumnSpan="2" Margin="0" Grid.Row="1"/>
-            <ComboBox x:Name="CameraSelector" Grid.Column="1" Margin="9.5,10,0,35" ItemsSource="{Binding _Camera.AvailableCameras}"/>
+            <RadioButton x:Name="Center_Select" Content="Center" HorizontalAlignment="Left" Height="15" Margin="10,17,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Foreground="White" BorderBrush="White" Background="Black"/>
+            <RadioButton x:Name="Right_Select" Content="Right" HorizontalAlignment="Left" Height="15" Margin="10,37,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Background="Black" BorderBrush="White" Foreground="White"/>
+            <RadioButton x:Name="Left_Select" Content="Left" HorizontalAlignment="Left" Height="15" Margin="10,0,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Background="Black" BorderBrush="White" Foreground="White"/>
+            <TextBlock x:Name="Timer" Margin="60,0,0,10" TextWrapping="Wrap" Text="{Binding _Timer.Time, Mode=OneWay}" FontSize="48" TextAlignment="Center" Foreground="#FF6E00FF" FontWeight="Bold"/>
+            <Slider x:Name="LiftDiagram" HorizontalAlignment="Left" Height="217" Margin="206,3,0,0" Grid.Row="1" VerticalAlignment="Top" Width="28" Orientation="Vertical" Background="{x:Null}" BorderBrush="{x:Null}" Maximum="100" Value="{Binding _Lift.SliderValue, Mode=OneWay}" IsEnabled="False" Grid.Column="2"/>
+            <TextBlock x:Name="NetworkUsageBox" Grid.Column="3" HorizontalAlignment="Left" Height="26" Margin="109,0,0,0" TextWrapping="Wrap" Text="{Binding _Monitor.Display, Mode=OneWay}" VerticalAlignment="Top" Width="60" Foreground="White" Visibility="Hidden"/>
+            <Image x:Name="CameraBox" Margin="10,0,2,0" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1"/>
+            <ComboBox x:Name="CameraSelector" Grid.Column="1" Margin="5,-3,5,33" ItemsSource="{Binding _Camera.AvailableCameras}"/>
 
         </Grid>
     </Viewbox>

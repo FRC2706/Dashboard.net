@@ -29,6 +29,7 @@ namespace Dashboard.net
         public Element_Controllers.Camera _Camera { get; private set; }
         public NetworkMonitor _Monitor { get; private set; }
         public ConnectionUI _ConnectionUI { get; private set; }
+        public Cautioner _Cautioner { get; private set; }
         public Element_Controllers.Checklist ChecklistHandler { get; private set; }
         public DataDealer _DataFileIO { get; private set; } = new DataDealer();
 
@@ -42,6 +43,7 @@ namespace Dashboard.net
             _Monitor = new NetworkMonitor(this);
             _Camera = new Element_Controllers.Camera(this);
             _ConnectionUI = new ConnectionUI(this);
+            _Cautioner = new Cautioner(this);
             ChecklistHandler = new Element_Controllers.Checklist(this);
         }
     }

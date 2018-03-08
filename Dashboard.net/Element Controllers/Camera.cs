@@ -60,7 +60,8 @@ namespace Dashboard.net.Element_Controllers
         {
             get
             {
-                return GetCameraProperties();
+                return null;
+                //return GetCameraProperties(); TODO fix
             }
         }
 

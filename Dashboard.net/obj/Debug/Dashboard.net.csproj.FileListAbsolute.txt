@@ -96,3 +96,4 @@ D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Checklist\Checkli
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\MjpegProcessor.dll
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Camera\CameraNewWindow.g.cs
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Camera\CameraNewWindow.baml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csproj.CopyComplete

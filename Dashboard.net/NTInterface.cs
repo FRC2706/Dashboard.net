@@ -436,7 +436,7 @@ namespace Dashboard.net
         /// </summary>
         /// <param name="path">The path for the value. Example: SmartDashboard/autonomous/selected_positon</param>
         /// <param name="value">The new value for the path.</param>
-        public void SetValue(string path, Value value) // TODO error handling 
+        public void SetValue(string path, Value value)
         {
             if (!IsConnected) return;
             // Get the information for this path.
@@ -483,6 +483,8 @@ namespace Dashboard.net
         public Dictionary<string, Value> GetAllValuesInTable(string path)
         {
             ITable table = GetTable(path);
+
+            if (table == null) return null;
 
             // Get all the keys in the table
             HashSet<string> keys = table.GetKeys();

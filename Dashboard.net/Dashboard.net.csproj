@@ -103,6 +103,7 @@
     <Compile Include="Camera\CameraNewWindow.xaml.cs">
       <DependentUpon>CameraNewWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Element Controllers\Cautioner.cs" />
     <Compile Include="Element Controllers\Checklist.cs" />
     <Compile Include="Checklist\ChecklistEditor.xaml.cs">
       <DependentUpon>ChecklistEditor.xaml</DependentUpon>

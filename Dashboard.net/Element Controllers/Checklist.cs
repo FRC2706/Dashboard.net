@@ -8,6 +8,8 @@ namespace Dashboard.net.Element_Controllers
     /// </summary>
     public class Checklist : Controller
     {
+        private static readonly string WARNINGMESSAGE = "Checklist Incomplete";
+
         private ChecklistEditor ChecklistWindow;
         public ChecklistEditor _ChecklistEditor
         {
@@ -27,6 +29,25 @@ namespace Dashboard.net.Element_Controllers
                 FunctionToExecute = (object parameter) => _ChecklistEditor.Show(),
                 CanExecuteDeterminer = () => true
             };
+            _ChecklistEditor.ItemToggled += _ChecklistEditor_ItemToggled;
+
+            master._Dashboard_NT.ConnectionEvent += _Dashboard_NT_ConnectionEvent;
+        }
+
+        private void _Dashboard_NT_ConnectionEvent(object sender, bool e)
+        {
+            CauseAnimation();
+        }
+
+        private void _ChecklistEditor_ItemToggled(object sender, string e)
+        {
+            CauseAnimation();
+        }
+
+        private void CauseAnimation()
+        {
+            if (!ChecklistComplete && master._Dashboard_NT.IsConnected) master._Cautioner.SetWarning(WARNINGMESSAGE);
+            else master._Cautioner.StopWarning(WARNINGMESSAGE);
         }
 
         /// <summary>
