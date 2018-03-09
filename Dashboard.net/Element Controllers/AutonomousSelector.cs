@@ -104,8 +104,6 @@ namespace Dashboard.net.Element_Controllers
         {
             AutoModes.Move(e.OldIndex, e.NewIndex);
             Refresh();
-
-            SendAutoModes();
         }
 
         #endregion
@@ -206,9 +204,6 @@ namespace Dashboard.net.Element_Controllers
 
 
             Refresh();
-
-            // Send auto modes in case this priority is good
-            SendAutoModes();
         }
 
         #endregion

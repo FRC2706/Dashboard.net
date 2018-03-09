@@ -200,7 +200,7 @@ namespace Dashboard.net.Checklist
         /// </summary>
         private void Reload()
         {
-            List<string> data = dataFileIO.GetCheckListData();
+            List<string> data = dataFileIO.ReadCheckListData();
             if (data == null || data.Count == 0) CheckListItems = new List<string>()
             {
                 {DefaultTODO }

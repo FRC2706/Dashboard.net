@@ -10,7 +10,8 @@ namespace Dashboard.net
     public class DataDealer
     {
 
-        public static readonly string ChecklistKey = "checklist";
+        public static readonly string CHECKLISTKEY = "checklist";
+        public static readonly string CAUTIONERKEY = "cautioner";
 
         /// <summary>
         /// The location of the data json file.
@@ -49,6 +50,7 @@ namespace Dashboard.net
             File.Create(DataFileLocation).Close();
         }
 
+        #region Basic read write functions
         /// <summary>
         /// Encodes the data hashtable into json and writes it to the data file.
         /// </summary>
@@ -97,36 +99,72 @@ namespace Dashboard.net
                 (Hashtable)JsonConvert.DeserializeObject<Hashtable>(fileContents);
 
             Newtonsoft.Json.Linq.JArray checklistData =
-                (Newtonsoft.Json.Linq.JArray)data_hashtable[ChecklistKey];
+                (Newtonsoft.Json.Linq.JArray)data_hashtable[CHECKLISTKEY];
+            Newtonsoft.Json.Linq.JObject cautionerData =
+                (Newtonsoft.Json.Linq.JObject)data_hashtable[CAUTIONERKEY];
 
-            List<string> checkListDataFormatted = checklistData.ToObject<List<string>>();
+            List<string> checkListDataFormatted = (checklistData != null) ?checklistData.ToObject<List<string>>() : null;
+            Hashtable cautionerDataFormatted = (cautionerData != null) ? cautionerData.ToObject<Hashtable>() : null;
 
             return new Hashtable
             {
-                { ChecklistKey, checkListDataFormatted }
+                { CHECKLISTKEY, checkListDataFormatted },
+                {CAUTIONERKEY, cautionerDataFormatted }
             };
         }
+        #endregion
 
+        /// <summary>
+        /// Replaces the current value of the key provided with the new value
+        /// </summary>
+        /// <param name="key">The key to replace</param>
+        /// <param name="newValue">The new value to set that key to</param>
+        private void UpdateAndWrite(string key, object newValue)
+        {
+            Hashtable currentData = ReadData();
+            currentData[key] = newValue;
 
+            WriteData(currentData);
+        }
+
+        #region Checklist read write methods
         /// <summary>
         /// Method for writing checklist data to the file.
         /// </summary>
         /// <param name="CheckListData"></param>
         public void WriteChecklistData(List<string> CheckListData)
         {
-            Hashtable currentData = ReadData();
-            currentData[ChecklistKey] = CheckListData;
-
-            WriteData(currentData);
+            UpdateAndWrite(CHECKLISTKEY, CheckListData);
         }
 
         /// <summary>
         /// Reads the file and returns the checklist data.
         /// </summary>
         /// <returns>The checklist data.</returns>
-        public List<string> GetCheckListData()
+        public List<string> ReadCheckListData()
         {
-            return (List<string>)ReadData()[ChecklistKey];
+            return (List<string>)ReadData()[CHECKLISTKEY];
         }
+
+        #endregion
+
+        #region Cautioner read write methods
+        /// <summary>
+        /// Writes new checklist data to the file
+        /// </summary>
+        /// <param name="data">The new data to write to the file</param>
+        public void WriteCautionerData(Hashtable data)
+        {
+            UpdateAndWrite(CAUTIONERKEY, data);
+        }
+        /// <summary>
+        /// Reads the cautioner data and returns it
+        /// </summary>
+        /// <returns>The cautioner data present on file</returns>
+        public Hashtable ReadCautionerData()
+        {
+            return (Hashtable)ReadData()[CAUTIONERKEY];
+        }
+        #endregion
     }
 }

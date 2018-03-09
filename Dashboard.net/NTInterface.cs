@@ -414,7 +414,7 @@ namespace Dashboard.net
         public double GetDouble(string path)
         {
             Value value = GetValue(path);
-            double doubleValue = (value != null && value.Type != NtType.Unassigned) ? value.GetDouble() : 0;
+            double doubleValue = (value != null && value.Type == NtType.Double) ? value.GetDouble() : 0;
             return doubleValue;
         }
 
@@ -427,7 +427,7 @@ namespace Dashboard.net
         public string GetString(string path)
         {
             Value value = GetValue(path);
-            string stringValue = (value != null && value.Type != NtType.Unassigned) ? value.GetString() : "";
+            string stringValue = (value != null && value.Type == NtType.String) ? value.GetString() : "";
             return stringValue;
         }
 
@@ -440,10 +440,35 @@ namespace Dashboard.net
         public bool GetBool(string path)
         {
             Value value = GetValue(path);
-            bool boolValue = (value != null && value.Type != NtType.Unassigned) ? value.GetBoolean() : false;
+            bool boolValue = (value != null && value.Type == NtType.Boolean) ? value.GetBoolean() : false;
             return boolValue;
         }
 
+        /// <summary>
+        /// Gets the string array value at the specified networktables path
+        /// Example paths are SmartDashboard/autonomous/selected_modes
+        /// </summary>
+        /// <param name="path">The path to that value. Example: SmartDashboard/autonomous/selected_modes</param>
+        /// <returns>A string array representing the value at that path. Returns null if the path can't be reached./returns>
+        public string[] GetStringArray(string path)
+        {
+            Value value = GetValue(path);
+            string[] stringArrValue = (value != null && value.Type == NtType.StringArray) ? value.GetStringArray() : null;
+            return stringArrValue;
+        }
+
+        /// <summary>
+        /// Gets the double array value at the specified networktables path
+        /// Example paths are SmartDashboard/autonomous/selected_modes
+        /// </summary>
+        /// <param name="path">The path to that value. Example: SmartDashboard/autonomous/selected_modes</param>
+        /// <returns>A double array representing the value at that path. Returns null if the path can't be reached./returns>
+        public double[] GetDoubleArray(string path)
+        {
+            Value value = GetValue(path);
+            double[] doubleArrValue = (value != null && value.Type == NtType.DoubleArray) ? value.GetDoubleArray() : null;
+            return doubleArrValue;
+        }
 
         /// <summary>
         /// Sets the value at the given path.
@@ -470,6 +495,25 @@ namespace Dashboard.net
         public void SetString(string path, string value)
         {
             SetValue(path, Value.MakeString(value));
+        }
+
+        /// <summary>
+        /// Sets the value at the given path to the given string array
+        /// </summary>
+        /// <param name="path">The key location whose value is being set</param>
+        /// <param name="value">The new value to set that key location to</param>
+        public void SetStringArray(string path, string[] value)
+        {
+            SetValue(path, Value.MakeStringArray(value));
+        }
+        /// <summary>
+        /// Sets the value at the given path to the given double array
+        /// </summary>
+        /// <param name="path">The key location whose value is being set</param>
+        /// <param name="value">The new value to set that key location to</param>
+        public void SetDoubleArray(string path, double[] value)
+        {
+            SetValue(path, Value.MakeDoubleArray(value));
         }
         /// <summary>
         /// Sets the double value at the given path

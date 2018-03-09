@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -15,6 +16,8 @@ namespace Dashboard.net.Element_Controllers
     public class Cautioner : Controller, INotifyPropertyChanged
     {
         private static readonly string DEFAULTCONTENT = "Master Caution";
+
+        #region NetworkTable constants
         /// <summary>
         /// The networktables location for the addd queue
         /// </summary>
@@ -23,6 +26,18 @@ namespace Dashboard.net.Element_Controllers
         /// The networktables location for the remove queue
         /// </summary>
         private static readonly string NTREMOVEKEY = "SmartDashboard/Warnings/RemoveQueue";
+        /// <summary>
+        /// The networktables location for the current warnings being displayed.
+        /// </summary>
+        private static readonly string NTCURRENTWARNINGS = "SmartDashboard/Warnings/CurrentWarnings";
+        #endregion
+
+        #region Data file constants
+        /// <summary>
+        /// The key location for the data hashtable boolean of whether or not the animation should be enabled
+        /// </summary>
+        private static readonly string ENABLEDKEY = "enabled";
+        #endregion
 
         private string _warningMessage = DEFAULTCONTENT;
         /// <summary>
@@ -46,10 +61,22 @@ namespace Dashboard.net.Element_Controllers
         /// </summary>
         public RelayCommand CautionerClicked { get; private set; }
 
+        private bool _isEnabled;
         /// <summary>
         /// Whether or not the animaton is enabled, as determined by the user.
         /// </summary>
-        private bool IsEnabled { get; set; } = true;
+        private bool IsEnabled
+        {
+            get
+            {
+                return _isEnabled;
+            }
+            set
+            {
+                _isEnabled = value;
+                master._DataFileIO.WriteCautionerData(new Hashtable { { ENABLEDKEY, _isEnabled } });
+            }
+        }
  
         /// <summary>
         /// True when there is a warning currently being displayed, false otherwise.
@@ -87,6 +114,7 @@ namespace Dashboard.net.Element_Controllers
         {
             WarningList = new ObservableCollection<string>();
 
+            // Subscribe to the collection changed event in order to refresh
             WarningList.CollectionChanged += Refresh;
 
             CautionerClicked = new RelayCommand()
@@ -99,12 +127,27 @@ namespace Dashboard.net.Element_Controllers
                 }
             };
 
+            // Set the initial state of the enabled boolean from the data file
+            Hashtable cautionerData = master._DataFileIO.ReadCautionerData();
+            if (cautionerData == null)
+            {
+                cautionerData = new Hashtable()
+                {
+                    {ENABLEDKEY, true }
+                };
+
+                master._DataFileIO.WriteCautionerData(cautionerData);
+            }
+            _isEnabled = (bool)cautionerData[ENABLEDKEY];
+
             // Listen for key changes on the add and remove queues
             master._Dashboard_NT.AddKeyListener(NTADDKEY, OnNTKeyAdded);
             master._Dashboard_NT.AddKeyListener(NTREMOVEKEY, OnNTKeyRemoved);
+            // Add a listener to the currrent warnings networktable property in case another program changes it.
+            master._Dashboard_NT.AddKeyListener(NTCURRENTWARNINGS, (Value value) => UpdateNTArray());
         }
 
-        #region Networktables listeners
+        #region Networktables stuff
         /// <summary>
         /// Removes the warning from the warnings queue from input from the networktables table
         /// </summary>
@@ -125,6 +168,13 @@ namespace Dashboard.net.Element_Controllers
             // Confirm that the object type is a string
             if (obj == null || obj.Type != NtType.String) return;
             SetWarning(obj.GetString());
+        }
+        /// <summary>
+        /// Updates the networktables warning array every time a warning is added or removed.
+        /// </summary>
+        private void UpdateNTArray()
+        {
+            master._Dashboard_NT.SetStringArray(NTCURRENTWARNINGS, WarningList.ToArray<string>());
         }
         #endregion
 
@@ -259,6 +309,7 @@ namespace Dashboard.net.Element_Controllers
         private void Refresh(object sender, NotifyCollectionChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsWarning"));
+            UpdateNTArray();
         }
     }
 }
