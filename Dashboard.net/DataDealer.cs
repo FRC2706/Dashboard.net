@@ -4,6 +4,9 @@ using System.IO;
 using System.Collections;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using Dashboard.net.Element_Controllers;
+using Newtonsoft.Json.Linq;
+using System.Collections.ObjectModel;
 
 namespace Dashboard.net
 {
@@ -163,7 +166,13 @@ namespace Dashboard.net
         /// <returns>The cautioner data present on file</returns>
         public Hashtable ReadCautionerData()
         {
-            return (Hashtable)ReadData()[CAUTIONERKEY];
+            Hashtable goodData = new Hashtable();
+            Hashtable data = (Hashtable)ReadData()[CAUTIONERKEY];
+
+            goodData[Cautioner.ENABLEDKEY] = data[Cautioner.ENABLEDKEY];
+            goodData[Cautioner.IGNOREKEY] = ((JArray)data[Cautioner.IGNOREKEY]).ToObject<ObservableCollection<string>>();
+
+            return goodData;
         }
         #endregion
     }

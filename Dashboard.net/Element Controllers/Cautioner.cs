@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using NetworkTables;
@@ -36,7 +38,11 @@ namespace Dashboard.net.Element_Controllers
         /// <summary>
         /// The key location for the data hashtable boolean of whether or not the animation should be enabled
         /// </summary>
-        private static readonly string ENABLEDKEY = "enabled";
+        public static readonly string ENABLEDKEY = "enabled";
+        /// <summary>
+        /// The key location for the data hashtable list for the ignore list.
+        /// </summary>
+        public static readonly string IGNOREKEY = "ignoreList";
         #endregion
 
         private string _warningMessage = DEFAULTCONTENT;
@@ -53,6 +59,23 @@ namespace Dashboard.net.Element_Controllers
             {
                 _warningMessage = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("WarningMessage"));
+            }
+        }
+
+        private ListView ignoreListViewer;
+
+        /// <summary>
+        /// The data that must be saved to the data file
+        /// </summary>
+        private Hashtable DataToSave
+        {
+            get
+            {
+                return new Hashtable()
+                {
+                    {IGNOREKEY, IgnoreList },
+                    {ENABLEDKEY, IsEnabled }
+                };
             }
         }
 
@@ -74,7 +97,7 @@ namespace Dashboard.net.Element_Controllers
             set
             {
                 _isEnabled = value;
-                master._DataFileIO.WriteCautionerData(new Hashtable { { ENABLEDKEY, _isEnabled } });
+                master._DataFileIO.WriteCautionerData(DataToSave);
             }
         }
  
@@ -88,6 +111,11 @@ namespace Dashboard.net.Element_Controllers
                 return WarningList.Count > 0;
             }
         }
+
+        /// <summary>
+        /// List of warnings that were set by the user to be ignored.
+        /// </summary>
+        public ObservableCollection<string> IgnoreList { get; private set; }
 
         public ObservableCollection<string> WarningList { get; private set; }
         DispatcherTimer _caller;
@@ -120,7 +148,7 @@ namespace Dashboard.net.Element_Controllers
             CautionerClicked = new RelayCommand()
             {
                 CanExecuteDeterminer = () => true,
-                FunctionToExecute = (object parameter) => 
+                FunctionToExecute = (object parameter) =>
                 {
                     IsEnabled = !IsEnabled;
                     SetAnimation(true);
@@ -131,14 +159,17 @@ namespace Dashboard.net.Element_Controllers
             Hashtable cautionerData = master._DataFileIO.ReadCautionerData();
             if (cautionerData == null)
             {
-                cautionerData = new Hashtable()
-                {
-                    {ENABLEDKEY, true }
-                };
+                _isEnabled = true;
+                IgnoreList = new ObservableCollection<string>();
 
-                master._DataFileIO.WriteCautionerData(cautionerData);
+                master._DataFileIO.WriteCautionerData(DataToSave);
             }
-            _isEnabled = (bool)cautionerData[ENABLEDKEY];
+            else
+            {
+                _isEnabled = (bool)cautionerData[ENABLEDKEY];
+                IgnoreList = (ObservableCollection<string>)cautionerData[IGNOREKEY];
+            }
+            IgnoreList.CollectionChanged += Refresh;
 
             // Listen for key changes on the add and remove queues
             master._Dashboard_NT.AddKeyListener(NTADDKEY, OnNTKeyAdded);
@@ -186,6 +217,26 @@ namespace Dashboard.net.Element_Controllers
         protected override void OnMainWindowSet(object sender, EventArgs e)
         {
             storyboard = (Storyboard)master._MainWindow.FindResource("animate_caution");
+            master._MainWindow.Master_Caution.MouseRightButtonDown += IgnoreListViewer_MouseRightButtonDown;
+            ignoreListViewer = master._MainWindow.IgnoreListViewer;
+            ignoreListViewer.SelectionChanged += IgnoreListViewer_SelectionChanged;
+        }
+
+        /// <summary>
+        /// Handles a selection change in the ignore list viewer in order to remove the selected item from the list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void IgnoreListViewer_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (ignoreListViewer.SelectedItem == null) return;
+            RemoveFromIgnoreList(ignoreListViewer.SelectedItem.ToString());
+        }
+
+        private void IgnoreListViewer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Just add the current warning to the ignore list
+            AddToIngoreList(WarningMessage);
         }
 
         #region Basic start stop execute functions
@@ -263,7 +314,8 @@ namespace Dashboard.net.Element_Controllers
         /// <param name="text">The warning message teo display</param>
         public void SetWarning(string text)
         {
-            if (WarningList.Contains(text)) return;
+            // If it's already being warned of or it's in the ignore list, don't do anything
+            if (WarningList.Contains(text) || IgnoreList.Contains(text)) return;
             WarningList.Add(text);
 
             // Set the counter so that this warning is displayed next.
@@ -302,6 +354,28 @@ namespace Dashboard.net.Element_Controllers
         #endregion
 
         /// <summary>
+        /// Adds the given text to the ignore list so that that warning isn't shown.
+        /// </summary>
+        /// <param name="text">The text to add to the ignore list</param>
+        private void AddToIngoreList(string text)
+        {
+            // Add it to the ignore list and remove it from being warned right now if it's there.
+            IgnoreList.Add(text);
+            StopWarning(text);
+        }
+
+        /// <summary>
+        /// Removes the given text warning from the ignore list so that it isn't ignored anymore
+        /// </summary>
+        /// <param name="text">The text warning to remove from the ignore list</param>
+        private void RemoveFromIgnoreList(string text)
+        {
+            // Removes the given text from the Ignore List
+            if (!IgnoreList.Contains(text)) return;
+            IgnoreList.Remove(text);
+        }
+
+        /// <summary>
         /// Refreshes the necessary elements that do not auto-refresh
         /// </summary>
         /// <param name="sender"></param>
@@ -310,6 +384,8 @@ namespace Dashboard.net.Element_Controllers
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsWarning"));
             UpdateNTArray();
+
+            master._DataFileIO.WriteCautionerData(DataToSave);
         }
     }
 }

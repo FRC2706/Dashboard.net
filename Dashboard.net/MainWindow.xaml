@@ -33,9 +33,12 @@
                 <local:Master/>
             </Grid.DataContext>
             <Menu HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF6E00FF" Foreground="White" Height="18" Width="56">
-                <MenuItem Header="Options" Foreground="White">
+                <MenuItem Header="Overflow" Foreground="White">
                     <MenuItem x:Name="Checklist" Header="Checklist" Command="{Binding ChecklistHandler.OpenChecklist}" Background="Black" Foreground="White"/>
                     <MenuItem x:Name="CameraNewWindow" Header="Pop out camera" Background="Black" Command="{Binding _Camera.OpenNewWindow}"/>
+                    <MenuItem Header="Modify Ignore List" Background="Black">
+                        <ListView x:Name="IgnoreListViewer" ItemsSource="{Binding _Cautioner.IgnoreList}" />
+                    </MenuItem>
                 </MenuItem>
             </Menu>
             <Grid x:Name="SpeedometerZone" Grid.Row="1" Margin="10,40,120,55">
