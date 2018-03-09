@@ -106,6 +106,18 @@ namespace Dashboard.net
         }
 
         /// <summary>
+        /// Gets the sub table name from the given path
+        /// </summary>
+        /// <param name="path">The path where the sub table is located</param>
+        /// <returns>The sub table from the given path. If there is no real sub-table, the toplevel table is returned instead.</returns>
+        public static string GetSubTablePath(string path)
+        {
+            int index = path.LastIndexOf('/');
+            // Get the correct substring and return it.
+            return path.Substring(0, index);
+        }
+
+        /// <summary>
         /// Gets the table's name from the table object
         /// </summary>
         /// <param name="table">The table to get the name from</param>
@@ -214,10 +226,12 @@ namespace Dashboard.net
             ConnectionEvent?.Invoke(this, IsConnected);
 
             // Populate the Tables dictionary
-            if (connected) await Task.Run(PopulateTablesAsync);
-
-            // Call changed events
-            CallChangedMethodsForAll();
+            if (connected)
+            {
+                await Task.Run(PopulateTablesAsync);
+                // Call changed events
+                CallChangedMethodsForAll();
+            }
         }
 
         /// <summary>
@@ -248,7 +262,7 @@ namespace Dashboard.net
         {
             // Don't allow the same key to have two listeners TODO allow this functionality later on?
             if (ListenerFunctions.ContainsKey(key)) return;
-            string tableKey = GetTableName(key);
+            string subtablePath = GetSubTablePath(key);
 
             // Add it to the listener array
             ListenerFunctions.Add(key, functionToExecute);
@@ -256,16 +270,16 @@ namespace Dashboard.net
             // If we're not connected, we'll add the key but keep the table null. It will be filled in when we connect.
             if (!IsConnected)
             {
-                if (!Tables.ContainsKey(tableKey)) Tables.Add(tableKey, null);
+                if (!Tables.ContainsKey(subtablePath)) Tables.Add(subtablePath, null);
                 return;
             }
 
-            ITable table = GetTable(tableKey);
+            ITable table = GetTable(subtablePath);
 
             // If the table is not on our list, add it and subscribe to its change event.
-            if (!Tables.ContainsKey(tableKey))
+            if (!Tables.ContainsKey(subtablePath))
             {
-                Tables.Add(tableKey, table);
+                Tables.Add(subtablePath, table);
                 table.AddTableListener(OnTableValuesChanged);
             }
         }

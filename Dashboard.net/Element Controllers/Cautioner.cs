@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using NetworkTables;
 
 namespace Dashboard.net.Element_Controllers
 {
@@ -14,6 +15,14 @@ namespace Dashboard.net.Element_Controllers
     public class Cautioner : Controller, INotifyPropertyChanged
     {
         private static readonly string DEFAULTCONTENT = "Master Caution";
+        /// <summary>
+        /// The networktables location for the addd queue
+        /// </summary>
+        private static readonly string NTADDKEY = "SmartDashboard/Warnings/AddQueue";
+        /// <summary>
+        /// The networktables location for the remove queue
+        /// </summary>
+        private static readonly string NTREMOVEKEY = "SmartDashboard/Warnings/RemoveQueue";
 
         private string _warningMessage = DEFAULTCONTENT;
         /// <summary>
@@ -89,7 +98,35 @@ namespace Dashboard.net.Element_Controllers
                     SetAnimation(true);
                 }
             };
+
+            // Listen for key changes on the add and remove queues
+            master._Dashboard_NT.AddKeyListener(NTADDKEY, OnNTKeyAdded);
+            master._Dashboard_NT.AddKeyListener(NTREMOVEKEY, OnNTKeyRemoved);
         }
+
+        #region Networktables listeners
+        /// <summary>
+        /// Removes the warning from the warnings queue from input from the networktables table
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OnNTKeyRemoved(Value obj)
+        {
+            // Confirm that the object type is a string
+            if (obj == null || obj.Type != NtType.String) return;
+            StopWarning(obj.GetString());
+        }
+
+        /// <summary>
+        /// Adds a warning from the networktables Warnings subtable by listening for the key to change.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OnNTKeyAdded(Value obj)
+        {
+            // Confirm that the object type is a string
+            if (obj == null || obj.Type != NtType.String) return;
+            SetWarning(obj.GetString());
+        }
+        #endregion
 
         /// <summary>
         /// Called when the main window is set in order to set the storyboard object variable
@@ -101,6 +138,7 @@ namespace Dashboard.net.Element_Controllers
             storyboard = (Storyboard)master._MainWindow.FindResource("animate_caution");
         }
 
+        #region Basic start stop execute functions
         /// <summary>
         /// Begins to display the warnings.
         /// </summary>
@@ -164,7 +202,9 @@ namespace Dashboard.net.Element_Controllers
 
             WarningMessage = WarningList.ElementAt(counter);
         }
+        #endregion
 
+        #region Start stop methods
         /// <summary>
         /// Sets a warning with the given text to run on the warning system.
         /// If multiple warnings are occurring at once, the text will slide by.
@@ -209,6 +249,7 @@ namespace Dashboard.net.Element_Controllers
                 WarningMessage = WarningList.ElementAt(0);
             }
         }
+        #endregion
 
         /// <summary>
         /// Refreshes the necessary elements that do not auto-refresh
