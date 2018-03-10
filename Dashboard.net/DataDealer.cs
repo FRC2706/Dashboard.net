@@ -168,6 +168,7 @@ namespace Dashboard.net
         {
             Hashtable goodData = new Hashtable();
             Hashtable data = (Hashtable)ReadData()[CAUTIONERKEY];
+            if (data == null) return null;
 
             goodData[Cautioner.ENABLEDKEY] = data[Cautioner.ENABLEDKEY];
             goodData[Cautioner.IGNOREKEY] = ((JArray)data[Cautioner.IGNOREKEY]).ToObject<ObservableCollection<string>>();

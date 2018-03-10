@@ -42,3 +42,47 @@ D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.e
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.application
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.exe
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.pdb
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Dashboard.net.exe.config
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Dashboard.net.exe.manifest
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Dashboard.net.application
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Dashboard.net.exe
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Dashboard.net.pdb
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\FRC.NetworkTables.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\ListViewDragDropManager.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Microsoft.Expression.Drawing.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\MjpegProcessor.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\NativeLibraryUtilities.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Newtonsoft.Json.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Nito.AsyncEx.Context.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Nito.AsyncEx.Coordination.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Nito.AsyncEx.Tasks.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Nito.Collections.Deque.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Nito.Disposables.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\FRC.NetworkTables.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\NativeLibraryUtilities.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Newtonsoft.Json.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Nito.AsyncEx.Context.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Nito.AsyncEx.Coordination.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Nito.AsyncEx.Tasks.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Nito.Collections.Deque.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Release\Nito.Disposables.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.csprojResolveAssemblyReference.cache
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Camera\CameraNewWindow.g.cs
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Checklist\ChecklistEditor.g.cs
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\MainWindow.g.cs
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\App.g.cs
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\GeneratedInternalTypeHelper.g.cs
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net_MarkupCompile.cache
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net_MarkupCompile.lref
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Camera\CameraNewWindow.baml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Checklist\ChecklistEditor.baml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\MainWindow.baml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.g.resources
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.Properties.Resources.resources
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.csproj.GenerateResource.Cache
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.csproj.CoreCompileInputs.cache
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.TrustInfo.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.exe.manifest
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.application
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.exe
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.pdb
