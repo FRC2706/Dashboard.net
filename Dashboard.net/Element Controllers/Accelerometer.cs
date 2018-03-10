@@ -6,7 +6,8 @@ namespace Dashboard.net.Element_Controllers
 {
     public class Accelerometer : Controller, INotifyPropertyChanged
     {
-        public static readonly string VELOCITYKEY = "SmartDashboard/velocity";
+        public static readonly string RIGHTSPEEDKEY = "SmartDashboard/Right Speed (RPM)";
+        public static readonly string LEFTSPEEDKEY = "SmartDashboard/Left Speed (RPM)";
         public static readonly double MAXVELOCITY = 100;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -22,19 +23,20 @@ namespace Dashboard.net.Element_Controllers
         }
 
         /// <summary>
-        /// The robot's velocity, as recorded by the networktables
+        /// The robot's velocity, as recorded by the networktables in rates per minute
         /// </summary>
         public double Velocity
         {
             get
             {
-                return master._Dashboard_NT.GetDouble(VELOCITYKEY);
+                return (master._Dashboard_NT.GetDouble(RIGHTSPEEDKEY) + master._Dashboard_NT.GetDouble(LEFTSPEEDKEY)) /2;
             }
         }
 
         public Accelerometer(Master controller) : base(controller)
         {
-            master._Dashboard_NT.AddKeyListener(VELOCITYKEY, OnKeyChange);
+            master._Dashboard_NT.AddKeyListener(LEFTSPEEDKEY, OnKeyChange);
+            master._Dashboard_NT.AddKeyListener(RIGHTSPEEDKEY, OnKeyChange);
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace Dashboard.net.Element_Controllers
     public class Lift : Controller, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private static readonly string LIFTHEIGHTPATH = "SmartDashboard/lift_height";
+        private static readonly string LIFTHEIGHTPATH = "SmartDashboard/Lift Distance";
 
 
         private Slider heightSlider;
@@ -19,7 +19,7 @@ namespace Dashboard.net.Element_Controllers
         /// <summary>
         /// The highest height that the lift goes to.
         /// </summary>
-        private static readonly double MAXHEIGHT = 10.0;
+        private static readonly double MAXHEIGHT = 7.0;
 
         public double LiftHeight
         {

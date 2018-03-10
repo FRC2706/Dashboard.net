@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using Dashboard.net.Camera;
@@ -21,6 +22,7 @@ namespace Dashboard.net.Element_Controllers
         private readonly string PROPERTYPATH = "Property";
         public ObservableCollection<string> AvailableCameras { get; private set; } = new ObservableCollection<string>();
 
+        public RelayCommand OpenSettingsCommand;
 
         private MjpegDecoder camera;
         private Image display;
@@ -34,6 +36,18 @@ namespace Dashboard.net.Element_Controllers
             get
             {
                 return GetCameraURL(SelectedCamera);
+            }
+        }
+
+        /// <summary>
+        /// The string url of the camera settings
+        /// </summary>
+        private string CameraSettingsURL
+        {
+            get
+            {
+                string url = CameraURL;
+                return (!string.IsNullOrEmpty(url)) ? url.Substring(0, url.LastIndexOf('/')) : null;
             }
         }
 
@@ -90,6 +104,7 @@ namespace Dashboard.net.Element_Controllers
                 CanExecuteDeterminer = () => true,
                 FunctionToExecute = ShowInNewWindow
             };
+
 
         }
 
@@ -170,6 +185,7 @@ namespace Dashboard.net.Element_Controllers
 
         private string GetCameraURL(string selection)
         {
+            if (string.IsNullOrEmpty(selection)) return null;
             // Format url for camera
             string pathToCameraURL = string.Format("{0}/{1}/{2}", CAMERAPATH, selection, URLPATH);
 
@@ -216,6 +232,15 @@ namespace Dashboard.net.Element_Controllers
         {
             if (OtherWindow == null) OtherWindow = new CameraNewWindow(camera);
             OtherWindow.Show();
+        }
+
+        /// <summary>
+        /// Opens the settings page for the current camera.
+        /// </summary>
+        private void OpenCameraSettings()
+        {
+            string settingsURL = CameraSettingsURL;
+            if (!string.IsNullOrEmpty(settingsURL)) Process.Start(settingsURL);
         }
     }
 }
