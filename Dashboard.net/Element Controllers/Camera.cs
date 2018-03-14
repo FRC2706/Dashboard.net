@@ -22,11 +22,29 @@ namespace Dashboard.net.Element_Controllers
         private readonly string PROPERTYPATH = "Property";
         public ObservableCollection<string> AvailableCameras { get; private set; } = new ObservableCollection<string>();
 
-        public RelayCommand OpenSettingsCommand;
+        public RelayCommand OpenSettingsCommand { get; private set; }
 
         private MjpegDecoder camera;
         private Image display;
         private ComboBox cameraSelector;
+
+        private bool isStreaming;
+        /// <summary>
+        /// Whether or not the camera is currently streaming the image from the robot.
+        /// </summary>
+        public bool IsStreaming
+        {
+            get
+            {
+                return isStreaming;
+            }
+            set
+            {
+                isStreaming = value;
+                // Tell the command to open settings to refresh itself.
+                OpenSettingsCommand.RaiseCanExecuteChanged();
+            }
+        }
 
         /// <summary>
         /// The streaming URL of the selected camera
@@ -105,7 +123,11 @@ namespace Dashboard.net.Element_Controllers
                 FunctionToExecute = ShowInNewWindow
             };
 
-
+            OpenSettingsCommand = new RelayCommand()
+            {
+                CanExecuteDeterminer = () => IsStreaming,
+                FunctionToExecute = (object parameter) => OpenCameraSettings()
+            };
         }
 
         /// <summary>
@@ -115,6 +137,7 @@ namespace Dashboard.net.Element_Controllers
         /// <param name="e"></param>
         private void Camera_Error(object sender, ErrorEventArgs e)
         {
+            IsStreaming = false;
             StartCamera();
         }
 
@@ -141,7 +164,7 @@ namespace Dashboard.net.Element_Controllers
             else
             {
                 AvailableCameras.Clear();
-                camera.StopStream();
+                StopCamera();
             }
         }
 
@@ -210,6 +233,16 @@ namespace Dashboard.net.Element_Controllers
             string url = CameraURL;
             if (string.IsNullOrEmpty(url)) return;
             await Task.Run(() => StartCameraAsync(url));
+            IsStreaming = true;
+        }
+
+        /// <summary>
+        /// Stops the camera stream 
+        /// </summary>
+        private void StopCamera()
+        {
+            camera.StopStream();
+            IsStreaming = false;
         }
 
         private async Task StartCameraAsync(string url)

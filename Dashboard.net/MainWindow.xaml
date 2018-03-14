@@ -33,8 +33,8 @@
                 <local:Master/>
             </Grid.DataContext>
             <Image x:Name="CameraBox" Margin="10,0,2,0" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1"/>
-            <Menu HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF6E00FF" Foreground="White" Height="18" Width="56">
-                <MenuItem Header="Overflow" Foreground="White">
+            <Menu HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF663399" Foreground="White" Height="18" Width="79">
+                <MenuItem Header="Overflow" Foreground="White" Background="#FF663399" Width="79">
                     <MenuItem x:Name="Checklist" Header="Checklist" Command="{Binding ChecklistHandler.OpenChecklist}" Background="Black" Foreground="White"/>
                     <MenuItem x:Name="CameraNewWindow" Header="Pop out camera" Background="Black" Command="{Binding _Camera.OpenNewWindow}"/>
                     <MenuItem Header="Modify Ignore List" Background="Black">
@@ -56,7 +56,7 @@
                         FontSize="40 px" FontWeight="Light" Margin="0,-5,0,0" Width="72" TextAlignment="Center"/>
                 </StackPanel>
             </Grid>
-            <Button x:Name="ConnectButton" Content="{Binding _ConnectionUI.ConnectButtonLabel}" HorizontalAlignment="Left" Height="23" Margin="164,-1,0,0" VerticalAlignment="Top" Width="70" Background="{Binding _ConnectionUI.ConnectButtonColour}" Foreground="White" Command="{Binding _ConnectionUI.OnConnect}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}" Grid.Column="2"/>
+            <Button x:Name="ConnectButton" Content="{Binding _ConnectionUI.ConnectButtonLabel}" HorizontalAlignment="Left" Height="23" Margin="164,-1,0,0" VerticalAlignment="Top" Width="70" Background="{Binding _ConnectionUI.ConnectButtonColour}" Foreground="White" Command="{Binding _ConnectionUI.OnConnect}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}" Grid.Column="2" BorderBrush="{x:Null}"/>
             <TextBox x:Name="ConnectAddressBox" HorizontalAlignment="Left" Height="23" Margin="27,-1,0,0" TextWrapping="Wrap" Text="roboRIO-2706-FRC.local" VerticalAlignment="Top" Width="137" FontSize="10" Grid.Column="2">
                 <TextBox.InputBindings>
                     <KeyBinding Key="Return" Command="{Binding _ConnectionUI.OnConnect}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}"/>
@@ -81,11 +81,11 @@
             <RadioButton x:Name="Center_Select" Content="Center" HorizontalAlignment="Left" Height="15" Margin="10,17,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Foreground="White" BorderBrush="White" Background="Black"/>
             <RadioButton x:Name="Right_Select" Content="Right" HorizontalAlignment="Left" Height="15" Margin="10,32,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Background="Black" BorderBrush="White" Foreground="White"/>
             <RadioButton x:Name="Left_Select" Content="Left" HorizontalAlignment="Left" Height="15" Margin="10,0,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Background="Black" BorderBrush="White" Foreground="White"/>
-            <TextBlock x:Name="Timer" Margin="60,0,0,10" TextWrapping="Wrap" Text="{Binding _Timer.Time, Mode=OneWay}" FontSize="48" TextAlignment="Center" Foreground="#FF6E00FF" FontWeight="Bold"/>
+            <TextBlock x:Name="Timer" Margin="60,0,0,10" TextWrapping="Wrap" Text="{Binding _Timer.Time, Mode=OneWay}" FontSize="48" TextAlignment="Center" Foreground="#FF663399" FontWeight="Bold"/>
             <Slider x:Name="LiftDiagram" HorizontalAlignment="Left" Height="217" Margin="206,3,0,0" Grid.Row="1" VerticalAlignment="Top" Width="28" Orientation="Vertical" Background="{x:Null}" BorderBrush="{x:Null}" Maximum="100" Value="{Binding _Lift.SliderValue, Mode=OneWay}" IsEnabled="False" Grid.Column="2"/>
             <TextBlock x:Name="NetworkUsageBox" Grid.Column="3" HorizontalAlignment="Left" Height="26" Margin="109,0,0,0" TextWrapping="Wrap" Text="{Binding _Monitor.Display, Mode=OneWay}" VerticalAlignment="Top" Width="60" Foreground="White" Visibility="Hidden"/>
             <ComboBox x:Name="CameraSelector" Grid.Column="1" Margin="5,-3,5,33" ItemsSource="{Binding _Camera.AvailableCameras}"/>
-            <Button x:Name="CameraSettings" Grid.Column="2" HorizontalAlignment="Left" Height="25" Margin="166,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="40" Content="Settings" Background="White"/>
+            <Button x:Name="CameraSettings" Grid.Column="2" HorizontalAlignment="Left" Height="25" Margin="149,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="57" Content="Settings" Background="{x:Null}" Command="{Binding _Camera.OpenSettingsCommand, Mode=OneWay}" BorderBrush="{x:Null}" FontWeight="Bold" Foreground="#FF663399"/>
 
         </Grid>
     </Viewbox>

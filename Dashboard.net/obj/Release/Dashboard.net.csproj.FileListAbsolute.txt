@@ -131,3 +131,4 @@ C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\R
 C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Release\Dashboard.net.csproj.CopyComplete
 C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Release\Dashboard.net.exe
 C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Release\Dashboard.net.pdb
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Release\Dashboard.net.csproj.CopyComplete

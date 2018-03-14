@@ -200,12 +200,27 @@ namespace Dashboard.net.Element_Controllers
             if (obj == null || obj.Type != NtType.String) return;
             SetWarning(obj.GetString());
         }
+
+        /// <summary>
+        /// Set to true if the dashboard updates the CurrentWarnings string array in networktables.
+        /// </summary>
+        private bool justUpdatedWarningArray;
         /// <summary>
         /// Updates the networktables warning array every time a warning is added or removed.
         /// </summary>
         private void UpdateNTArray()
         {
-            master._Dashboard_NT.SetStringArray(NTCURRENTWARNINGS, WarningList.ToArray<string>());
+            // If it was the dashboard that did the change, don't keep changing it and calling this method over and over.
+            if (justUpdatedWarningArray)
+            {
+                justUpdatedWarningArray = false;
+                return;
+            }
+            else
+            {
+                master._Dashboard_NT.SetStringArray(NTCURRENTWARNINGS, WarningList.ToArray<string>());
+                justUpdatedWarningArray = true;
+            }
         }
         #endregion
 
