@@ -3,24 +3,70 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
         xmlns:local="clr-namespace:Dashboard.net"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" ResizeMode="CanResizeWithGrip">
-    <Viewbox Stretch="Uniform">
-        <Grid x:Name="Grid" Height="277" Width="443">
+        Title="2706 Dashboard.Net" Height="350" Width="846.024" ResizeMode="CanResizeWithGrip" Background="Black" FontFamily="Century Gothic" Icon="Icons/2706.ico" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <local:ValueConverter x:Key="ValueConverter"/>
+        <Storyboard x:Key="animate_caution" x:Name="animate_caution">
+            <DoubleAnimation From="1.0" To="0.5" Duration="0:0:0.25" AutoReverse="True" RepeatBehavior="Forever" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Master_Caution"/>
+        </Storyboard>
+    </Window.Resources>
+    <Viewbox Stretch="Uniform" Margin="5">
+        <Grid x:Name="Grid" Height="278" Width="798" Background="Black">
             <Grid.Resources>
                 <local:ValueConverter x:Key="ValueConverter"></local:ValueConverter>
             </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="29*"/>
+                <RowDefinition Height="110*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="276*"/>
+                <ColumnDefinition Width="117*"/>
+                <ColumnDefinition Width="236*"/>
+                <ColumnDefinition Width="169*"/>
+            </Grid.ColumnDefinitions>
             <Grid.DataContext>
                 <local:Master/>
             </Grid.DataContext>
-            <Button x:Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" Height="23" Margin="363,10,0,0" VerticalAlignment="Top" Width="70" Background="#FF6E00FF" Foreground="White" Command="{Binding _Dashboard_NT.OnConnect, Mode=OneWay}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}"/>
-            <TextBox x:Name="ConnectAddressBox" HorizontalAlignment="Left" Height="23" Margin="247,10,0,0" TextWrapping="Wrap" Text="roboRIO-2706-FRC.local" VerticalAlignment="Top" Width="116" FontSize="10"/>
-            <TextBlock x:Name="StatusBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding _Dashboard_NT.StatusMessage, Mode=OneWay, TargetNullValue=UNKNOWN, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="133,10,0,0" Height="19" Width="85" TextAlignment="Center">
+            <Image x:Name="CameraBox" Margin="10,0,2,0" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1"/>
+            <Menu HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF663399" Foreground="White" Height="18" Width="79">
+                <MenuItem Header="Overflow" Foreground="White" Background="#FF663399" Width="79">
+                    <MenuItem x:Name="Checklist" Header="Checklist" Command="{Binding ChecklistHandler.OpenChecklist}" Background="Black" Foreground="White"/>
+                    <MenuItem x:Name="CameraNewWindow" Header="Pop out camera" Background="Black" Command="{Binding _Camera.OpenNewWindow}"/>
+                    <MenuItem Header="Modify Ignore List" Background="Black">
+                        <ListView x:Name="IgnoreListViewer" ItemsSource="{Binding _Cautioner.IgnoreList}" />
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+            <Grid x:Name="SpeedometerZone" Grid.Row="1" Margin="10,40,120,55">
+                <Grid Margin="0">
+                    <ed:Arc StartAngle="-120" EndAngle="120" Stretch="None" StrokeThickness="13"      
+                    StrokeDashArray=".25" Stroke="#FF484D5F"/>
+                    <ed:Arc StartAngle="-120" EndAngle="{Binding _Accelerometer.Degrees, Mode=OneWay}" Stretch="None" StrokeThickness="13"
+                    StrokeDashArray=".25" Stroke="Turquoise"/>
+                </Grid>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="37,40,37,27" Width="72">
+                    <TextBlock Text="RPM" Foreground="#FF878A9F" HorizontalAlignment="Center"
+                        FontSize="12"/>
+                    <TextBlock Text="{Binding _Accelerometer.Velocity, Mode=OneWay}" Foreground="White" HorizontalAlignment="Center"
+                        FontSize="40 px" FontWeight="Light" Margin="0,-5,0,0" Width="72" TextAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+            <Button x:Name="ConnectButton" Content="{Binding _ConnectionUI.ConnectButtonLabel}" HorizontalAlignment="Left" Height="23" Margin="164,-1,0,0" VerticalAlignment="Top" Width="70" Background="{Binding _ConnectionUI.ConnectButtonColour}" Foreground="White" Command="{Binding _ConnectionUI.OnConnect}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}" Grid.Column="2" BorderBrush="{x:Null}"/>
+            <TextBox x:Name="ConnectAddressBox" HorizontalAlignment="Left" Height="23" Margin="27,-1,0,0" TextWrapping="Wrap" Text="roboRIO-2706-FRC.local" VerticalAlignment="Top" Width="137" FontSize="10" Grid.Column="2">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Return" Command="{Binding _ConnectionUI.OnConnect}" CommandParameter="{Binding Text, ElementName=ConnectAddressBox}"/>
+                </TextBox.InputBindings>
+            </TextBox>
+            <TextBlock x:Name="StatusBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding _ConnectionUI.StatusMessage, TargetNullValue=UNKNOWN}" VerticalAlignment="Top" Margin="29,27,0,0" Height="29" Width="197" TextAlignment="Center" Grid.Column="2" FontSize="20" Foreground="{Binding _ConnectionUI.StatusBoxColour}">
                 <TextBlock.Style>
                     <Style>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding _Dashboard_NT.IsConnected, Converter={StaticResource ValueConverter} , UpdateSourceTrigger=PropertyChanged}" Value="True">
+                            <DataTrigger Binding="{Binding _Dashboard_NT.IsConnected, Converter={StaticResource ValueConverter}, UpdateSourceTrigger=PropertyChanged}" Value="True">
                                 <Setter Property="TextBlock.Foreground" Value="Green"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding _Dashboard_NT.IsConnected, Converter={StaticResource ValueConverter}, UpdateSourceTrigger=PropertyChanged}" Value="False">
@@ -30,10 +76,16 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-            <ListBox x:Name="AutoList" HorizontalAlignment="Left" Height="135" Margin="338,132,0,0" VerticalAlignment="Top" Width="95" ItemsSource="{Binding _AutoSelector.AutoModes.Values}"/>
-            <RadioButton x:Name="Center_Select" Content="Center" HorizontalAlignment="Left" Height="15" Margin="196,190,0,0" VerticalAlignment="Top" Width="88" GroupName="side"/>
-            <RadioButton x:Name="Right_Select" Content="Right" HorizontalAlignment="Left" Height="15" Margin="196,210,0,0" VerticalAlignment="Top" Width="88" GroupName="side"/>
-            <RadioButton x:Name="Left_Select" Content="Left" HorizontalAlignment="Left" Height="15" Margin="196,170,0,0" VerticalAlignment="Top" Width="88" GroupName="side"/>
+            <Button x:Name="Master_Caution" Background="Yellow" Content="{Binding _Cautioner.WarningMessage}" FontSize="20" Grid.Row="1" Margin="0,0,5,185" Foreground="Black" FontWeight="Bold" BorderBrush="{x:Null}" Visibility="{Binding _Cautioner.IsWarning, Converter={StaticResource BoolToVis}}" Command="{Binding _Cautioner.CautionerClicked}"/>
+            <ListView x:Name="AutoList" Margin="0" ItemsSource="{Binding _AutoSelector.AutoModes, Mode=Default}" DisplayMemberPath="Item2" AllowDrop="True" Grid.Column="3" Grid.Row="1" FontSize="10"/>
+            <RadioButton x:Name="Center_Select" Content="Center" HorizontalAlignment="Left" Height="15" Margin="10,17,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Foreground="White" BorderBrush="White" Background="Black"/>
+            <RadioButton x:Name="Right_Select" Content="Right" HorizontalAlignment="Left" Height="15" Margin="10,32,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Background="Black" BorderBrush="White" Foreground="White"/>
+            <RadioButton x:Name="Left_Select" Content="Left" HorizontalAlignment="Left" Height="15" Margin="10,0,0,0" VerticalAlignment="Top" Width="88" GroupName="side" Grid.Column="3" Background="Black" BorderBrush="White" Foreground="White"/>
+            <TextBlock x:Name="Timer" Margin="60,0,0,10" TextWrapping="Wrap" Text="{Binding _Timer.Time, Mode=OneWay}" FontSize="48" TextAlignment="Center" Foreground="#FF663399" FontWeight="Bold"/>
+            <Slider x:Name="LiftDiagram" HorizontalAlignment="Left" Height="217" Margin="206,3,0,0" Grid.Row="1" VerticalAlignment="Top" Width="28" Orientation="Vertical" Background="{x:Null}" BorderBrush="{x:Null}" Maximum="100" Value="{Binding _Lift.SliderValue, Mode=OneWay}" IsEnabled="False" Grid.Column="2"/>
+            <TextBlock x:Name="NetworkUsageBox" Grid.Column="3" HorizontalAlignment="Left" Height="26" Margin="109,0,0,0" TextWrapping="Wrap" Text="{Binding _Monitor.Display, Mode=OneWay}" VerticalAlignment="Top" Width="60" Foreground="White" Visibility="Hidden"/>
+            <ComboBox x:Name="CameraSelector" Grid.Column="1" Margin="5,-3,5,33" ItemsSource="{Binding _Camera.AvailableCameras}"/>
+            <Button x:Name="CameraSettings" Grid.Column="2" HorizontalAlignment="Left" Height="25" Margin="149,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="57" Content="Settings" Background="{x:Null}" Command="{Binding _Camera.OpenSettingsCommand, Mode=OneWay}" BorderBrush="{x:Null}" FontWeight="Bold" Foreground="#FF663399"/>
 
         </Grid>
     </Viewbox>

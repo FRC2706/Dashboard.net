@@ -82,3 +82,107 @@ D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.pdb
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\GeneratedInternalTypeHelper.g.cs
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Newtonsoft.Json.dll
 D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Newtonsoft.Json.xml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\ListViewDragDropManager.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Microsoft.Expression.Drawing.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.exe.manifest
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.application
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.TrustInfo.xml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.exe.manifest
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.application
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\NativeLibraryUtilities.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\NativeLibraryUtilities.xml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Checklist\ChecklistEditor.g.cs
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Checklist\ChecklistEditor.baml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\bin\Debug\MjpegProcessor.dll
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Camera\CameraNewWindow.g.cs
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Camera\CameraNewWindow.baml
+D:\Programming\Team 2706\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csproj.CopyComplete
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.exe.config
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.exe.manifest
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.application
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.exe
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Dashboard.net.pdb
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\FRC.NetworkTables.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\ListViewDragDropManager.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Microsoft.Expression.Drawing.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\MjpegProcessor.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\NativeLibraryUtilities.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Newtonsoft.Json.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Context.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Coordination.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Tasks.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.Collections.Deque.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.Disposables.dll
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\FRC.NetworkTables.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\NativeLibraryUtilities.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Newtonsoft.Json.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Context.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Coordination.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.AsyncEx.Tasks.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.Collections.Deque.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\bin\Debug\Nito.Disposables.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csprojResolveAssemblyReference.cache
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Camera\CameraNewWindow.g.cs
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Checklist\ChecklistEditor.g.cs
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\MainWindow.g.cs
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\App.g.cs
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\GeneratedInternalTypeHelper.g.cs
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net_MarkupCompile.cache
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net_MarkupCompile.lref
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Camera\CameraNewWindow.baml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Checklist\ChecklistEditor.baml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\MainWindow.baml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.g.resources
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.Properties.Resources.resources
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csproj.GenerateResource.Cache
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.csproj.CoreCompileInputs.cache
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.TrustInfo.xml
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.exe.manifest
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.application
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.exe
+E:\AUE Mic SD\Programming\Team 2706\Dashboard.net\Dashboard.net\Dashboard.net\obj\Debug\Dashboard.net.pdb
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Dashboard.net.exe.config
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Dashboard.net.exe.manifest
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Dashboard.net.application
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Dashboard.net.exe
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Dashboard.net.pdb
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\FRC.NetworkTables.dll
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\ListViewDragDropManager.dll
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Microsoft.Expression.Drawing.dll
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\MjpegProcessor.dll
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\NativeLibraryUtilities.dll
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Newtonsoft.Json.dll
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Nito.AsyncEx.Context.dll
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Nito.AsyncEx.Coordination.dll
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Nito.AsyncEx.Tasks.dll
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Nito.Collections.Deque.dll
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Nito.Disposables.dll
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\FRC.NetworkTables.xml
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\NativeLibraryUtilities.xml
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Newtonsoft.Json.xml
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Nito.AsyncEx.Context.xml
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Nito.AsyncEx.Coordination.xml
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Nito.AsyncEx.Tasks.xml
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Nito.Collections.Deque.xml
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\bin\Debug\Nito.Disposables.xml
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Dashboard.net.csprojResolveAssemblyReference.cache
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Camera\CameraNewWindow.g.cs
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Checklist\ChecklistEditor.g.cs
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\MainWindow.g.cs
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\App.g.cs
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Dashboard.net_MarkupCompile.cache
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Dashboard.net_MarkupCompile.lref
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Camera\CameraNewWindow.baml
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Checklist\ChecklistEditor.baml
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\MainWindow.baml
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Dashboard.net.g.resources
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Dashboard.net.Properties.Resources.resources
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Dashboard.net.csproj.GenerateResource.cache
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Dashboard.net.csproj.CoreCompileInputs.cache
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Dashboard.net.TrustInfo.xml
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Dashboard.net.exe.manifest
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Dashboard.net.application
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Dashboard.net.csproj.CopyComplete
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Dashboard.net.exe
+C:\Users\kylek\Desktop\Development\Dashboard.net-Development\Dashboard.net\obj\Debug\Dashboard.net.pdb
