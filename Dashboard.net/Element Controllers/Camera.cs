@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using Dashboard.net.Camera;
 using MjpegProcessor;
 using NetworkTables;
@@ -17,9 +18,7 @@ namespace Dashboard.net.Element_Controllers
     public class Camera : Controller
     {
 
-        private readonly string CAMERAPATH = "CameraPublisher";
-        private readonly string URLPATH = "streams";
-        private readonly string PROPERTYPATH = "Property";
+        private readonly string CAMERAPATH = "CameraPublisher", URLPATH = "streams", PROPERTYPATH = "Property";
         public ObservableCollection<string> AvailableCameras { get; private set; } = new ObservableCollection<string>();
 
         public RelayCommand OpenSettingsCommand { get; private set; }
@@ -88,15 +87,6 @@ namespace Dashboard.net.Element_Controllers
             }
         }
 
-        private Dictionary<string, Value> CameraProperties
-        {
-            get
-            {
-                return null;
-                //return GetCameraProperties(); TODO fix
-            }
-        }
-
         /// <summary>
         /// The relaycommand that shows the feed in a new window.
         /// </summary>
@@ -106,6 +96,13 @@ namespace Dashboard.net.Element_Controllers
         /// The other window with the camera feed in it.
         /// </summary>
         private CameraNewWindow OtherWindow { get; set; }
+        private bool IsShowingOtherWindow
+        {
+            get
+            {
+                return OtherWindow != null && OtherWindow.IsActive; // TODO also check that the window isn't closed.
+            }
+        }
 
         public Camera(Master controller) : base(controller)
         {
@@ -125,7 +122,7 @@ namespace Dashboard.net.Element_Controllers
 
             OpenSettingsCommand = new RelayCommand()
             {
-                CanExecuteDeterminer = () => IsStreaming,
+                CanExecuteDeterminer = () => true,
                 FunctionToExecute = (object parameter) => OpenCameraSettings()
             };
         }
@@ -157,8 +154,6 @@ namespace Dashboard.net.Element_Controllers
                 
                 // If we only have one camera, select it.
                 if (AvailableCameras.Count == 1) cameraSelector.SelectedIndex = 0;
-
-                GetCameraProperties();
             }
             // If not connected, disconnect the camera
             else
@@ -180,17 +175,6 @@ namespace Dashboard.net.Element_Controllers
             cameras = new ObservableCollection<string>(master._Dashboard_NT.GetSubTables(CAMERAPATH));
 
             return cameras;
-        }
-
-        /// <summary>
-        /// Gets the camera properties for the selected camera
-        /// </summary>
-        private Dictionary<string, Value> GetCameraProperties()
-        {
-            string path = CameraPropertyPath;
-            Dictionary<string, Value> properties = master._Dashboard_NT.GetAllValuesInTable(path);
-
-            return properties;
         }
 
         private void Master_MainWindowSet(object sender, EventArgs e)
@@ -255,6 +239,9 @@ namespace Dashboard.net.Element_Controllers
         {
             // Set the camera source.
             display.Source = e.BitmapImage;
+
+            // Also show the image on the other window
+            if (IsShowingOtherWindow) OtherWindow.ImageStream = e.BitmapImage;
         }
 
         /// <summary>
@@ -263,8 +250,12 @@ namespace Dashboard.net.Element_Controllers
         /// <param name="parameter"></param>
         private void ShowInNewWindow(object parameter = null)
         {
-            if (OtherWindow == null) OtherWindow = new CameraNewWindow(camera);
+            // If we're not streaming, don't do anything and simply return.
+            BitmapImage image = (IsStreaming) ? camera.BitmapImage : null;
+            if (!IsShowingOtherWindow) OtherWindow = new CameraNewWindow(image);
             OtherWindow.Show();
+            OtherWindow.Focus();
+            OtherWindow.ImageStream = image;
         }
 
         /// <summary>

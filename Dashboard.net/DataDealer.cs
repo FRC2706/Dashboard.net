@@ -13,8 +13,7 @@ namespace Dashboard.net
     public class DataDealer
     {
 
-        public static readonly string CHECKLISTKEY = "checklist";
-        public static readonly string CAUTIONERKEY = "cautioner";
+        public static readonly string CHECKLISTKEY = "checklist", CAUTIONERKEY = "cautioner";
 
         /// <summary>
         /// The location of the data json file.
@@ -106,8 +105,8 @@ namespace Dashboard.net
             Newtonsoft.Json.Linq.JObject cautionerData =
                 (Newtonsoft.Json.Linq.JObject)data_hashtable[CAUTIONERKEY];
 
-            List<string> checkListDataFormatted = (checklistData != null) ?checklistData.ToObject<List<string>>() : null;
-            Hashtable cautionerDataFormatted = (cautionerData != null) ? cautionerData.ToObject<Hashtable>() : null;
+            List<string> checkListDataFormatted = checklistData?.ToObject<List<string>>();
+            Hashtable cautionerDataFormatted = cautionerData?.ToObject<Hashtable>();
 
             return new Hashtable
             {

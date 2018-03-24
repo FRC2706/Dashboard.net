@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace Dashboard.net
 {
@@ -19,6 +18,9 @@ namespace Dashboard.net
             // Set width and height based on screen size
             Height = SystemParameters.FullPrimaryScreenHeight * 0.7;
             Width = SystemParameters.FullPrimaryScreenWidth;
+            // Set the dashboard to be at the top left of the screen
+            Left = 0;
+            Top = 0;
         }
     }
 

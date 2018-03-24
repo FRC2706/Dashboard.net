@@ -54,7 +54,7 @@ namespace Dashboard.net.Element_Controllers
             get
             {
                 BrushConverter bc = new BrushConverter();
-                return (IsConnected) ? Brushes.Red : (Brush)bc.ConvertFrom("#FF663399");
+                return (IsConnected) ? Brushes.Red : (Brush)bc.ConvertFrom("#FF6704CB");
             }
         }
 

@@ -6,8 +6,7 @@ namespace Dashboard.net.Element_Controllers
 {
     public class Accelerometer : Controller, INotifyPropertyChanged
     {
-        public static readonly string RIGHTSPEEDKEY = "SmartDashboard/Right Speed (RPM)";
-        public static readonly string LEFTSPEEDKEY = "SmartDashboard/Left Speed (RPM)";
+        public static readonly string RIGHTSPEEDKEY = "SmartDashboard/Right Speed (RPM)", LEFTSPEEDKEY = "SmartDashboard/Left Speed (RPM)";
         public static readonly double MAXVELOCITY = 100;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -29,7 +28,8 @@ namespace Dashboard.net.Element_Controllers
         {
             get
             {
-                return (master._Dashboard_NT.GetDouble(RIGHTSPEEDKEY) + master._Dashboard_NT.GetDouble(LEFTSPEEDKEY)) /2;
+                return Math.Abs(Math.Round((master._Dashboard_NT.GetDouble(RIGHTSPEEDKEY) +
+                    master._Dashboard_NT.GetDouble(LEFTSPEEDKEY)) / 2, 2));
             }
         }
 

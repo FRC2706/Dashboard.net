@@ -16,9 +16,8 @@ namespace Dashboard.net.Element_Controllers
 
 
         #region NetworkTables keys
-        private static readonly string SELECTED_SIDE_KEY = "SmartDashboard/autonomous/selected_position";
-        private static readonly string SELECTED_MODES_KEY = "SmartDashboard/autonomous/selected_modes";
-        private static readonly string POSTED_MODES_KEY = "SmartDashboard/autonomous/auto_modes";
+        private static readonly string SELECTED_SIDE_KEY = "SmartDashboard/autonomous/selected_position", 
+            SELECTED_MODES_KEY = "SmartDashboard/autonomous/selected_modes", POSTED_MODES_KEY = "SmartDashboard/autonomous/auto_modes";
         #endregion
 
         public event EventHandler<ObservableCollection<Tuple<string, string>>> AutoModesChanged;
