@@ -9,8 +9,6 @@ namespace Dashboard.net.Camera
     /// </summary>
     public partial class CameraNewWindow : Window
     {
-        private MjpegDecoder Camera;
-
         public BitmapImage ImageStream
         {
             get

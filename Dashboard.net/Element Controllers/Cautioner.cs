@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -32,6 +33,11 @@ namespace Dashboard.net.Element_Controllers
         /// The networktables location for the current warnings being displayed.
         /// </summary>
         private static readonly string NTCURRENTWARNINGS = "SmartDashboard/Warnings/CurrentWarnings";
+
+        /// <summary>
+        /// The networktables location for the status of the cube being in the robot or not.
+        /// </summary>
+        private static readonly string CUBESTATUSKEY = "SmartDashboard/cubeIn";
         #endregion
 
         #region Data file constants
@@ -59,6 +65,26 @@ namespace Dashboard.net.Element_Controllers
             {
                 _warningMessage = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("WarningMessage"));
+            }
+        }
+
+        // Brightnesses for the power cube being lit or dimmed
+        private static readonly double POWERCUBELIT = 1, POWERCUBEDIMMED = 0.3;
+        private double powerCubeBrightess = POWERCUBEDIMMED;
+        /// <summary>
+        /// The brightness of the power cube
+        /// </summary>
+        public double PowerCubeBrightness
+        {
+            get
+            {
+                return powerCubeBrightess;
+            }
+
+            private set
+            {
+                powerCubeBrightess = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PowerCubeBrightness"));
             }
         }
 
@@ -172,33 +198,52 @@ namespace Dashboard.net.Element_Controllers
             IgnoreList.CollectionChanged += Refresh;
 
             // Listen for key changes on the add and remove queues
-            master._Dashboard_NT.AddKeyListener(NTADDKEY, OnNTKeyAdded);
-            master._Dashboard_NT.AddKeyListener(NTREMOVEKEY, OnNTKeyRemoved);
+            master._Dashboard_NT.AddKeyListener(NTADDKEY, OnNTKWarningAdded);
+            master._Dashboard_NT.AddKeyListener(NTREMOVEKEY, OnNTWarningRemoved);
             // Add a listener to the currrent warnings networktable property in case another program changes it.
             master._Dashboard_NT.AddKeyListener(NTCURRENTWARNINGS, (Value value) => UpdateNTArray());
+
+            // Listen for key changes in the cubeIn boolean
+            master._Dashboard_NT.AddKeyListener(CUBESTATUSKEY, CubeStatusChanged);
+        }
+
+        private void CubeStatusChanged(Value value)
+        {
+            PowerCubeBrightness = (value != null && value.GetBoolean()) ? POWERCUBELIT : POWERCUBEDIMMED;
         }
 
         #region Networktables stuff
         /// <summary>
+        /// The warnings that were added from networktables so that the robot can only remove
+        /// warnings that it set.
+        /// </summary>
+        private List<string> NtAddedWarnings = new List<string>();
+        /// <summary>
         /// Removes the warning from the warnings queue from input from the networktables table
         /// </summary>
         /// <param name="obj"></param>
-        private void OnNTKeyRemoved(Value obj)
+        private void OnNTWarningRemoved(Value obj)
         {
             // Confirm that the object type is a string
             if (obj == null || obj.Type != NtType.String) return;
-            StopWarning(obj.GetString());
+            string warningText = obj.GetString();
+            if (!NtAddedWarnings.Contains(warningText)) return;
+
+            // Stop showing the warnings
+            StopWarning(obj.GetString(), true);
         }
 
         /// <summary>
         /// Adds a warning from the networktables Warnings subtable by listening for the key to change.
         /// </summary>
         /// <param name="obj"></param>
-        private void OnNTKeyAdded(Value obj)
+        private void OnNTKWarningAdded(Value obj)
         {
             // Confirm that the object type is a string
             if (obj == null || obj.Type != NtType.String) return;
-            SetWarning(obj.GetString());
+
+            // Begin displaying the warning
+            SetWarning(obj.GetString(), true);
         }
 
         /// <summary>
@@ -327,10 +372,12 @@ namespace Dashboard.net.Element_Controllers
         /// To stop the warning, use the StopWarning() method
         /// </summary>
         /// <param name="text">The warning message teo display</param>
-        public void SetWarning(string text)
+        public void SetWarning(string text, bool fromRobot = false)
         {
             // If it's already being warned of or it's in the ignore list, don't do anything
             if (WarningList.Contains(text) || IgnoreList.Contains(text)) return;
+            // If the warning is being sent from the robot, add it to the robot's list of warnings
+            if (fromRobot) NtAddedWarnings.Add(text);
             WarningList.Add(text);
 
             // Set the counter so that this warning is displayed next.
@@ -354,9 +401,11 @@ namespace Dashboard.net.Element_Controllers
         /// Removes the warning with the given text from the warning queue
         /// </summary>
         /// <param name="text">The texr warning to stop.</param>
-        public void StopWarning(string text)
+        public void StopWarning(string text, bool fromRobot = false)
         {
             if (WarningList.Contains(text)) WarningList.Remove(text);
+            // If the warning had been dispatched from the robot, remove it.
+            if (fromRobot && NtAddedWarnings.Contains(text)) NtAddedWarnings.Remove(text);
             
             // If we have no text to show, stop executing
             if (WarningList.Count <= 0) StopAnimation();

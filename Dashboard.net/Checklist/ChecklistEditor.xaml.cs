@@ -36,7 +36,7 @@ namespace Dashboard.net.Checklist
         /// Fired when items are removed from the checklist
         /// String list that is sent is the text of the items removed.
         /// </summary>
-        public event EventHandler<List<string>> ItemsDeleted;
+        public event EventHandler<string[]> ItemsDeleted;
 
         /// <summary>
         /// Fired when an item is checked or unchecked.
@@ -134,8 +134,9 @@ namespace Dashboard.net.Checklist
             // Make sure that there's always a default todo
             if (CheckListList.Count <= 0) CheckListList.Add(MakeCheckBoxForItem(DefaultTODO));
 
+            string[] itemsDeleted = convertedBoxes.Select(checkbox => checkbox.Content.ToString()).ToList().ToArray();
             // Fire the event.
-            ItemsDeleted?.Invoke(this, convertedBoxes.Select(checkbox => checkbox.Content.ToString()).ToList());
+            ItemsDeleted?.Invoke(this, itemsDeleted);
         }
 
         /// <summary>

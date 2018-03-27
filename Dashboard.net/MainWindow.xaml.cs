@@ -22,6 +22,14 @@ namespace Dashboard.net
             Left = 0;
             Top = 0;
         }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            // Manually shut down application
+            Application.Current.Shutdown();
+        }
     }
 
     public class ValueConverter : IValueConverter

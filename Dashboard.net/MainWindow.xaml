@@ -86,6 +86,7 @@
             <TextBlock x:Name="NetworkUsageBox" Grid.Column="3" HorizontalAlignment="Left" Height="26" Margin="109,0,0,0" TextWrapping="Wrap" Text="{Binding _Monitor.Display, Mode=OneWay}" VerticalAlignment="Top" Width="60" Foreground="White" Visibility="Hidden"/>
             <ComboBox x:Name="CameraSelector" Grid.Column="1" Margin="5,-3,5,33" ItemsSource="{Binding _Camera.AvailableCameras}"/>
             <Button x:Name="CameraSettings" Grid.Column="2" HorizontalAlignment="Left" Height="25" Margin="149,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="57" Content="Settings" Background="{x:Null}" Command="{Binding _Camera.OpenSettingsCommand, Mode=OneWay}" BorderBrush="{x:Null}" FontWeight="Bold" Foreground="#FF663399"/>
+            <Image Grid.Column="2" HorizontalAlignment="Left" Height="30" Margin="164,40,0,0" Grid.Row="1" VerticalAlignment="Top" Width="30" Source="Icons/powerCube.ico" Opacity="{Binding _Cautioner.PowerCubeBrightness, Mode=OneWay}"/>
 
         </Grid>
     </Viewbox>

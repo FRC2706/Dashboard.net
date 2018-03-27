@@ -10,13 +10,13 @@ namespace Dashboard.net.Element_Controllers
     {
         private static readonly string WARNINGMESSAGE = "Checklist Incomplete";
 
-        private ChecklistEditor ChecklistWindow;
+        private ChecklistEditor checklistWindow;
         public ChecklistEditor _ChecklistEditor
         {
             get
             {
-                if (ChecklistWindow == null) ChecklistWindow = new ChecklistEditor(master._DataFileIO);
-                return ChecklistWindow;
+                if (checklistWindow == null) checklistWindow = new ChecklistEditor(master._DataFileIO);
+                return checklistWindow;
             }
         }
 
@@ -30,6 +30,8 @@ namespace Dashboard.net.Element_Controllers
                 CanExecuteDeterminer = () => true
             };
             _ChecklistEditor.ItemToggled += _ChecklistEditor_ItemToggled;
+            _ChecklistEditor.ItemAdded += (object sender, string item) => CauseAnimation();
+            _ChecklistEditor.ItemsDeleted += (object sender, string[] items) => CauseAnimation();
 
             master._Dashboard_NT.ConnectionEvent += _Dashboard_NT_ConnectionEvent;
         }
