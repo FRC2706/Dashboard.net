@@ -1,13 +1,12 @@
-Dashboard.net/bin/Debug/data.json
-
+*/data.json
 .vs/
 
 
 Dashboard.net/bin/*
 !Dashboard.net/bin/Release/
 
-Dashboard Setup/bin/*
-!Dashboard Setup/bin/Release/
+Dashboard Setup/Debug/
+!Dashboard Setup/Release/
 
 Dashboard.net/obj/
 

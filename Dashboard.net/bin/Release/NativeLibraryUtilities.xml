@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NativeLibraryUtilities</name>
+    </assembly>
+    <members>
+        <member name="T:NativeLibraryUtilities.EmbeddedLibraryLoader">
+            <summary>
+             Library loader for embedded devices
+             </summary>
+        </member>
+        <member name="P:NativeLibraryUtilities.EmbeddedLibraryLoader.NativeLibraryHandle">
+            <inheritdoc/>
+        </member>
+        <member name="M:NativeLibraryUtilities.EmbeddedLibraryLoader.NativeLibraryUtilities#ILibraryLoader#LoadLibrary(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NativeLibraryUtilities.EmbeddedLibraryLoader.NativeLibraryUtilities#ILibraryLoader#GetProcAddress(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NativeLibraryUtilities.EmbeddedLibraryLoader.NativeLibraryUtilities#ILibraryLoader#UnloadLibrary">
+            <inheritdoc/>
+        </member>
+        <member name="T:NativeLibraryUtilities.ILibraryInformation">
+            <summary>
+            Interface for getting information about a loaded native library.
+            </summary>
+        </member>
+        <member name="P:NativeLibraryUtilities.ILibraryInformation.LibraryLoader">
+            <summary>
+            The LibraryLoader used to load this library
+            </summary>
+        </member>
+        <member name="P:NativeLibraryUtilities.ILibraryInformation.LibraryLocation">
+            <summary>
+            The location on disk of the native library
+            </summary>
+        </member>
+        <member name="P:NativeLibraryUtilities.ILibraryInformation.OsType">
+            <summary>
+            The OS Type of the loaded system.
+            </summary>
+        </member>
+        <member name="P:NativeLibraryUtilities.ILibraryInformation.UsingTempFile">
+            <summary>
+            Gets if the native library was extracted to the temp directory
+            </summary>
+        </member>
+        <member name="T:NativeLibraryUtilities.ILibraryLoader">
+            <summary>
+            Interface for platform specific native interface to the library
+            </summary>
+        </member>
+        <member name="P:NativeLibraryUtilities.ILibraryLoader.NativeLibraryHandle">
+            <summary>
+            Gets the native library handle for the library
+            </summary>
+        </member>
+        <member name="M:NativeLibraryUtilities.ILibraryLoader.LoadLibrary(System.String)">
+            <summary>
+            Loads the library from the specified file name
+            </summary>
+            <param name="filename"></param>
+        </member>
+        <member name="M:NativeLibraryUtilities.ILibraryLoader.GetProcAddress(System.String)">
+            <summary>
+            Gets the address of a specific entry point in the native library
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NativeLibraryUtilities.ILibraryLoader.UnloadLibrary">
+            <summary>
+            Unloads the native library
+            </summary>
+        </member>
+        <member name="T:NativeLibraryUtilities.LinuxLibraryLoader">
+            <summary>
+            This class handles native libraries on Linux
+            </summary>
+        </member>
+        <member name="P:NativeLibraryUtilities.LinuxLibraryLoader.NativeLibraryHandle">
+            <inheritdoc/>
+        </member>
+        <member name="M:NativeLibraryUtilities.LinuxLibraryLoader.NativeLibraryUtilities#ILibraryLoader#LoadLibrary(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NativeLibraryUtilities.LinuxLibraryLoader.NativeLibraryUtilities#ILibraryLoader#GetProcAddress(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NativeLibraryUtilities.LinuxLibraryLoader.NativeLibraryUtilities#ILibraryLoader#UnloadLibrary">
+            <inheritdoc/>
+        </member>
+        <member name="T:NativeLibraryUtilities.MacOsLibraryLoader">
+            <summary>
+            This class handles native libraries on Mac OS
+            </summary>
+        </member>
+        <member name="P:NativeLibraryUtilities.MacOsLibraryLoader.NativeLibraryHandle">
+            <inheritdoc/>
+        </member>
+        <member name="T:NativeLibraryUtilities.NativeDelegateAttribute">
+            <summary>
+            Specifies that the attributed field should be considered a target for native initialization 
+            </summary>
+        </member>
+        <member name="P:NativeLibraryUtilities.NativeDelegateAttribute.NativeName">
+            <summary>
+            Gets the native name for this field if set.
+            </summary>
+        </member>
+        <member name="M:NativeLibraryUtilities.NativeDelegateAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:NativeLibraryUtilities.NativeDelegateAttribute"/>, 
+            using the name of the field as the native name.
+            </summary>
+        </member>
+        <member name="M:NativeLibraryUtilities.NativeDelegateAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:NativeLibraryUtilities.NativeDelegateAttribute"/>,
+            with the name of the native method passed in.
+            </summary>
+            <param name="nativeName"></param>
+        </member>
+        <member name="T:NativeLibraryUtilities.NativeDelegateInitializer">
+            <summary>
+            This class contains methods to initialize delegates 
+            </summary>
+        </member>
+        <member name="M:NativeLibraryUtilities.NativeDelegateInitializer.SetupNativeDelegate(NativeLibraryUtilities.ILibraryInformation,System.String,System.Type)">
+            <summary>
+            Loads and setups a native delegate.
+            </summary>
+            <param name="library">The library to load from</param>
+            <param name="nativeName">The native function name to load</param>
+            <param name="delegateType">The type of delegate to create</param>
+            <returns>A delegate that will call the native function</returns>
+        </member>
+        <member name="M:NativeLibraryUtilities.NativeDelegateInitializer.SetupNativeDelegates``1(NativeLibraryUtilities.ILibraryInformation)">
+            <summary>
+            Sets up all native delegate in the type passed as the generic parameter
+            </summary>
+            <typeparam name="T">The type to setup the native delegates in</typeparam>
+            <param name="library">The object containing the native library to load from</param>
+        </member>
+        <member name="M:NativeLibraryUtilities.NativeDelegateInitializer.GetNativeDelegateList``1">
+            <summary>
+            Gets a list of all all native delegates in the type passed as the generic parameter
+            </summary>
+            <typeparam name="T">The type to setup the native delegates in</typeparam>
+            <returns>A list of all native delegates that are being requested</returns>
+        </member>
+        <member name="M:NativeLibraryUtilities.NativeDelegateInitializer.GetNativeDelegateList(System.Type)">
+            <summary>
+            Gets a list of all all native delegates in the type passed as the generic parameter
+            </summary>
+            <param name="type">The type to setup the native delegates in</param>
+            <returns>A list of all native delegates that are being requested</returns>
+        </member>
+        <member name="T:NativeLibraryUtilities.NativeLibraryLoader">
+            <summary>
+            This class handles loading of a native library
+            </summary>
+        </member>
+        <member name="P:NativeLibraryUtilities.NativeLibraryLoader.LibraryLoader">
+            <inheritdoc/>
+        </member>
+        <member name="P:NativeLibraryUtilities.NativeLibraryLoader.OsType">
+            <inheritdoc/>
+        </member>
+        <member name="P:NativeLibraryUtilities.NativeLibraryLoader.UsingTempFile">
+            <inheritdoc/>
+        </member>
+        <member name="P:NativeLibraryUtilities.NativeLibraryLoader.LibraryLocation">
+            <inheritdoc/>
+        </member>
+        <member name="M:NativeLibraryUtilities.NativeLibraryLoader.CheckIsRoboRio">
+            <summary>
+            Checks if the current system is a roboRIO
+            </summary>
+            <returns>True if running on a roboRIO</returns>
+        </member>
+        <member name="M:NativeLibraryUtilities.NativeLibraryLoader.AddLibraryLocation(NativeLibraryUtilities.OsType,System.String)">
+            <summary>
+            Add a file location to be used when automatically searching for a library to load
+            </summary>
+            <param name="osType">The OsType to associate with the file</param>
+            <param name="libraryName">The file to load on that OS</param>
+        </member>
+        <member name="M:NativeLibraryUtilities.NativeLibraryLoader.LoadNativeLibrary``1(NativeLibraryUtilities.ILibraryLoader,System.String,System.Boolean,System.String)">
+            <summary>
+            Loads a native library using the specified loader and file
+            </summary>
+            <typeparam name="T">The type containing the native resource, if it is embedded.</typeparam>
+            <param name="loader">The LibraryLoader to use</param>
+            <param name="location">The file location. Can be either an embedded resource, or a direct file location</param>
+            <param name="directLoad">True to load the file directly from disk, otherwise false to extract from embedded</param>
+            <param name="extractLocation">The location to extract to if the file is embedded. On null, it extracts to a temp file</param>
+        </member>
+        <member name="M:NativeLibraryUtilities.NativeLibraryLoader.LoadNativeLibrary``1(System.String,System.Boolean,System.String)">
+            <summary>
+            Loads a native library using the specified file. The OS is determined automatically
+            </summary>
+            <typeparam name="T">The type containing the native resource, if it is embedded.</typeparam>
+            <param name="location">The file location. Can be either an embedded resource, or a direct file location</param>
+            <param name="directLoad">True to load the file directly from disk, otherwise false to extract from embedded</param>
+            <param name="extractLocation">The location to extract to if the file is embedded. On null, it extracts to a temp file</param>
+        </member>
+        <member name="M:NativeLibraryUtilities.NativeLibraryLoader.LoadNativeLibrary``1(System.Boolean,System.String)">
+            <summary>
+            Loads a native library, using locations added using <see cref="M:NativeLibraryUtilities.NativeLibraryLoader.AddLibraryLocation(NativeLibraryUtilities.OsType,System.String)"/>
+            </summary>
+            <typeparam name="T">The type containing the native resource, if it is embedded.</typeparam>
+            <param name="directLoad">True to load the file directly from disk, otherwise false to extract from embedded</param>
+            <param name="extractLocation">The location to extract to if the file is embedded. On null, it extracts to a temp file</param>
+        </member>
+        <member name="M:NativeLibraryUtilities.NativeLibraryLoader.LoadNativeLibraryFromReflectedAssembly(System.String,System.Boolean)">
+            <summary>
+            Loads a native library with a reflected assembly holding the native libraries
+            </summary>
+            <param name="assemblyName">The name of the assembly to reflect into and load from</param>
+            <param name="localLoadOnRio">True to force a local load on the RoboRIO</param>
+        </member>
+        <member name="M:NativeLibraryUtilities.NativeLibraryLoader.GetOsType">
+            <summary>
+            Gets the OS Type of the current running system.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:NativeLibraryUtilities.OsType">
+            <summary>
+            Enumeration of the OS type for this system.
+            </summary>
+        </member>
+        <member name="F:NativeLibraryUtilities.OsType.None">
+            <summary>
+            OS Type not found
+            </summary>
+        </member>
+        <member name="F:NativeLibraryUtilities.OsType.Windows32">
+            <summary>
+            Windows 32 bit
+            </summary>
+        </member>
+        <member name="F:NativeLibraryUtilities.OsType.Windows64">
+            <summary>
+            Windows 64 bit
+            </summary>
+        </member>
+        <member name="F:NativeLibraryUtilities.OsType.Linux32">
+            <summary>
+            Linux 32 bit
+            </summary>
+        </member>
+        <member name="F:NativeLibraryUtilities.OsType.Linux64">
+            <summary>
+            Linux 64 bit
+            </summary>
+        </member>
+        <member name="F:NativeLibraryUtilities.OsType.MacOs32">
+            <summary>
+            Mac OS 32 bit
+            </summary>
+        </member>
+        <member name="F:NativeLibraryUtilities.OsType.MacOs64">
+            <summary>
+            Mac OS 64 bit
+            </summary>
+        </member>
+        <member name="F:NativeLibraryUtilities.OsType.roboRIO">
+            <summary>
+            FRC roboRIO
+            </summary>
+        </member>
+        <member name="F:NativeLibraryUtilities.OsType.LinuxArmhf">
+            <summary>
+            Linux Arm Hard Float (Not Raspbian)
+            </summary>
+        </member>
+        <member name="F:NativeLibraryUtilities.OsType.LinuxRaspbian">
+            <summary>
+            Linux Raspbian
+            </summary>
+        </member>
+        <member name="T:NativeLibraryUtilities.WindowsLibraryLoader">
+            <summary>
+            This class handles native libraries on Windows
+            </summary>
+        </member>
+        <member name="P:NativeLibraryUtilities.WindowsLibraryLoader.NativeLibraryHandle">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>
