@@ -5,11 +5,11 @@ Dashboard.net/bin/Debug/data.json
 
 !Dashboard.net/Dashboard.net/bin/
 
-Dashboard.net/Dashboard.net/bin/*
-!Dashboard.net/Dashboard.net/bin/Release/
+Dashboard.net/bin/*
+!Dashboard.net/bin/Release/
 
-Dashboard.net/Dashboard Setup/bin/*
-!Dashboard.net/Dashboard Setup/bin/Release/
+Dashboard Setup/bin/*
+!Dashboard Setup/bin/Release/
 
-Dashboard.net/Dashboard.net/obj/
+Dashboard.net/obj/
 
