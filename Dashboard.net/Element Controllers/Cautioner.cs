@@ -37,7 +37,7 @@ namespace Dashboard.net.Element_Controllers
         /// <summary>
         /// The networktables location for the status of the cube being in the robot or not.
         /// </summary>
-        private static readonly string CUBESTATUSKEY = "SmartDashboard/cubeIn";
+        private static readonly string CUBESTATUSKEY = "SmartDashboard/CubeIn";
         #endregion
 
         #region Data file constants

@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Media.Imaging;
-using MjpegProcessor;
 
 namespace Dashboard.net.Camera
 {
