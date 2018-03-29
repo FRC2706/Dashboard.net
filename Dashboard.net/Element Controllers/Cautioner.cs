@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using Dashboard.net.DataHandlers;
 using NetworkTables;
 
 namespace Dashboard.net.Element_Controllers
@@ -123,7 +124,7 @@ namespace Dashboard.net.Element_Controllers
             set
             {
                 _isEnabled = value;
-                master._DataFileIO.WriteCautionerData(DataToSave);
+                DataDealer.WriteCautionerData(DataToSave);
             }
         }
  
@@ -182,13 +183,13 @@ namespace Dashboard.net.Element_Controllers
             };
 
             // Set the initial state of the enabled boolean from the data file
-            Hashtable cautionerData = master._DataFileIO.ReadCautionerData();
+            Hashtable cautionerData = DataDealer.ReadCautionerData();
             if (cautionerData == null)
             {
                 _isEnabled = true;
                 IgnoreList = new ObservableCollection<string>();
 
-                master._DataFileIO.WriteCautionerData(DataToSave);
+                DataDealer.WriteCautionerData(DataToSave);
             }
             else
             {
@@ -449,7 +450,7 @@ namespace Dashboard.net.Element_Controllers
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsWarning"));
             UpdateNTArray();
 
-            master._DataFileIO.WriteCautionerData(DataToSave);
+            DataDealer.WriteCautionerData(DataToSave);
         }
     }
 }

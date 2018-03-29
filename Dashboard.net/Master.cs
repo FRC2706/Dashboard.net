@@ -1,4 +1,5 @@
-﻿using Dashboard.net.Element_Controllers;
+﻿using Dashboard.net.DataHandlers;
+using Dashboard.net.Element_Controllers;
 using System;
 
 namespace Dashboard.net
@@ -31,7 +32,6 @@ namespace Dashboard.net
         public ConnectionUI _ConnectionUI { get; private set; }
         public Cautioner _Cautioner { get; private set; }
         public Element_Controllers.Checklist ChecklistHandler { get; private set; }
-        public DataDealer _DataFileIO { get; private set; } = new DataDealer();
 
         public Master()
         {

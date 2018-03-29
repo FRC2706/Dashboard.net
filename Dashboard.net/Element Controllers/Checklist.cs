@@ -15,7 +15,7 @@ namespace Dashboard.net.Element_Controllers
         {
             get
             {
-                if (checklistWindow == null) checklistWindow = new ChecklistEditor(master._DataFileIO);
+                if (checklistWindow == null) checklistWindow = new ChecklistEditor();
                 return checklistWindow;
             }
         }
