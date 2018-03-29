@@ -172,5 +172,8 @@
   <ItemGroup>
     <Resource Include="Icons\2706.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\powerCube.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

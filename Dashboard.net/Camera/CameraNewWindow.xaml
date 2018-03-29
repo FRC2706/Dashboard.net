@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Dashboard.net.Camera"
         mc:Ignorable="d"
-        Title="Camera Feed" Height="300" Width="300">
+        Title="Camera Feed" Height="300" Width="300" ShowInTaskbar="False" Icon="/Dashboard.net;component/Icons/2706.ico">
     <Grid>
         <Image x:Name="CameraDisplay" Margin="0"/>
 
