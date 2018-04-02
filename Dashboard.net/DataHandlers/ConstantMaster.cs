@@ -55,8 +55,8 @@ namespace Dashboard.net.DataHandlers
             }
             else
             {
-                MaxLiftHeight = (double)currentData[LIFTHEIGHT];
-                MaxRPM = (double)currentData[RPM];
+                maxLiftHeight = (double)currentData[LIFTHEIGHT];
+                maxLiftHeight = (double)currentData[RPM];
                 CallEvent();
             }
         }

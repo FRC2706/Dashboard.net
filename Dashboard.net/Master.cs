@@ -23,8 +23,6 @@ namespace Dashboard.net
             }
         }
 
-        public ObservableCollection<ConstantMaster> ConstantsList { get; private set; }
-
         public ConstantMaster Constants { get; private set; }
         public NTInterface _Dashboard_NT { get; private set; }
         public AutonomousSelector _AutoSelector { get; private set; }
@@ -41,8 +39,6 @@ namespace Dashboard.net
         {
             // Make constants first so that all the others have access to it right away
             Constants = new ConstantMaster();
-
-            ConstantsList = new ObservableCollection<ConstantMaster>() { Constants };
 
             _Dashboard_NT = new NTInterface(this);
             _AutoSelector = new AutonomousSelector(this);
