@@ -165,7 +165,7 @@ namespace Dashboard.net.DataHandlers
         public static List<string> ReadCheckListData()
         {
             // Read and convert then return.
-            return ((JArray)ReadData()[CHECKLISTKEY]).ToObject<List<string>>();
+            return ((JArray)ReadData()[CHECKLISTKEY])?.ToObject<List<string>>();
         }
 
         #endregion
@@ -187,7 +187,7 @@ namespace Dashboard.net.DataHandlers
         {
             Hashtable goodData = new Hashtable();
             // Read and convert the data
-            Hashtable data = ((JObject)(ReadData()[CAUTIONERKEY])).ToObject<Hashtable>();
+            Hashtable data = ((JObject)(ReadData()[CAUTIONERKEY]))?.ToObject<Hashtable>();
             if (data == null) return null;
 
             goodData[Cautioner.ENABLEDKEY] = data[Cautioner.ENABLEDKEY];
