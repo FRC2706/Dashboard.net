@@ -7,7 +7,7 @@ namespace Dashboard.net.Element_Controllers
     public class Accelerometer : Controller, INotifyPropertyChanged
     {
         public static readonly string RIGHTSPEEDKEY = "SmartDashboard/Right Speed (RPM)", LEFTSPEEDKEY = "SmartDashboard/Left Speed (RPM)";
-        public static readonly double MAXVELOCITY = 100;
+        public double MaxVelocity { get; private set; } = 100;
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
@@ -17,7 +17,7 @@ namespace Dashboard.net.Element_Controllers
         {
             get
             {
-                return (int)Math.Round(Velocity / MAXVELOCITY * 240) - 120;
+                return (int)Math.Round(Velocity / MaxVelocity * 240) - 120;
             }
         }
 
@@ -37,6 +37,9 @@ namespace Dashboard.net.Element_Controllers
         {
             master._Dashboard_NT.AddKeyListener(LEFTSPEEDKEY, OnKeyChange);
             master._Dashboard_NT.AddKeyListener(RIGHTSPEEDKEY, OnKeyChange);
+
+            // Set the maximum velocity to auto update whenever it's changed.
+            master.Constants.ConstantsUpdated += (sender, e) => MaxVelocity = master.Constants.MaxRPM;
         }
 
         /// <summary>

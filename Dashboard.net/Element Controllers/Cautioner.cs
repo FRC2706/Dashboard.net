@@ -275,11 +275,11 @@ namespace Dashboard.net.Element_Controllers
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected override void OnMainWindowSet(object sender, EventArgs e)
+        protected override void OnMainWindowSet(object sender, MainWindow e)
         {
-            storyboard = (Storyboard)master._MainWindow.FindResource("animate_caution");
-            master._MainWindow.Master_Caution.MouseRightButtonDown += IgnoreListViewer_MouseRightButtonDown;
-            ignoreListViewer = master._MainWindow.IgnoreListViewer;
+            storyboard = (Storyboard)e.FindResource("animate_caution");
+            e.Master_Caution.MouseRightButtonDown += IgnoreListViewer_MouseRightButtonDown;
+            ignoreListViewer = e.IgnoreListViewer;
             ignoreListViewer.SelectionChanged += IgnoreListViewer_SelectionChanged;
         }
 

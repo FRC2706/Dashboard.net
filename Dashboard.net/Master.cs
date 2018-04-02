@@ -1,12 +1,13 @@
 ﻿using Dashboard.net.DataHandlers;
 using Dashboard.net.Element_Controllers;
 using System;
+using System.Collections.ObjectModel;
 
 namespace Dashboard.net
 {
     public class Master
     {
-        public event EventHandler MainWindowSet;
+        public event EventHandler<MainWindow> MainWindowSet;
 
         private MainWindow masterWindow;
         public MainWindow _MainWindow
@@ -18,10 +19,13 @@ namespace Dashboard.net
             set
             {
                 masterWindow = value;
-                MainWindowSet?.Invoke(this, new EventArgs());
+                MainWindowSet?.Invoke(this, masterWindow);
             }
         }
 
+        public ObservableCollection<ConstantMaster> ConstantsList { get; private set; }
+
+        public ConstantMaster Constants { get; private set; }
         public NTInterface _Dashboard_NT { get; private set; }
         public AutonomousSelector _AutoSelector { get; private set; }
         public Timer _Timer { get; private set; }
@@ -35,6 +39,11 @@ namespace Dashboard.net
 
         public Master()
         {
+            // Make constants first so that all the others have access to it right away
+            Constants = new ConstantMaster();
+
+            ConstantsList = new ObservableCollection<ConstantMaster>() { Constants };
+
             _Dashboard_NT = new NTInterface(this);
             _AutoSelector = new AutonomousSelector(this);
             _Timer = new Timer(this);

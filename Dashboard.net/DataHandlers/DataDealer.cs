@@ -210,7 +210,7 @@ namespace Dashboard.net.DataHandlers
         public static Hashtable ReadConstants()
         {
             // Read the data and return it.
-            Hashtable readData = ((JObject)ReadData()[CONSTANTSKEY]).ToObject<Hashtable>();
+            Hashtable readData = ((JObject)ReadData()[CONSTANTSKEY])?.ToObject<Hashtable>();
             return readData;
         }
         #endregion

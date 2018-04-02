@@ -33,12 +33,15 @@
                 <local:Master/>
             </Grid.DataContext>
             <Image x:Name="CameraBox" Margin="10,0,2,0" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1"/>
-            <Menu HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF663399" Foreground="White" Height="18" Width="79">
-                <MenuItem Header="Overflow" Foreground="White" Background="#FF6704CB" Width="79">
-                    <MenuItem x:Name="Checklist" Header="Checklist" Command="{Binding ChecklistHandler.OpenChecklist}" Background="Black" Foreground="White"/>
+            <Menu HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF663399" Foreground="Black" Height="18" Width="60">
+                <MenuItem Header="Overflow" Foreground="White" Background="#FF6704CB" Width="60">
+                    <MenuItem x:Name="Checklist" Header="Checklist" Command="{Binding ChecklistHandler.OpenChecklist}" Background="Black"/>
                     <MenuItem x:Name="CameraNewWindow" Header="Pop out camera" Background="Black" Command="{Binding _Camera.OpenNewWindow}"/>
                     <MenuItem Header="Modify Ignore List" Background="Black">
                         <ListView x:Name="IgnoreListViewer" ItemsSource="{Binding _Cautioner.IgnoreList}" />
+                    </MenuItem>
+                    <MenuItem x:Name="ConstantsMenu" Header="Modify Constants" Background="Black">
+                        <DataGrid x:Name="ConstantsGrid" ItemsSource="{Binding ConstantsList}"/>
                     </MenuItem>
                 </MenuItem>
             </Menu>

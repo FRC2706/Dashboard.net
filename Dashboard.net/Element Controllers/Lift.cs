@@ -19,7 +19,7 @@ namespace Dashboard.net.Element_Controllers
         /// <summary>
         /// The highest height that the lift goes to.
         /// </summary>
-        private static readonly double MAXHEIGHT = 7.0;
+        private double MaxHeight { get; set; } = 7.0;
 
         public double LiftHeight
         {
@@ -36,19 +36,22 @@ namespace Dashboard.net.Element_Controllers
         {
             get
             {
-                return heightSlider != null ? LiftHeight / MAXHEIGHT * heightSlider.Maximum : 0.0;
+                return heightSlider != null ? LiftHeight / MaxHeight * heightSlider.Maximum : 0.0;
             }
         }
 
         public Lift(Master controller) : base(controller)
         {
             master._Dashboard_NT.AddKeyListener(LIFTHEIGHTPATH, OnLiftHeightChanged);
+
+
+            master.Constants.ConstantsUpdated += (sender, e) => MaxHeight = master.Constants.MaxLiftHeight;
         }
 
         #region Event listeners
-        protected override void OnMainWindowSet(object sender, EventArgs e)
+        protected override void OnMainWindowSet(object sender, MainWindow e)
         {
-            heightSlider = master._MainWindow.LiftDiagram;
+            heightSlider = e.LiftDiagram;
         }
 
         /// <summary>
