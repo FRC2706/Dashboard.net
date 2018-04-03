@@ -32,9 +32,12 @@ namespace Dashboard.net
         public ConnectionUI _ConnectionUI { get; private set; }
         public Cautioner _Cautioner { get; private set; }
         public Element_Controllers.Checklist ChecklistHandler { get; private set; }
+        public Logger logger;
 
         public Master()
         {
+            logger = new Logger();
+
             _Dashboard_NT = new NTInterface(this);
             _AutoSelector = new AutonomousSelector(this);
             _Timer = new Timer(this);
