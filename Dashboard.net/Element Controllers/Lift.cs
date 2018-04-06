@@ -13,13 +13,19 @@ namespace Dashboard.net.Element_Controllers
         public event PropertyChangedEventHandler PropertyChanged;
         private static readonly string LIFTHEIGHTPATH = "SmartDashboard/Lift Distance";
 
-
-        private Slider heightSlider;
-
+        private double maxHeight;
         /// <summary>
         /// The highest height that the lift goes to.
         /// </summary>
-        private static readonly double MAXHEIGHT = 7.0;
+        public double MaxHeight
+        {
+            get => maxHeight;
+            private set
+            {
+                maxHeight = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("MaxHeight"));
+            }
+        }
 
         public double LiftHeight
         {
@@ -32,25 +38,20 @@ namespace Dashboard.net.Element_Controllers
         /// <summary>
         /// The height that the slider should be at.
         /// </summary>
-        public double SliderValue
-        {
-            get
-            {
-                return heightSlider != null ? LiftHeight / MAXHEIGHT * heightSlider.Maximum : 0.0;
-            }
-        }
+        public double SliderValue => LiftHeight;
 
         public Lift(Master controller) : base(controller)
         {
             master._Dashboard_NT.AddKeyListener(LIFTHEIGHTPATH, OnLiftHeightChanged);
+
+            // Set the maxHeight property right away if we can.
+            if (master.Constants != null) MaxHeight = master.Constants.MaxLiftHeight;
+
+
+            master.Constants.ConstantsUpdated += (sender, e) => MaxHeight = master.Constants.MaxLiftHeight;
         }
 
         #region Event listeners
-        protected override void OnMainWindowSet(object sender, EventArgs e)
-        {
-            heightSlider = master._MainWindow.LiftDiagram;
-        }
-
         /// <summary>
         /// Just updates the GUI whenever the height of the lift is changed
         /// </summary>

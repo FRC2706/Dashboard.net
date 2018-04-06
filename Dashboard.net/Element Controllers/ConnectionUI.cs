@@ -93,11 +93,11 @@ namespace Dashboard.net.Element_Controllers
             master._Dashboard_NT.ConnectionEvent += _Dashboard_NT_ConnectionEvent;
         }
 
-        protected override void OnMainWindowSet(object sender, EventArgs e)
+        protected override void OnMainWindowSet(object sender, MainWindow e)
         {
             // Set the status box.
             statusBox = master._MainWindow.StatusBox;
-            connectButton = master._MainWindow.ConnectButton;
+            connectButton =e.ConnectButton;
         }
 
         private void _Dashboard_NT_ConnectionEvent(object sender, bool connected)

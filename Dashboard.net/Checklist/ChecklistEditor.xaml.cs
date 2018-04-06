@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dashboard.net.DataHandlers;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,7 +19,6 @@ namespace Dashboard.net.Checklist
         /// The list of checkboxes to 
         /// </summary>
         public ObservableCollection<CheckBox> CheckListList { get; private set; }
-        private DataDealer dataFileIO;
 
         private static readonly string DefaultTODO = "TODO: Add stuff to this checklist!";
 
@@ -82,7 +82,7 @@ namespace Dashboard.net.Checklist
         /// Constructor for the window
         /// </summary>
         /// <param name="_DataFileIO">The data file to get data from.</param>
-        public ChecklistEditor(DataDealer _DataFileIO)
+        public ChecklistEditor()
         {
             InitializeComponent();
 
@@ -91,8 +91,6 @@ namespace Dashboard.net.Checklist
             Width = SystemParameters.FullPrimaryScreenWidth * 0.6;
 
             Focusable = true;
-
-            dataFileIO = _DataFileIO;
 
             // Load the checklist.
             Reload();
@@ -129,7 +127,7 @@ namespace Dashboard.net.Checklist
                 CheckListList.Remove(box);
             }
 
-            dataFileIO.WriteChecklistData(CheckListItems);
+            DataDealer.WriteChecklistData(CheckListItems);
 
             // Make sure that there's always a default todo
             if (CheckListList.Count <= 0) CheckListList.Add(MakeCheckBoxForItem(DefaultTODO));
@@ -156,7 +154,7 @@ namespace Dashboard.net.Checklist
             AddTextBox.Clear();
 
             // Save the newly created item.
-            dataFileIO.WriteChecklistData(CheckListItems);
+            DataDealer.WriteChecklistData(CheckListItems);
 
             // Fire the event.
             ItemAdded?.Invoke(this, itemText);
@@ -201,7 +199,7 @@ namespace Dashboard.net.Checklist
         /// </summary>
         private void Reload()
         {
-            List<string> data = dataFileIO.ReadCheckListData();
+            List<string> data = DataDealer.ReadCheckListData();
             if (data == null || data.Count == 0) CheckListItems = new List<string>()
             {
                 {DefaultTODO }
