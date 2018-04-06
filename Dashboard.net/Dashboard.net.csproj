@@ -116,6 +116,7 @@
     <Compile Include="Element Controllers\ConnectionUI.cs" />
     <Compile Include="Element Controllers\Controller.cs" />
     <Compile Include="Element Controllers\Lift.cs" />
+    <Compile Include="Element Controllers\MiscOperations.cs" />
     <Compile Include="Element Controllers\NetworkMonitor.cs" />
     <Compile Include="Master.cs" />
     <Compile Include="NTInterface.cs" />

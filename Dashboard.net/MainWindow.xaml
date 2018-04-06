@@ -40,6 +40,7 @@
                     <MenuItem Header="Modify Ignore List" Foreground="Black">
                         <ListView x:Name="IgnoreListViewer" ItemsSource="{Binding _Cautioner.IgnoreList}" />
                     </MenuItem>
+                    <MenuItem Header="Wipe Application Data"  Command="{Binding _MiscOperations.EraseDataCommand, Mode=OneWay}" Foreground="Black"/>
                     <MenuItem x:Name="ConstantsMenu" Header="Modify Constants" Foreground="Black" StaysOpenOnClick="True">
                         <Grid>
                             <Grid.ColumnDefinitions>

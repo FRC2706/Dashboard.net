@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Dashboard.net.Element_Controllers;
 using Newtonsoft.Json.Linq;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace Dashboard.net.DataHandlers
 {
@@ -65,6 +66,30 @@ namespace Dashboard.net.DataHandlers
         private static void CreateDataFile()
         {
             File.Create(DataFileLocation).Close();
+        }
+
+        /// <summary>
+        /// Erases the contents of the DataFile and restarts the application because of it.
+        /// Cannot be undone.
+        /// </summary>
+        internal static void EraseDataFile()
+        {
+            if (DataFileExists) File.Delete(DataFileLocation);
+
+        }
+
+        /// <summary>
+        /// Function used to restart this application.
+        /// </summary>
+        internal static void RestartApplication()
+        {
+            Process.Start(Application.ResourceAssembly.Location);
+            CloseApplication();
+        }
+
+        private static void CloseApplication()
+        {
+            Application.Current.Shutdown();
         }
 
         #region Basic read write functions

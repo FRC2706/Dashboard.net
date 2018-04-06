@@ -34,6 +34,7 @@ namespace Dashboard.net
         public ConnectionUI _ConnectionUI { get; private set; }
         public Cautioner _Cautioner { get; private set; }
         public Element_Controllers.Checklist ChecklistHandler { get; private set; }
+        public MiscOperations _MiscOperations { get; private set; }
 
         public Master()
         {
@@ -50,6 +51,7 @@ namespace Dashboard.net
             _ConnectionUI = new ConnectionUI(this);
             _Cautioner = new Cautioner(this);
             ChecklistHandler = new Element_Controllers.Checklist(this);
+            _MiscOperations = new MiscOperations(this);
         }
     }
 }
