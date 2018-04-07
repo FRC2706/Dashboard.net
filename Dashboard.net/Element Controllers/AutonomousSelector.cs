@@ -109,7 +109,7 @@ namespace Dashboard.net.Element_Controllers
 
 
         #region Event Listeners
-        protected override void OnMainWindowSet(object sender, MainWindow e)
+        protected override void OnMainWindowSet(object sender, EventArgs e)
         {
             // Get the auto list object from the mainwindow to be able to work with id.
             AutoList = master._MainWindow.AutoList;

@@ -12,7 +12,7 @@ namespace Dashboard.net.Element_Controllers
             master.MainWindowSet += OnMainWindowSet;
         }
 
-        protected virtual void OnMainWindowSet(object sender, MainWindow e)
+        protected virtual void OnMainWindowSet(object sender, EventArgs e)
         {
             
         }

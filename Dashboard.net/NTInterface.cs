@@ -327,9 +327,9 @@ namespace Dashboard.net
             if (!arg3) mainDispatcher.Invoke(() => ConnectionEvent?.Invoke(this, IsConnected));
         }
 
-        protected void OnMainWindowSet(object sender, MainWindow e)
+        protected void OnMainWindowSet(object sender, EventArgs e)
         {
-            mainDispatcher = e.Dispatcher;
+            mainDispatcher = master._MainWindow.Dispatcher;
         }
 
         #endregion

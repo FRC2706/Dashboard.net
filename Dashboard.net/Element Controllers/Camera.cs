@@ -177,10 +177,10 @@ namespace Dashboard.net.Element_Controllers
             return cameras;
         }
 
-        private void Master_MainWindowSet(object sender, MainWindow e)
+        private void Master_MainWindowSet(object sender, EventArgs e)
         {
-            display = e.CameraBox;
-            cameraSelector = e.CameraSelector;
+            display = master._MainWindow.CameraBox;
+            cameraSelector = master._MainWindow.CameraSelector;
 
             cameraSelector.SelectionChanged += CameraSelector_SelectionChanged;
         }

@@ -8,50 +8,25 @@ using Dashboard.net.Element_Controllers;
 using Newtonsoft.Json.Linq;
 using System.Collections.ObjectModel;
 
-namespace Dashboard.net.DataHandlers
+namespace Dashboard.net
 {
-    public static class DataDealer
+    public class DataDealer
     {
 
-        public static readonly string CHECKLISTKEY = "checklist", CAUTIONERKEY = "cautioner", CONSTANTSKEY = "constants";
+        public static readonly string CHECKLISTKEY = "checklist", CAUTIONERKEY = "cautioner";
 
-        private static string dataLocation;
         /// <summary>
         /// The location of the data json file.
         /// </summary>
-        public static string DataLocation
-        {
-            get
-            {
-                // If the variable for the location is null or empty, fix it.
-                if (string.IsNullOrEmpty(dataLocation))
-                {
-                    dataLocation = Path.Combine(Environment.
-                        GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dashboard.net Data");
-
-                    // If we're debugging or the data location doesn't exist, change it to the current directory
-                    dataLocation = (Debugger.IsAttached || !Directory.Exists(dataLocation)) ? Environment.CurrentDirectory : dataLocation;
-                }
-                return dataLocation;
-            }
-        }
-        /// <summary>
-        /// The location of the data file that contains the data.
-        /// </summary>
-        public static string DataFileLocation
-        {
-            get
-            {
-                return Path.Combine(DataLocation, "data.json");
-            }
-        }
+        public static string DataLocation { get; private set; }
+        public static string DataFileLocation { get; private set; }
 
         static object key = new object();
 
         /// <summary>
         /// Returns true if the data file exists, false otherwise.
         /// </summary>
-        private static bool DataFileExists
+        private bool DataFileExists
         {
             get
             {
@@ -59,10 +34,20 @@ namespace Dashboard.net.DataHandlers
             }
         }
 
+        public DataDealer()
+        {
+            DataLocation = Path.Combine(Environment.
+                GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dashboard.net Data");
+            if (Debugger.IsAttached || !Directory.Exists(DataLocation)) DataLocation = Environment.CurrentDirectory;
+
+            // Set the data file location.
+            DataFileLocation = Path.Combine(DataLocation, "data.json");
+        }
+
         /// <summary>
         /// Creates the data file, overwritting it if it doesn't exist.
         /// </summary>
-        private static void CreateDataFile()
+        private void CreateDataFile()
         {
             File.Create(DataFileLocation).Close();
         }
@@ -72,7 +57,7 @@ namespace Dashboard.net.DataHandlers
         /// Encodes the data hashtable into json and writes it to the data file.
         /// </summary>
         /// <param name="dataToWrite"></param>
-        private static void WriteData(Hashtable dataToWrite)
+        private void WriteData(Hashtable dataToWrite)
         {
             // Lock this segment so that other threads don't cause problems.
             lock (key)
@@ -94,7 +79,7 @@ namespace Dashboard.net.DataHandlers
             }
         }
 
-        private static Hashtable ReadData()
+        private Hashtable ReadData()
         {
             string fileContents = "";
             // Lock this segment so other threads don't cause problems.
@@ -113,25 +98,21 @@ namespace Dashboard.net.DataHandlers
             if (fileContents == "" || fileContents == null) return new Hashtable();
 
             Hashtable data_hashtable =
-                (Hashtable)JsonConvert.DeserializeObject<Hashtable>(fileContents) ;
+                (Hashtable)JsonConvert.DeserializeObject<Hashtable>(fileContents);
 
-            // Make hashtable of the data that will be returned at the end.
-            Hashtable dataToBeReturned = new Hashtable();
-            foreach (string key in data_hashtable.Keys)
+            Newtonsoft.Json.Linq.JArray checklistData =
+                (Newtonsoft.Json.Linq.JArray)data_hashtable[CHECKLISTKEY];
+            Newtonsoft.Json.Linq.JObject cautionerData =
+                (Newtonsoft.Json.Linq.JObject)data_hashtable[CAUTIONERKEY];
+
+            List<string> checkListDataFormatted = checklistData?.ToObject<List<string>>();
+            Hashtable cautionerDataFormatted = cautionerData?.ToObject<Hashtable>();
+
+            return new Hashtable
             {
-                var data = data_hashtable[key];
-                if (data is JArray)
-                {
-                    dataToBeReturned[key] = (JArray)data;
-                    Type type = dataToBeReturned[key].GetType();
-                }
-                else if (data is JObject)
-                {
-                    dataToBeReturned[key] = (JObject)data;
-                }
-            }
-
-            return dataToBeReturned;
+                { CHECKLISTKEY, checkListDataFormatted },
+                {CAUTIONERKEY, cautionerDataFormatted }
+            };
         }
         #endregion
 
@@ -140,7 +121,7 @@ namespace Dashboard.net.DataHandlers
         /// </summary>
         /// <param name="key">The key to replace</param>
         /// <param name="newValue">The new value to set that key to</param>
-        private static void UpdateAndWrite(string key, object newValue)
+        private void UpdateAndWrite(string key, object newValue)
         {
             Hashtable currentData = ReadData();
             currentData[key] = newValue;
@@ -153,7 +134,7 @@ namespace Dashboard.net.DataHandlers
         /// Method for writing checklist data to the file.
         /// </summary>
         /// <param name="CheckListData"></param>
-        public static void WriteChecklistData(List<string> CheckListData)
+        public void WriteChecklistData(List<string> CheckListData)
         {
             UpdateAndWrite(CHECKLISTKEY, CheckListData);
         }
@@ -162,10 +143,9 @@ namespace Dashboard.net.DataHandlers
         /// Reads the file and returns the checklist data.
         /// </summary>
         /// <returns>The checklist data.</returns>
-        public static List<string> ReadCheckListData()
+        public List<string> ReadCheckListData()
         {
-            // Read and convert then return.
-            return ((JArray)ReadData()[CHECKLISTKEY])?.ToObject<List<string>>();
+            return (List<string>)ReadData()[CHECKLISTKEY];
         }
 
         #endregion
@@ -175,7 +155,7 @@ namespace Dashboard.net.DataHandlers
         /// Writes new checklist data to the file
         /// </summary>
         /// <param name="data">The new data to write to the file</param>
-        public static void WriteCautionerData(Hashtable data)
+        public void WriteCautionerData(Hashtable data)
         {
             UpdateAndWrite(CAUTIONERKEY, data);
         }
@@ -183,35 +163,16 @@ namespace Dashboard.net.DataHandlers
         /// Reads the cautioner data and returns it
         /// </summary>
         /// <returns>The cautioner data present on file</returns>
-        public static Hashtable ReadCautionerData()
+        public Hashtable ReadCautionerData()
         {
             Hashtable goodData = new Hashtable();
-            // Read and convert the data
-            Hashtable data = ((JObject)(ReadData()[CAUTIONERKEY]))?.ToObject<Hashtable>();
+            Hashtable data = (Hashtable)ReadData()[CAUTIONERKEY];
             if (data == null) return null;
 
             goodData[Cautioner.ENABLEDKEY] = data[Cautioner.ENABLEDKEY];
             goodData[Cautioner.IGNOREKEY] = ((JArray)data[Cautioner.IGNOREKEY]).ToObject<ObservableCollection<string>>();
 
             return goodData;
-        }
-        #endregion
-
-        #region ConstantMaster read write methods
-        /// <summary>
-        /// Writes the constants data to the file in order to be retrieved later
-        /// </summary>
-        /// <param name="data">The constants to write to file</param>
-        public static void WriteConstants(Hashtable data)
-        {
-            UpdateAndWrite(CONSTANTSKEY, data);
-        }
-
-        public static Hashtable ReadConstants()
-        {
-            // Read the data and return it.
-            Hashtable readData = ((JObject)ReadData()[CONSTANTSKEY])?.ToObject<Hashtable>();
-            return readData;
         }
         #endregion
     }

@@ -1,13 +1,11 @@
-﻿using Dashboard.net.DataHandlers;
-using Dashboard.net.Element_Controllers;
+﻿using Dashboard.net.Element_Controllers;
 using System;
-using System.Collections.ObjectModel;
 
 namespace Dashboard.net
 {
     public class Master
     {
-        public event EventHandler<MainWindow> MainWindowSet;
+        public event EventHandler MainWindowSet;
 
         private MainWindow masterWindow;
         public MainWindow _MainWindow
@@ -19,11 +17,10 @@ namespace Dashboard.net
             set
             {
                 masterWindow = value;
-                MainWindowSet?.Invoke(this, masterWindow);
+                MainWindowSet?.Invoke(this, new EventArgs());
             }
         }
 
-        public ConstantMaster Constants { get; private set; }
         public NTInterface _Dashboard_NT { get; private set; }
         public AutonomousSelector _AutoSelector { get; private set; }
         public Timer _Timer { get; private set; }
@@ -34,12 +31,10 @@ namespace Dashboard.net
         public ConnectionUI _ConnectionUI { get; private set; }
         public Cautioner _Cautioner { get; private set; }
         public Element_Controllers.Checklist ChecklistHandler { get; private set; }
+        public DataDealer _DataFileIO { get; private set; } = new DataDealer();
 
         public Master()
         {
-            // Make constants first so that all the others have access to it right away
-            Constants = new ConstantMaster();
-
             _Dashboard_NT = new NTInterface(this);
             _AutoSelector = new AutonomousSelector(this);
             _Timer = new Timer(this);

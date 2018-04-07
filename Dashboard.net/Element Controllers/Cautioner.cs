@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using Dashboard.net.DataHandlers;
 using NetworkTables;
 
 namespace Dashboard.net.Element_Controllers
@@ -124,7 +123,7 @@ namespace Dashboard.net.Element_Controllers
             set
             {
                 _isEnabled = value;
-                DataDealer.WriteCautionerData(DataToSave);
+                master._DataFileIO.WriteCautionerData(DataToSave);
             }
         }
  
@@ -183,13 +182,13 @@ namespace Dashboard.net.Element_Controllers
             };
 
             // Set the initial state of the enabled boolean from the data file
-            Hashtable cautionerData = DataDealer.ReadCautionerData();
+            Hashtable cautionerData = master._DataFileIO.ReadCautionerData();
             if (cautionerData == null)
             {
                 _isEnabled = true;
                 IgnoreList = new ObservableCollection<string>();
 
-                DataDealer.WriteCautionerData(DataToSave);
+                master._DataFileIO.WriteCautionerData(DataToSave);
             }
             else
             {
@@ -275,11 +274,11 @@ namespace Dashboard.net.Element_Controllers
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected override void OnMainWindowSet(object sender, MainWindow e)
+        protected override void OnMainWindowSet(object sender, EventArgs e)
         {
-            storyboard = (Storyboard)e.FindResource("animate_caution");
-            e.Master_Caution.MouseRightButtonDown += IgnoreListViewer_MouseRightButtonDown;
-            ignoreListViewer = e.IgnoreListViewer;
+            storyboard = (Storyboard)master._MainWindow.FindResource("animate_caution");
+            master._MainWindow.Master_Caution.MouseRightButtonDown += IgnoreListViewer_MouseRightButtonDown;
+            ignoreListViewer = master._MainWindow.IgnoreListViewer;
             ignoreListViewer.SelectionChanged += IgnoreListViewer_SelectionChanged;
         }
 
@@ -450,7 +449,7 @@ namespace Dashboard.net.Element_Controllers
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsWarning"));
             UpdateNTArray();
 
-            DataDealer.WriteCautionerData(DataToSave);
+            master._DataFileIO.WriteCautionerData(DataToSave);
         }
     }
 }
