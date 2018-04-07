@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -112,7 +111,7 @@ namespace Dashboard.net.Element_Controllers
             camera.FrameReady += Camera_FrameReady;
             camera.Error += Camera_Error;
 
-            master._Dashboard_NT.ConnectionEvent += _Dashboard_NT_ConnectionEvent;
+            master._Dashboard_NT.ConnectionEvent += OnRobotConnection;
 
             OpenNewWindow = new RelayCommand()
             {
@@ -138,13 +137,16 @@ namespace Dashboard.net.Element_Controllers
             StartCamera();
         }
 
-        private void _Dashboard_NT_ConnectionEvent(object sender, bool connected)
+        private void OnRobotConnection(object sender, bool connected)
         {
             // When we connect, begin receiving the stream.
             if (connected)
             {
                 // Get the available cameras
                 AvailableCameras.Clear();
+                /* Do not simply want to reassing the AvailableCameras list because that would cause
+                 * for the change listener to not work.
+                 */
                 ObservableCollection<string> cameras =  GetAvailableCameras();
                 
                 foreach (string camera in cameras)
