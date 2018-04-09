@@ -20,14 +20,12 @@ namespace Dashboard.net.Camera
             }
         }
 
-        public CameraNewWindow(BitmapImage imageStream)
+        public CameraNewWindow()
         {
             InitializeComponent();
             // Set width and height based on screen size
             Height = SystemParameters.FullPrimaryScreenHeight * 0.5;
             Width = SystemParameters.FullPrimaryScreenWidth * 0.5;
-
-            ImageStream = imageStream;
         }
     }
 }

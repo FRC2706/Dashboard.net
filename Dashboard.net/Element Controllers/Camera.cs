@@ -17,15 +17,30 @@ namespace Dashboard.net.Element_Controllers
     public class Camera : Controller
     {
 
+        #region Location constants
         private readonly string CAMERAPATH = "CameraPublisher", URLPATH = "streams", PROPERTYPATH = "Property";
+        #endregion
+
         public ObservableCollection<string> AvailableCameras { get; private set; } = new ObservableCollection<string>();
 
         public RelayCommand OpenSettingsCommand { get; private set; }
+        /// <summary>
+        /// The relaycommand that shows the feed in a new window.
+        /// </summary>
+        public RelayCommand OpenNewWindow { get; private set; }
 
+        /// <summary>
+        /// The other window with the camera feed in it.
+        /// </summary>
+        private CameraNewWindow OtherWindow { get; set; }
+
+        #region Display elements
         private MjpegDecoder camera;
         private Image display;
         private ComboBox cameraSelector;
+        #endregion
 
+        #region Camera Properties
         private bool isStreaming;
         /// <summary>
         /// Whether or not the camera is currently streaming the image from the robot.
@@ -85,16 +100,6 @@ namespace Dashboard.net.Element_Controllers
                 return string.Format("{0}/{1}/{2}", CAMERAPATH, SelectedCamera, PROPERTYPATH);
             }
         }
-
-        /// <summary>
-        /// The relaycommand that shows the feed in a new window.
-        /// </summary>
-        public RelayCommand OpenNewWindow { get; private set; }
-
-        /// <summary>
-        /// The other window with the camera feed in it.
-        /// </summary>
-        private CameraNewWindow OtherWindow { get; set; }
         private bool IsShowingOtherWindow
         {
             get
@@ -102,15 +107,16 @@ namespace Dashboard.net.Element_Controllers
                 return OtherWindow != null && OtherWindow.IsActive; // TODO also check that the window isn't closed.
             }
         }
+        #endregion
 
         public Camera(Master controller) : base(controller)
         {
-            master.MainWindowSet += Master_MainWindowSet;
-
+            // Set up the camera object.
             camera = new MjpegDecoder();
             camera.FrameReady += Camera_FrameReady;
-            camera.Error += Camera_Error;
+            camera.Error += OnCamera_Error;
 
+            // Subscribe to robot connection event.
             master._Dashboard_NT.ConnectionEvent += OnRobotConnection;
 
             OpenNewWindow = new RelayCommand()
@@ -126,17 +132,7 @@ namespace Dashboard.net.Element_Controllers
             };
         }
 
-        /// <summary>
-        /// Handles errors with the camera by restarting the stream
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Camera_Error(object sender, ErrorEventArgs e)
-        {
-            IsStreaming = false;
-            StartCamera();
-        }
-
+        #region Event Handlers
         private void OnRobotConnection(object sender, bool connected)
         {
             // When we connect, begin receiving the stream.
@@ -164,7 +160,39 @@ namespace Dashboard.net.Element_Controllers
                 StopCamera();
             }
         }
+        /// <summary>
+        /// Handles errors with the camera by restarting the stream
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnCamera_Error(object sender, ErrorEventArgs e)
+        {
+            IsStreaming = false;
+            StartCamera();
+        }
+        private void Master_MainWindowSet(object sender, MainWindow e)
+        {
+            display = e.CameraBox;
+            cameraSelector = e.CameraSelector;
 
+            cameraSelector.SelectionChanged += CameraSelector_SelectionChanged;
+        }
+
+        private void CameraSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            StartCamera();
+        }
+        private void Camera_FrameReady(object sender, FrameReadyEventArgs e)
+        {
+            // Set the camera source.
+            display.Source = e.BitmapImage;
+
+            // Also show the image on the other window
+            if (IsShowingOtherWindow) OtherWindow.ImageStream = e.BitmapImage;
+        }
+        #endregion
+
+        #region Get Functions
         /// <summary>
         /// Gets a list of the available cameras.
         /// </summary>
@@ -179,36 +207,38 @@ namespace Dashboard.net.Element_Controllers
             return cameras;
         }
 
-        private void Master_MainWindowSet(object sender, MainWindow e)
-        {
-            display = e.CameraBox;
-            cameraSelector = e.CameraSelector;
-
-            cameraSelector.SelectionChanged += CameraSelector_SelectionChanged;
-        }
-
-        private void CameraSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            StartCamera();
-        }
-
         private string GetCameraURL(string selection)
         {
-            if (string.IsNullOrEmpty(selection)) return null;
-            // Format url for camera
-            string pathToCameraURL = string.Format("{0}/{1}/{2}", CAMERAPATH, selection, URLPATH);
+            string url;
+            if (string.IsNullOrEmpty(selection)) url = string.Empty;
+            else
+            {
+                /* Format the networktables location for camera.
+                 * It follows the format of "[camera publisher name]/[camera name]/[path for url for camera stream]"
+                 */
+                string pathToCameraURL = string.Format("{0}/{1}/{2}", CAMERAPATH, selection, URLPATH);
 
-            // Get the property from the networktables
-            Value thing = master._Dashboard_NT.GetValue(pathToCameraURL);
-            if (thing == null || !NTInterface.IsValidValue(thing)) return "";
-            string[] urlThing = thing.GetStringArray();
+                // Get the Mjpeg stream URL property from the networktables
+                Value networktablesCameraURL = master._Dashboard_NT.GetValue(pathToCameraURL);
+                // Validate the value by checking for null and for proper type
+                if (networktablesCameraURL == null || 
+                    !NTInterface.IsValidValue(networktablesCameraURL, NtType.StringArray))
+                {
+                    // If it's invalid, return empty string.
+                    url = string.Empty;
+                }
+                // Retrieve the string array
+                string[] urlThing = networktablesCameraURL.GetStringArray();
 
-            // Fix URL
-            string url = urlThing[0].Replace("mjpg:", "");
+                // Get the URL (the first element in the string array) and get rid of the "mjpg:" at the start.
+                url = urlThing[0].Replace("mjpg:", "");
+            }
             // Return
             return url;
         }
+        #endregion
 
+        #region Action methods
         /// <summary>
         /// Starts streaming the caemra
         /// </summary>
@@ -237,15 +267,6 @@ namespace Dashboard.net.Element_Controllers
             await Task.Delay(0);
         }
 
-        private void Camera_FrameReady(object sender, FrameReadyEventArgs e)
-        {
-            // Set the camera source.
-            display.Source = e.BitmapImage;
-
-            // Also show the image on the other window
-            if (IsShowingOtherWindow) OtherWindow.ImageStream = e.BitmapImage;
-        }
-
         /// <summary>
         /// Shows the camera feed in a new window.
         /// </summary>
@@ -254,10 +275,12 @@ namespace Dashboard.net.Element_Controllers
         {
             // If we're not streaming, don't do anything and simply return.
             BitmapImage image = (IsStreaming) ? camera.BitmapImage : null;
-            if (!IsShowingOtherWindow) OtherWindow = new CameraNewWindow(image);
+            if (!IsShowingOtherWindow) OtherWindow = new CameraNewWindow()
+            {
+                ImageStream = image
+            };
             OtherWindow.Show();
             OtherWindow.Focus();
-            OtherWindow.ImageStream = image;
         }
 
         /// <summary>
@@ -268,5 +291,6 @@ namespace Dashboard.net.Element_Controllers
             string settingsURL = CameraSettingsURL;
             if (!string.IsNullOrEmpty(settingsURL)) Process.Start(settingsURL);
         }
+        #endregion
     }
 }

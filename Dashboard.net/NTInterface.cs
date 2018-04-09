@@ -90,9 +90,25 @@ namespace Dashboard.net
             return goodAddress;
         }
 
+        /// <summary>
+        /// Checks the given networktables value to make sure that it's valid
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <returns>True if it's valid, false otherwise</returns>
         public static bool IsValidValue(Value value)
         {
             return (value.Type != NtType.Unassigned);
+        }
+
+        /// <summary>
+        /// Ensures that the given networktables value is of the expected type
+        /// </summary>
+        /// <param name="value">The value from networktables</param>
+        /// <param name="expectedType">The expected value type</param>
+        /// <returns></returns>
+        public static bool IsValidValue(Value value, NtType expectedType)
+        {
+            return (value.Type == expectedType);
         }
 
         /// <summary>
