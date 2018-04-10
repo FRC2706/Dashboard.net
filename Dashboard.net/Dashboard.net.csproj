@@ -104,6 +104,7 @@
       <DependentUpon>CameraNewWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataHandlers\ConstantMaster.cs" />
+    <Compile Include="DataHandlers\RobotLogSaver.cs" />
     <Compile Include="Element Controllers\Cautioner.cs" />
     <Compile Include="Element Controllers\Checklist.cs" />
     <Compile Include="Checklist\ChecklistEditor.xaml.cs">
@@ -122,6 +123,7 @@
     <Compile Include="NTInterface.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Element Controllers\Timer.cs" />
+    <Compile Include="RobotLogging\RobotLogInterface.cs" />
     <Page Include="Camera\CameraNewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

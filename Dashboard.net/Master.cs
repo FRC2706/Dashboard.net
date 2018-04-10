@@ -1,5 +1,6 @@
 ﻿using Dashboard.net.DataHandlers;
 using Dashboard.net.Element_Controllers;
+using Dashboard.net.RobotLogging;
 using System;
 using System.Collections.ObjectModel;
 
@@ -8,6 +9,11 @@ namespace Dashboard.net
     public class Master
     {
         public event EventHandler<MainWindow> MainWindowSet;
+
+        /// <summary>
+        /// The current instance of the master class
+        /// </summary>
+        public static Master currentInstance;
 
         private MainWindow masterWindow;
         public MainWindow _MainWindow
@@ -36,8 +42,15 @@ namespace Dashboard.net
         public Element_Controllers.Checklist ChecklistHandler { get; private set; }
         public MiscOperations _MiscOperations { get; private set; }
 
+        /// <summary>
+        /// The interface that will be logging the logs from the robot.
+        /// </summary>
+        public RobotLogInterface RobotLogger {get; private set;}
+
         public Master()
         {
+            currentInstance = this;
+
             // Make constants first so that all the others have access to it right away
             Constants = new ConstantMaster();
 
@@ -52,6 +65,8 @@ namespace Dashboard.net
             _Cautioner = new Cautioner(this);
             ChecklistHandler = new Element_Controllers.Checklist(this);
             _MiscOperations = new MiscOperations(this);
+
+            RobotLogger = new RobotLogInterface();
         }
     }
 }
