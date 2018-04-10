@@ -97,7 +97,7 @@ namespace Dashboard.net
         /// <returns>True if it's valid, false otherwise</returns>
         public static bool IsValidValue(Value value)
         {
-            return (value.Type != NtType.Unassigned);
+            return (value != null && value.Type != NtType.Unassigned);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Dashboard.net
         /// <returns></returns>
         public static bool IsValidValue(Value value, NtType expectedType)
         {
-            return (value.Type == expectedType);
+            return (value != null && value.Type == expectedType);
         }
 
         /// <summary>
@@ -417,7 +417,7 @@ namespace Dashboard.net
 
             // Open the table and get the value
             Value value = GetTable(table).GetValue(key, new Value());
-            if (value.Type == NtType.Unassigned) return null;
+            if (IsValidValue(value)) return null;
             return value;
         }
 
@@ -430,7 +430,7 @@ namespace Dashboard.net
         public double GetDouble(string path)
         {
             Value value = GetValue(path);
-            double doubleValue = (value != null && value.Type == NtType.Double) ? value.GetDouble() : 0;
+            double doubleValue = (IsValidValue(value, NtType.Double)) ? value.GetDouble() : 0;
             return doubleValue;
         }
 
@@ -443,7 +443,7 @@ namespace Dashboard.net
         public string GetString(string path)
         {
             Value value = GetValue(path);
-            string stringValue = (value != null && value.Type == NtType.String) ? value.GetString() : "";
+            string stringValue = (IsValidValue(value, NtType.String)) ? value.GetString() : "";
             return stringValue;
         }
 
@@ -456,7 +456,7 @@ namespace Dashboard.net
         public bool GetBool(string path)
         {
             Value value = GetValue(path);
-            bool boolValue = (value != null && value.Type == NtType.Boolean) ? value.GetBoolean() : false;
+            bool boolValue = (IsValidValue(value, NtType.Boolean)) ? value.GetBoolean() : false;
             return boolValue;
         }
 
@@ -469,8 +469,21 @@ namespace Dashboard.net
         public string[] GetStringArray(string path)
         {
             Value value = GetValue(path);
-            string[] stringArrValue = (value != null && value.Type == NtType.StringArray) ? value.GetStringArray() : null;
+            string[] stringArrValue = (IsValidValue(value, NtType.StringArray)) ? value.GetStringArray() : null;
             return stringArrValue;
+        }
+
+        /// <summary>
+        /// Gets the byte array value at the specified networktables path.
+        /// Example paths are SmartDashboard/autonomous/selected_modes
+        /// </summary>
+        /// <param name="path">The path to that value. Example: SmartDashboard/autonomous/selected_modes</param>
+        /// <returns>The byte array at the given networktablese path. Returns null if there are any errors.</returns>
+        public byte[] GetByteArray(string path)
+        {
+            Value value = GetValue(path);
+            byte[] byteArrayValue = (IsValidValue(value, NtType.Raw)) ? value.GetRaw() : null;
+            return byteArrayValue;
         }
 
         /// <summary>
@@ -482,7 +495,7 @@ namespace Dashboard.net
         public double[] GetDoubleArray(string path)
         {
             Value value = GetValue(path);
-            double[] doubleArrValue = (value != null && value.Type == NtType.DoubleArray) ? value.GetDoubleArray() : null;
+            double[] doubleArrValue = (IsValidValue(value, NtType.DoubleArray)) ? value.GetDoubleArray() : null;
             return doubleArrValue;
         }
 
@@ -548,6 +561,16 @@ namespace Dashboard.net
         public void SetBool(string path, bool value)
         {
             SetValue(path, Value.MakeBoolean(value));
+        }
+
+        /// <summary>
+        /// Sets the networktables value at the given path to the given byte array.
+        /// </summary>
+        /// <param name="path">The path to the networktables value to be set.</param>
+        /// <param name="value">The bye array value to set the path to.</param>
+        public void SetByteArray(string path, byte[] value)
+        {
+            SetValue(path, Value.MakeRaw(value));
         }
 
         /// <summary>
