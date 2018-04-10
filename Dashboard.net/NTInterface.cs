@@ -276,7 +276,7 @@ namespace Dashboard.net
         /// <param name="functionToExecute">The function to fire when the value changes.</param>
         public void AddKeyListener(string key, Action<Value> functionToExecute)
         {
-            // Don't allow the same key to have two listeners TODO allow this functionality later on?
+            // TODO Don't allow the same key to have two listeners TODO allow this functionality later on?
             if (ListenerFunctions.ContainsKey(key)) return;
             string subtablePath = GetSubTablePath(key);
 

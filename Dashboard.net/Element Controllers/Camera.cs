@@ -168,7 +168,7 @@ namespace Dashboard.net.Element_Controllers
         private void OnCamera_Error(object sender, ErrorEventArgs e)
         {
             IsStreaming = false;
-            // If it's error code 0, don't try restarting. TODO make sure that this makes sense, as maybe it's always 0.
+            // TODO If it's error code 0, don't try restarting.  make sure that this makes sense, as maybe it's always 0.
             if (e.ErrorCode != 0) StartCamera();
         }
         protected override void OnMainWindowSet(object sender, MainWindow e)

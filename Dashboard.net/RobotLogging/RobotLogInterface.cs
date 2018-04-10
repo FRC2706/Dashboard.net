@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using Dashboard.net.DataHandlers;
 using NetworkTables;
 
@@ -8,6 +9,9 @@ namespace Dashboard.net.RobotLogging
     public class RobotLogInterface : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
+        // Command to open the logs folder for the user
+        public RelayCommand ExploreLogsCommand { get; private set; }
 
         // The networktables interface which will help us get logs from the robot
         NTInterface networktablesInterface;
@@ -49,6 +53,13 @@ namespace Dashboard.net.RobotLogging
             networktablesInterface.AddKeyListener(NTSAVEKEY, OnSaveKeyChanged);
 
             _isEnabled = GetEnabledState();
+
+            // Set up the open logs folder command
+            ExploreLogsCommand = new RelayCommand
+            {
+                FunctionToExecute = OpenLogFolder,
+                CanExecuteDeterminer = () => true
+            };
         }
 
         #region Enabled Get Set methods for saving
@@ -81,6 +92,7 @@ namespace Dashboard.net.RobotLogging
         }
         #endregion
 
+        #region Event Listeners
         /// <summary>
         /// Fired when the 
         /// </summary>
@@ -101,8 +113,9 @@ namespace Dashboard.net.RobotLogging
                 networktablesInterface.SetBool(NTSAVEKEY, false);
             }
         }
+        #endregion
 
-
+        #region actions
         /// <summary>
         /// Deletes the log byte array being stored on networktables.
         /// </summary>
@@ -121,9 +134,22 @@ namespace Dashboard.net.RobotLogging
             // Convert the logs to a string
             string logsToSave = System.Text.Encoding.UTF8.GetString(rawLogsToSave);
 
-            // Save the logs to the file.
-            RobotLogSaver.SaveLogData(logsToSave, GetFileName());
+            // Only do stuff it there area actually logs to save.
+            if (!string.IsNullOrEmpty(logsToSave))
+            {
+                // Save the logs to the file.
+                RobotLogSaver.SaveLogData(logsToSave, GetFileName());
+            }
         }
+        /// <summary>
+        ///  Opens the log folder up in Windows explorer.
+        /// </summary>
+        /// <param name="sender"></param>
+        private void OpenLogFolder(object sender = null)
+        {
+            RobotLogSaver.OpenLogFolder();
+        }
+        #endregion
 
         /// <summary>
         /// Gets the correct file name for the 

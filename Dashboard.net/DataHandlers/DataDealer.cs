@@ -31,7 +31,10 @@ namespace Dashboard.net.DataHandlers
                         GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dashboard.net Data");
 
                     // If we're debugging or the data location doesn't exist, change it to the current directory
-                    dataLocation = (Debugger.IsAttached || !Directory.Exists(dataLocation)) ? Environment.CurrentDirectory : dataLocation;
+                    dataLocation = (Debugger.IsAttached) ? Environment.CurrentDirectory : dataLocation;
+
+                    // If the directory doesn't exist, create it.
+                    if (!Directory.Exists(dataLocation)) Directory.CreateDirectory(dataLocation);
                 }
                 return dataLocation;
             }
