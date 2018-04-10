@@ -1,6 +1,7 @@
 ﻿using NetworkTables;
 using NetworkTables.Tables;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -209,17 +210,23 @@ namespace Dashboard.net
             await Task.Delay(0);
         }
 
+        // TODO uncomment
         /// <summary>
         /// Calls the changed event for all the subscribed functions
         /// </summary>
-        private void CallChangedMethodsForAll()
-        {
-            // Call all the values changes events in the list so that the change function is called on connect.
-            foreach (KeyValuePair<string, Action<Value>> kv in ListenerFunctions)
-            {
-                kv.Value(GetValue(kv.Key));
-            }
-        }
+        //private void CallChangedMethodsForAll()
+        //{
+        //    // Call all the values changes events in the list so that the change function is called on connect.
+        //    foreach (DictionaryEntry kv in ListenerFunctions)
+        //    {
+        //        string key = (string)kv.Key;
+
+        //        // Get the value.
+        //        Value value = GetValue(key);
+        //        // Only call the function if the value is not null.
+        //        if (value != null) kv.Value(kv.Key, value);
+        //    }
+        //}
 
         /// <summary>
         /// Connects the dashboard to the robot with the given address.
@@ -246,7 +253,7 @@ namespace Dashboard.net
             {
                 await Task.Run(PopulateTablesAsync);
                 // Call changed events
-                CallChangedMethodsForAll();
+                //TODO uncomment CallChangedMethodsForAll();
             }
         }
 
@@ -264,8 +271,8 @@ namespace Dashboard.net
         }
         #endregion
 
-        private Dictionary<string, Action<Value>> ListenerFunctions 
-            = new Dictionary<string, Action<Value>>();
+        private Hashtable ListenerFunctions 
+            = new Hashtable();
         private Dictionary<string, ITable> Tables = 
             new Dictionary<string, ITable>();
         /// <summary>
@@ -274,7 +281,84 @@ namespace Dashboard.net
         /// </summary>
         /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
         /// <param name="functionToExecute">The function to fire when the value changes.</param>
-        public void AddKeyListener(string key, Action<Value> functionToExecute)
+        public void AddKeyListener(string key, Action<string, Value> functionToExecute)
+        {
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        public void AddKeyListener(string key, Action<string, bool> functionToExecute)
+        {
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        public void AddKeyListener(string key, Action<string, string> functionToExecute)
+        {
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        public void AddKeyListener(string key, Action<string, string[]> functionToExecute)
+        {
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        public void AddKeyListener(string key, Action<string, byte[]> functionToExecute)
+        {
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        public void AddKeyListener(string key, Action<string, double> functionToExecute)
+        {
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        public void AddKeyListener(string key, Action<string, double[]> functionToExecute)
+        {
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        private void AddKeyListenerInternal<T>(string key, Action<string, T> functionToExecute)
         {
             // TODO Don't allow the same key to have two listeners TODO allow this functionality later on?
             if (ListenerFunctions.ContainsKey(key)) return;
@@ -300,7 +384,6 @@ namespace Dashboard.net
             }
         }
 
-
         #region Event Listeners
         /// <summary>
         /// Listens for changes in the SmartDashboard table and then calls the function listening.
@@ -323,7 +406,39 @@ namespace Dashboard.net
         /// <param name="value">The new value for that key</param>
         private void NTValueChanged(string key, Value value)
         {
-            ListenerFunctions[key](value);
+            if (ListenerFunctions.ContainsKey(key))
+            {
+                object functionToBeExecuted = ListenerFunctions[key];
+
+                // Convert and call the method if it matches any of the supported types.
+                if (functionToBeExecuted is Action<string, Value> action)
+                {
+                    action(key, value);
+                }
+                else if (functionToBeExecuted is Action<string, bool> boolAction)
+                {
+                    if (IsValidValue(value, NtType.Boolean)) boolAction(key, value.GetBoolean());
+                }
+                else if (functionToBeExecuted is Action<string, string> stringAction)
+                {
+                    if (IsValidValue(value, NtType.String)) stringAction(key, value.GetString());
+                }
+                else if (functionToBeExecuted is Action<string, byte[]> byteArrayAction) {
+                    if (IsValidValue(value, NtType.Raw)) byteArrayAction(key, value.GetRaw());
+                }
+                else if (functionToBeExecuted is Action<string, double> doubleAction)
+                {
+                    if (IsValidValue(value, NtType.Double)) doubleAction(key, value.GetDouble());
+                }
+                else if (functionToBeExecuted is Action<string, double[]> doubleArrayAction)
+                {
+                    if (IsValidValue(value, NtType.DoubleArray)) doubleArrayAction(key, value.GetDoubleArray());
+                }
+                else if (functionToBeExecuted is Action<string, string[]> stringArrayAction)
+                {
+                    if (IsValidValue(value, NtType.StringArray)) stringArrayAction(key, value.GetStringArray());
+                }
+            }
         }
 
         private bool previousConnectedState = false;

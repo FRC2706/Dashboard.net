@@ -97,10 +97,8 @@ namespace Dashboard.net.RobotLogging
         /// Fired when the 
         /// </summary>
         /// <param name="newValue"></param>
-        private void OnSaveKeyChanged(Value newValue)
+        private void OnSaveKeyChanged(string key, bool shouldSave)
         {
-            // Determine if we should be saving based on the value
-            bool shouldSave = (NTInterface.IsValidValue(newValue, NtType.Boolean) && IsEnabled) ? newValue.GetBoolean() : false;
             // If we should save, save
             if (shouldSave)
             {
