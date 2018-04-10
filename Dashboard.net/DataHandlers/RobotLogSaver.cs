@@ -37,11 +37,7 @@ namespace Dashboard.net.DataHandlers
         public static void SaveLogData(string dataToSave, string fileName, TypeOfSave typeOfSave = TypeOfSave.AppendOrCreate)
         {
             // Seperate the data into a string array based on the newline characters
-            string[] logDataToWrite = dataToSave.Split(
-                new[] { Environment.NewLine },
-                StringSplitOptions.None
-                );
-
+            dataToSave = dataToSave.Replace("\n", Environment.NewLine);
 
             // Format the file name properly
             fileName = FormatFileName(fileName);

@@ -104,7 +104,7 @@ namespace Dashboard.net.Element_Controllers
         {
             get
             {
-                return OtherWindow != null && OtherWindow.IsActive; // TODO also check that the window isn't closed.
+                return OtherWindow != null && OtherWindow.IsActive;
             }
         }
         #endregion
