@@ -168,9 +168,10 @@ namespace Dashboard.net.Element_Controllers
         private void OnCamera_Error(object sender, ErrorEventArgs e)
         {
             IsStreaming = false;
-            StartCamera();
+            // If it's error code 0, don't try restarting. TODO make sure that this makes sense, as maybe it's always 0.
+            if (e.ErrorCode != 0) StartCamera();
         }
-        private void Master_MainWindowSet(object sender, MainWindow e)
+        protected override void OnMainWindowSet(object sender, MainWindow e)
         {
             display = e.CameraBox;
             cameraSelector = e.CameraSelector;
@@ -206,7 +207,11 @@ namespace Dashboard.net.Element_Controllers
 
             return cameras;
         }
-
+        /// <summary>
+        /// Gets the streaming url for the given camera name that is selected.
+        /// </summary>
+        /// <param name="selection">The selected camera</param>
+        /// <returns>The string streaming URL for that camera.</returns>
         private string GetCameraURL(string selection)
         {
             string url;
@@ -219,19 +224,18 @@ namespace Dashboard.net.Element_Controllers
                 string pathToCameraURL = string.Format("{0}/{1}/{2}", CAMERAPATH, selection, URLPATH);
 
                 // Get the Mjpeg stream URL property from the networktables
-                Value networktablesCameraURL = master._Dashboard_NT.GetValue(pathToCameraURL);
+                string[] networktablesCameraURL = master._Dashboard_NT.GetStringArray(pathToCameraURL);
                 // Validate the value by checking for null and for proper type
-                if (networktablesCameraURL == null || 
-                    !NTInterface.IsValidValue(networktablesCameraURL, NtType.StringArray))
+                if (networktablesCameraURL == null)
                 {
                     // If it's invalid, return empty string.
                     url = string.Empty;
                 }
-                // Retrieve the string array
-                string[] urlThing = networktablesCameraURL.GetStringArray();
-
-                // Get the URL (the first element in the string array) and get rid of the "mjpg:" at the start.
-                url = urlThing[0].Replace("mjpg:", "");
+                else
+                {
+                    // Get the URL (the first element in the string array) and get rid of the "mjpg:" at the start.
+                    url = networktablesCameraURL[0].Replace("mjpg:", "");
+                }
             }
             // Return
             return url;

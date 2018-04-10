@@ -1,30 +1,85 @@
 ﻿using System;
+using System.ComponentModel;
 using Dashboard.net.DataHandlers;
 using NetworkTables;
 
 namespace Dashboard.net.RobotLogging
 {
-    public class RobotLogInterface
+    public class RobotLogInterface : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         // The networktables interface which will help us get logs from the robot
         NTInterface networktablesInterface;
 
         #region Networktables constants
         // Networktables constants
-        private static readonly string NTLOGGINGTABLEKEYLOGPATH = "logging-level",
+        private static readonly string NT_LOGGINGTABLEKEY = "logging-level",
             // The location of the actual log byte array
-            NTLOGKEY = NTLOGGINGTABLEKEYLOGPATH + "/Value", 
+            NTLOGKEY = NT_LOGGINGTABLEKEY + "/Value", 
             // The match name for the log file name.
-            NTMATCHKEY = NTLOGGINGTABLEKEYLOGPATH + "/match", 
+            NTMATCHKEY = NT_LOGGINGTABLEKEY + "/match", 
             // The location of the save boolean, which is set to true when we should save.
-            NTSAVEKEY = NTLOGGINGTABLEKEYLOGPATH + "/logging";
+            NTSAVEKEY = NT_LOGGINGTABLEKEY + "/save";
         #endregion
+
+        private bool _isEnabled;
+        /// <summary>
+        /// Whether or not logging for the robot is enabled.
+        /// </summary>
+        public bool IsEnabled
+        {
+            get
+            {
+                return _isEnabled;
+            }
+            set
+            {
+                _isEnabled = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsEnabled"));
+
+                // Save the current enabled state.
+                SaveEnabledState();
+            }
+        }
 
         public RobotLogInterface()
         {
             networktablesInterface = Master.currentInstance._Dashboard_NT;
             networktablesInterface.AddKeyListener(NTSAVEKEY, OnSaveKeyChanged);
+
+            _isEnabled = GetEnabledState();
         }
+
+        #region Enabled Get Set methods for saving
+        private static readonly string ENABLED_KEY = "IsRobotLoggingEnabled";
+        private bool GetEnabledState()
+        {
+            object isEnabled = DataDealer.ReadMiscData(ENABLED_KEY);
+
+            bool enabled;
+            if (isEnabled == null)
+            {
+                DataDealer.AppendMiscData(ENABLED_KEY, false);
+                enabled = false;
+            }
+            else
+            {
+                enabled = (bool)isEnabled;
+            }
+
+            // If it's null, we need to write 
+            return enabled;
+        }
+        /// <summary>
+        /// Saves the current state of the enabledness of the robot logging system
+        /// </summary>
+        private void SaveEnabledState()
+        {
+            // Append the data to the data dealer.
+            DataDealer.AppendMiscData(ENABLED_KEY, IsEnabled);
+        }
+        #endregion
 
         /// <summary>
         /// Fired when the 
@@ -33,11 +88,29 @@ namespace Dashboard.net.RobotLogging
         private void OnSaveKeyChanged(Value newValue)
         {
             // Determine if we should be saving based on the value
-            bool shouldSave = (NTInterface.IsValidValue(newValue, NtType.Boolean)) ? newValue.GetBoolean() : false;
+            bool shouldSave = (NTInterface.IsValidValue(newValue, NtType.Boolean) && IsEnabled) ? newValue.GetBoolean() : false;
             // If we should save, save
-            if (shouldSave) SaveLogs();
+            if (shouldSave)
+            {
+                SaveLogs();
+
+                // Delete the logs in networktables now that they've been saved.
+                DeleteNTLogs();
+
+                // Set the save to false after we're done saving
+                networktablesInterface.SetBool(NTSAVEKEY, false);
+            }
         }
 
+
+        /// <summary>
+        /// Deletes the log byte array being stored on networktables.
+        /// </summary>
+        private void DeleteNTLogs()
+        {
+            // Set the value to a new byte array with nothing in it.
+            networktablesInterface.SetByteArray(NTLOGKEY, new byte[0]);
+        }
         /// <summary>
         /// Saves the logs in their current state.
         /// </summary>
@@ -46,7 +119,7 @@ namespace Dashboard.net.RobotLogging
             // Get the logs
             byte[] rawLogsToSave = networktablesInterface.GetByteArray(NTLOGKEY);
             // Convert the logs to a string
-            string logsToSave = rawLogsToSave.ToString();
+            string logsToSave = System.Text.Encoding.UTF8.GetString(rawLogsToSave);
 
             // Save the logs to the file.
             RobotLogSaver.SaveLogData(logsToSave, GetFileName());

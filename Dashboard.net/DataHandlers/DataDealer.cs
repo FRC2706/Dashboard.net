@@ -14,7 +14,7 @@ namespace Dashboard.net.DataHandlers
     public static class DataDealer
     {
 
-        public static readonly string CHECKLISTKEY = "checklist", CAUTIONERKEY = "cautioner", CONSTANTSKEY = "constants";
+        public static readonly string CHECKLISTKEY = "checklist", CAUTIONERKEY = "cautioner", CONSTANTSKEY = "constants", MISCKEY = "misc";
 
         private static string dataLocation;
         /// <summary>
@@ -237,6 +237,45 @@ namespace Dashboard.net.DataHandlers
             // Read the data and return it.
             Hashtable readData = ((JObject)ReadData()[CONSTANTSKEY])?.ToObject<Hashtable>();
             return readData;
+        }
+        #endregion
+
+        #region MiscData read write methods
+        /// <summary>
+        /// Sets the misc data at the given key to the value of the given object.
+        /// </summary>
+        /// <param name="key">The key for the data in the misc hashtable</param>
+        /// <param name="data">The data to write at the key location.</param>
+        public static void AppendMiscData(string key, object data)
+        {
+            Hashtable currentMiscData = ReadMiscData();
+
+            if (currentMiscData == null)
+            {
+                currentMiscData = new Hashtable();
+            }
+
+            currentMiscData[key] = data; ;
+
+            UpdateAndWrite(MISCKEY, currentMiscData);
+        }
+        /// <summary>
+        /// Read all misc data and return the hashtable.
+        /// </summary>
+        /// <returns>The hashtable for the misc data.</returns>
+        private static Hashtable ReadMiscData()
+        {
+            return ((JObject)ReadData()[MISCKEY])?.ToObject<Hashtable>(); 
+        }
+        /// <summary>
+        /// Reads the misc data located at the specified key and returns it. Null if it doesn't exist.
+        /// </summary>
+        /// <param name="key">The key location of the data to read</param>
+        /// <returns>The object at the given key</returns>
+        public static object ReadMiscData(string key)
+        {
+            Hashtable readData = ReadMiscData();
+            return (readData != null && readData.ContainsKey(key)) ? readData[key] : null;
         }
         #endregion
     }

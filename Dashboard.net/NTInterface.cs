@@ -417,7 +417,7 @@ namespace Dashboard.net
 
             // Open the table and get the value
             Value value = GetTable(table).GetValue(key, new Value());
-            if (IsValidValue(value)) return null;
+            if (!IsValidValue(value)) return null;
             return value;
         }
 

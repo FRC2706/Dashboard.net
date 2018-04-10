@@ -104,6 +104,8 @@
             <ComboBox x:Name="CameraSelector" Grid.Column="1" Margin="5,-3,5,33" ItemsSource="{Binding _Camera.AvailableCameras}"/>
             <Button x:Name="CameraSettings" Grid.Column="2" HorizontalAlignment="Left" Height="25" Margin="149,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="57" Content="Settings" Background="{x:Null}" Command="{Binding _Camera.OpenSettingsCommand, Mode=OneWay}" BorderBrush="{x:Null}" FontWeight="Bold" Foreground="#FF663399"/>
             <Image Grid.Column="2" HorizontalAlignment="Left" Height="30" Margin="164,40,0,0" Grid.Row="1" VerticalAlignment="Top" Width="30" Source="Icons/powerCube.ico" Opacity="{Binding _Cautioner.PowerCubeBrightness, Mode=OneWay}"/>
+            <Label Content="Logging Enabled" HorizontalAlignment="Left" Margin="10,188,0,0" Grid.Row="1" VerticalAlignment="Top" Foreground="{DynamicResource MergePurple}"/>
+            <CheckBox Content="CheckBox" Height="22" Margin="124,191,0,0" Grid.Row="1" Width="36" IsChecked="{Binding RobotLogger.IsEnabled}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
         </Grid>
     </Viewbox>
