@@ -44,13 +44,8 @@ namespace Dashboard.net.Element_Controllers
             if (!e) StopAndReset();
         }
 
-        private void OnNTKeyChanged(Value startValue)
+        private void OnNTKeyChanged(string key, bool shouldStart)
         {
-            if (startValue == null || !NTInterface.IsValidValue(startValue)) return;
-            bool shouldStart;
-            if (startValue.Type == NtType.String) shouldStart = (startValue.ToString() == "true");
-            else shouldStart = startValue.GetBoolean();
-
             if (!shouldStart && IsRunning)
             {
                 StopAndReset();

@@ -56,7 +56,7 @@ namespace Dashboard.net.Element_Controllers
         /// Just updates the GUI whenever the height of the lift is changed
         /// </summary>
         /// <param name="obj"></param>
-        private void OnLiftHeightChanged(Value obj)
+        private void OnLiftHeightChanged(string key, Value obj)
         {
             PropertyChanged(this, new PropertyChangedEventArgs("SliderValue"));
         }

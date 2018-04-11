@@ -2,8 +2,7 @@
 .vs/
 
 
-Dashboard.net/bin/*
-!Dashboard.net/bin/Release/
+Dashboard.net/bin/
 
 Dashboard Setup/Debug/
 !Dashboard Setup/Release/
