@@ -51,6 +51,7 @@ namespace Dashboard.net.RobotLogging
         {
             networktablesInterface = Master.currentInstance._Dashboard_NT;
             networktablesInterface.AddKeyListener(NTSAVEKEY, OnSaveKeyChanged);
+            networktablesInterface.ConnectionEvent += OnRobotConnect;
 
             _isEnabled = GetEnabledState();
 
@@ -113,6 +114,21 @@ namespace Dashboard.net.RobotLogging
                 networktablesInterface.SetBool(NTSAVEKEY, false);
             }
         }
+
+        /// <summary>
+        /// Robot connection handler that performs certain actions when the robot connects.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="connected"></param>
+        private void OnRobotConnect(object sender, bool connected)
+        {
+            // Only do stuff if connected
+            if (connected)
+            {
+                // Set the log name for the logs right away once we've connected.
+                RobotLogSaver.SetLogName(GetFileName(), this);
+            }
+        }
         #endregion
 
         #region actions
@@ -138,7 +154,7 @@ namespace Dashboard.net.RobotLogging
             if (!string.IsNullOrEmpty(logsToSave))
             {
                 // Save the logs to the file.
-                RobotLogSaver.SaveLogData(logsToSave, GetFileName());
+                RobotLogSaver.SaveLogData(logsToSave);
             }
         }
         /// <summary>

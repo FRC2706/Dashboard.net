@@ -1,5 +1,5 @@
-﻿using System;
-using System.ComponentModel;
+﻿using Dashboard.net.RobotLogging;
+using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -16,6 +16,22 @@ namespace Dashboard.net.DataHandlers
         // We're saving these as log files. Folder path is the folder location for the logs.
         private static readonly string EXTENSION = ".log";
 
+        private static string LogName;
+
+        /// <summary>
+        /// Sets the file name for the logs that will be saved by the logger. Should only be set once every time the program is run.
+        /// </summary>
+        /// <param name="name"></param>
+        public static void SetLogName(string name, object sender)
+        {
+            // We should only change the name of the logs if it hasn't been set before already and if it's the logging system that's sending the name
+            if (string.IsNullOrEmpty(LogName) && sender.GetType() == typeof(RobotLogInterface))
+            {
+                // Format the file name before we actually save it.
+                LogName = FormatFileName(name);
+            }
+        }
+
         /// <summary>
         /// The full directory path for the logs
         /// </summary>
@@ -31,11 +47,9 @@ namespace Dashboard.net.DataHandlers
         /// Saves the given log data to the file name given
         /// </summary>
         /// <param name="dataToSave"></param>
-        /// <param name="fileName">The file name where we will be saving the file. Should not include the extension,
-        /// but if it does it gets rid of it.</param>
         /// <param name="typeOfSave">The type of saving to be doing, either overwriting the file, appending
         /// to it or appending and creating a new file if it doesn't exist.</param>
-        public static void SaveLogData(string dataToSave, string fileName, TypeOfSave typeOfSave = TypeOfSave.AppendOrCreate)
+        public static void SaveLogData(string dataToSave, TypeOfSave typeOfSave = TypeOfSave.AppendOrCreate)
         {
             // Only do stuff if there's actually stuff to save.
             if (!string.IsNullOrEmpty(dataToSave))
@@ -43,14 +57,11 @@ namespace Dashboard.net.DataHandlers
                 // Seperate the data into a string array based on the newline characters
                 dataToSave = dataToSave.Replace("\n", Environment.NewLine);
 
-                // Format the file name properly
-                fileName = FormatFileName(fileName);
-
                 // If the directory doesn't exist, create it.
                 if (!Directory.Exists(DirectoryPath)) Directory.CreateDirectory(DirectoryPath);
 
                 // Add the directory to the file name.
-                fileName = Path.Combine(DirectoryPath, fileName);
+                string fileName = Path.Combine(DirectoryPath, LogName);
 
 
                 FileStream logFile;
