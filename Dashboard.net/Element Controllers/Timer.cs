@@ -20,7 +20,7 @@ namespace Dashboard.net.Element_Controllers
             }
         }
 
-        private int Seconds = 135;
+        private int Seconds = 150;
         private DispatcherTimer caller;
 
         public event PropertyChangedEventHandler PropertyChanged;
