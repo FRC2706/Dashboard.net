@@ -1,8 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using Dashboard.net.DataHandlers;
-using NetworkTables;
 
 namespace Dashboard.net.RobotLogging
 {
@@ -51,7 +49,6 @@ namespace Dashboard.net.RobotLogging
         {
             networktablesInterface = Master.currentInstance._Dashboard_NT;
             networktablesInterface.AddKeyListener(NTSAVEKEY, OnSaveKeyChanged);
-            networktablesInterface.ConnectionEvent += OnRobotConnect;
 
             _isEnabled = GetEnabledState();
 
@@ -112,21 +109,6 @@ namespace Dashboard.net.RobotLogging
                 networktablesInterface.SetBool(NTSAVEKEY, false);
             }
         }
-
-        /// <summary>
-        /// Robot connection handler that performs certain actions when the robot connects.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="connected"></param>
-        private void OnRobotConnect(object sender, bool connected)
-        {
-            // Only do stuff if connected
-            if (connected)
-            {
-                // Set the log name for the logs right away once we've connected.
-                RobotLogSaver.SetLogName(GetFileName(), this);
-            }
-        }
         #endregion
 
         #region actions
@@ -148,9 +130,22 @@ namespace Dashboard.net.RobotLogging
             // Convert the logs to a string
             string logsToSave = System.Text.Encoding.UTF8.GetString(rawLogsToSave);
 
-            // Only do stuff it there area actually logs to save.
-            if (!string.IsNullOrEmpty(logsToSave))
+            // Only save logs if there's anything to save.
+            if (!string.IsNullOrWhiteSpace(logsToSave))
             {
+                // Set the name for the logs right away.
+                string matchNum = GetMatchNumber();
+
+                if (!string.IsNullOrWhiteSpace(matchNum))
+                {
+                    RobotLogSaver.LogName = matchNum;
+                }
+                // If the log name is empty and the match number is also empty, use a timestamp
+                else if (string.IsNullOrEmpty(RobotLogSaver.LogName))
+                {
+                    // Set it to the date as a last resort.
+                    RobotLogSaver.LogName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+                }
                 // Save the logs to the file.
                 RobotLogSaver.SaveLogData(logsToSave);
             }
@@ -169,18 +164,10 @@ namespace Dashboard.net.RobotLogging
         /// Gets the correct file name for the 
         /// </summary>
         /// <returns></returns>
-        private string GetFileName()
+        private string GetMatchNumber()
         {
             // Get the match name to be used as the file name
-            string fileName = networktablesInterface.GetString(NTMATCHKEY);
-
-            // If the file name hasn't been set, set it to the data.
-            if (string.IsNullOrEmpty(fileName))
-            {
-                fileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-            }
-
-            return fileName;
+            return networktablesInterface.GetString(NTMATCHKEY);
         }
     }
 }

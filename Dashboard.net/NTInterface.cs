@@ -210,23 +210,27 @@ namespace Dashboard.net
             await Task.Delay(0);
         }
 
-        // TODO uncomment
         /// <summary>
         /// Calls the changed event for all the subscribed functions
+        /// This is required because only values from within SmartDashboard network table seem to get notified of updates when the dashboard
+        /// initially connects
         /// </summary>
-        //private void CallChangedMethodsForAll()
-        //{
-        //    // Call all the values changes events in the list so that the change function is called on connect.
-        //    foreach (DictionaryEntry kv in ListenerFunctions)
-        //    {
-        //        string key = (string)kv.Key;
+        private void CallChangedMethodsForAll()
+        {
+            // Call all the values changes events in the list so that the change function is called on connect.
+            foreach (DictionaryEntry kv in ListenerFunctions)
+            {
+                string key = (string)kv.Key;
 
-        //        // Get the value.
-        //        Value value = GetValue(key);
-        //        // Only call the function if the value is not null.
-        //        if (value != null) kv.Value(kv.Key, value);
-        //    }
-        //}
+                // If the key is from the smart dashboard, don't bother with it since they get notified anyway
+                if (GetTableName(key) == "SmartDashboard") continue;
+
+                // Get the value.
+                Value value = GetValue(key);
+                // Call the function
+                CallFunction(key, value, kv.Value);
+            }
+        }
 
         /// <summary>
         /// Connects the dashboard to the robot with the given address.
@@ -253,7 +257,7 @@ namespace Dashboard.net
             {
                 await Task.Run(PopulateTablesAsync);
                 // Call changed events
-                //TODO uncomment CallChangedMethodsForAll();
+                 CallChangedMethodsForAll();
             }
         }
 
@@ -410,34 +414,46 @@ namespace Dashboard.net
             {
                 object functionToBeExecuted = ListenerFunctions[key];
 
-                // Convert and call the method if it matches any of the supported types.
-                if (functionToBeExecuted is Action<string, Value> action)
-                {
-                    action(key, value);
-                }
-                else if (functionToBeExecuted is Action<string, bool> boolAction)
-                {
-                    if (IsValidValue(value, NtType.Boolean)) boolAction(key, value.GetBoolean());
-                }
-                else if (functionToBeExecuted is Action<string, string> stringAction)
-                {
-                    if (IsValidValue(value, NtType.String)) stringAction(key, value.GetString());
-                }
-                else if (functionToBeExecuted is Action<string, byte[]> byteArrayAction) {
-                    if (IsValidValue(value, NtType.Raw)) byteArrayAction(key, value.GetRaw());
-                }
-                else if (functionToBeExecuted is Action<string, double> doubleAction)
-                {
-                    if (IsValidValue(value, NtType.Double)) doubleAction(key, value.GetDouble());
-                }
-                else if (functionToBeExecuted is Action<string, double[]> doubleArrayAction)
-                {
-                    if (IsValidValue(value, NtType.DoubleArray)) doubleArrayAction(key, value.GetDoubleArray());
-                }
-                else if (functionToBeExecuted is Action<string, string[]> stringArrayAction)
-                {
-                    if (IsValidValue(value, NtType.StringArray)) stringArrayAction(key, value.GetStringArray());
-                }
+                CallFunction(key, value, functionToBeExecuted);
+            }
+        }
+
+        /// <summary>
+        /// Attempts to convert the functionToBeExecuted to one of the networktables Action<string, type> methods. 
+        /// </summary>
+        /// <param name="key">The key of networktables that was changed</param>
+        /// <param name="value">The new value for that key</param>
+        /// <param name="functionToBeExecuted">The action to be called with the updated value.</param>
+        private static void CallFunction(string key, Value value, object functionToBeExecuted)
+        {
+            // Convert and call the method if it matches any of the supported types.
+            if (functionToBeExecuted is Action<string, Value> action)
+            {
+                action(key, value);
+            }
+            else if (functionToBeExecuted is Action<string, bool> boolAction)
+            {
+                if (IsValidValue(value, NtType.Boolean)) boolAction(key, value.GetBoolean());
+            }
+            else if (functionToBeExecuted is Action<string, string> stringAction)
+            {
+                if (IsValidValue(value, NtType.String)) stringAction(key, value.GetString());
+            }
+            else if (functionToBeExecuted is Action<string, byte[]> byteArrayAction)
+            {
+                if (IsValidValue(value, NtType.Raw)) byteArrayAction(key, value.GetRaw());
+            }
+            else if (functionToBeExecuted is Action<string, double> doubleAction)
+            {
+                if (IsValidValue(value, NtType.Double)) doubleAction(key, value.GetDouble());
+            }
+            else if (functionToBeExecuted is Action<string, double[]> doubleArrayAction)
+            {
+                if (IsValidValue(value, NtType.DoubleArray)) doubleArrayAction(key, value.GetDoubleArray());
+            }
+            else if (functionToBeExecuted is Action<string, string[]> stringArrayAction)
+            {
+                if (IsValidValue(value, NtType.StringArray)) stringArrayAction(key, value.GetStringArray());
             }
         }
 

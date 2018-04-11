@@ -16,19 +16,20 @@ namespace Dashboard.net.DataHandlers
         // We're saving these as log files. Folder path is the folder location for the logs.
         private static readonly string EXTENSION = ".log";
 
-        private static string LogName;
-
         /// <summary>
         /// Sets the file name for the logs that will be saved by the logger. Should only be set once every time the program is run.
         /// </summary>
         /// <param name="name"></param>
-        public static void SetLogName(string name, object sender)
+        public static string LogName { get; set; }
+
+        /// <summary>
+        /// Whether or not the log name has been set
+        /// </summary>
+        public static bool IsLogNameSet
         {
-            // We should only change the name of the logs if it hasn't been set before already and if it's the logging system that's sending the name
-            if (string.IsNullOrEmpty(LogName) && sender.GetType() == typeof(RobotLogInterface))
+            get
             {
-                // Format the file name before we actually save it.
-                LogName = FormatFileName(name);
+                return !string.IsNullOrEmpty(LogName);
             }
         }
 
@@ -60,8 +61,14 @@ namespace Dashboard.net.DataHandlers
                 // If the directory doesn't exist, create it.
                 if (!Directory.Exists(DirectoryPath)) Directory.CreateDirectory(DirectoryPath);
 
+                // If the log name hasn't been set, set it to the date
+                if (string.IsNullOrEmpty(LogName))
+                {
+                    LogName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+                }
+
                 // Add the directory to the file name.
-                string fileName = Path.Combine(DirectoryPath, LogName);
+                string fileName = Path.Combine(DirectoryPath, FormatFileName(LogName));
 
 
                 FileStream logFile;
@@ -72,7 +79,7 @@ namespace Dashboard.net.DataHandlers
                 // Use stream writer to write the data.
                 using (StreamWriter writer = new StreamWriter(logFile))
                 {
-                    writer.WriteLine(dataToSave);
+                    writer.Write(dataToSave);
                 }
             }
         }
