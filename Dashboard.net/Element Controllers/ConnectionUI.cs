@@ -90,7 +90,7 @@ namespace Dashboard.net.Element_Controllers
             OnConnect.CanExecuteDeterminer = () => !IsConnecting;
 
             // Subscribe to the connecton event to fix UI elements.
-            master._Dashboard_NT.ConnectionEvent += _Dashboard_NT_ConnectionEvent;
+            master._Dashboard_NT.ConnectionEvent += OnRobotConnection;
         }
 
         protected override void OnMainWindowSet(object sender, MainWindow e)
@@ -100,7 +100,12 @@ namespace Dashboard.net.Element_Controllers
             connectButton =e.ConnectButton;
         }
 
-        private void _Dashboard_NT_ConnectionEvent(object sender, bool connected)
+        private void OnRobotConnection(object sender, bool connected)
+        {
+            OnConnectionChange(connected);
+        }
+
+        private void OnConnectionChange(bool connected)
         {
             Refresh();
         }
@@ -108,7 +113,7 @@ namespace Dashboard.net.Element_Controllers
         public void OnConnectClick(object connectAddress)
         {
             // If we aren't connected, connect. Else, disconnect.
-            if (!IsConnected) master._Dashboard_NT.Connect(connectAddress.ToString());
+            if (!IsConnected) master._Dashboard_NT.Connect(connectAddress.ToString(), OnConnectionChange);
             else master._Dashboard_NT.Disconnect();
             Refresh();
         }

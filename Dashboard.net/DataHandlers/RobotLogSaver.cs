@@ -1,5 +1,4 @@
-﻿using Dashboard.net.RobotLogging;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -16,11 +15,23 @@ namespace Dashboard.net.DataHandlers
         // We're saving these as log files. Folder path is the folder location for the logs.
         private static readonly string EXTENSION = ".log";
 
+        private static string logName;
         /// <summary>
         /// Sets the file name for the logs that will be saved by the logger. Should only be set once every time the program is run.
         /// </summary>
         /// <param name="name"></param>
-        public static string LogName { get; set; }
+        public static string LogName
+        {
+            get
+            {
+                return logName;
+            }
+            set
+            {
+                // Get rid of bad characters and leading and trailing spaces.
+                logName = value.Replace("/", "-").Trim();
+            }
+        }
 
         /// <summary>
         /// Whether or not the log name has been set

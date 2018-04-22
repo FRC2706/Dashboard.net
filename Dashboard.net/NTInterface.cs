@@ -236,7 +236,9 @@ namespace Dashboard.net
         /// Connects the dashboard to the robot with the given address.
         /// </summary>
         /// <param name="connectAddress">The address to try connecting to.</param>
-        public async void Connect(string connectAddress)
+        /// <param name="functionToExecuteOnConnect">The function to call IMMEDIATELY when the robot is connected.
+        /// Faster than waiting for the event to run.</param>
+        public async void Connect(string connectAddress, Action<bool> functionToExecuteOnConnect = null)
         {
             IsConnecting = true;
 
@@ -247,6 +249,8 @@ namespace Dashboard.net
 
             CancellationTokenSource cts = new CancellationTokenSource();
             bool connected = await Task.Run<bool>(() => ConnectAsync(cts.Token));
+            // Call the action that was requested to be executed on connect, if it's not null
+            functionToExecuteOnConnect?.Invoke(connected);
 
             IsConnecting = false;
 
