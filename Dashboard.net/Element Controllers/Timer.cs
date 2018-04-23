@@ -7,6 +7,8 @@ namespace Dashboard.net.Element_Controllers
 {
     public class Timer : Controller, INotifyPropertyChanged
     {
+        // THE LENGTH of a match in seconds
+        private static readonly int MATCH_TIME = 150;
         public string Time
         {
             get
@@ -19,8 +21,7 @@ namespace Dashboard.net.Element_Controllers
                 return string.Format("{0}:{1}", minutes, seconds);
             }
         }
-
-        private int Seconds = 150;
+        private int Seconds = MATCH_TIME;
         private DispatcherTimer caller;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -97,7 +98,7 @@ namespace Dashboard.net.Element_Controllers
         /// </summary>
         private void Reset()
         {
-            Seconds = 135;
+            Seconds = MATCH_TIME;
             Refresh();
         }
         #endregion
