@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Dashboard.net.Camera;
 using MjpegProcessor;
-using NetworkTables;
 
 namespace Dashboard.net.Element_Controllers
 {
