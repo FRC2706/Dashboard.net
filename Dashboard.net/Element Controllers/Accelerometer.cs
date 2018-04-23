@@ -7,7 +7,10 @@ namespace Dashboard.net.Element_Controllers
     public class Accelerometer : Controller, INotifyPropertyChanged
     {
         public static readonly string RIGHTSPEEDKEY = "SmartDashboard/Right Speed (RPM)", LEFTSPEEDKEY = "SmartDashboard/Left Speed (RPM)";
-        public static readonly double MAXVELOCITY = 100;
+        // Max degrees is the largest possible number that the degrees should be allowed to reach. Degrees range is the number of degrees that the accelerometer occupies.
+        public static readonly int MAX_DEGREEES = 120, DEGREES_RANGE = 240;
+
+        public double MaxVelocity { get; private set; } = 10;
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
@@ -17,7 +20,9 @@ namespace Dashboard.net.Element_Controllers
         {
             get
             {
-                return (int)Math.Round(Velocity / MAXVELOCITY * 240) - 120;
+                int initialiDegrees = (int)Math.Round(Velocity / MaxVelocity * DEGREES_RANGE) - DEGREES_RANGE / 2;
+                // Make sure that we don't return more than the maxmium possible degrees
+                return (initialiDegrees <= MAX_DEGREEES) ? initialiDegrees : MAX_DEGREEES;
             }
         }
 
@@ -37,13 +42,17 @@ namespace Dashboard.net.Element_Controllers
         {
             master._Dashboard_NT.AddKeyListener(LEFTSPEEDKEY, OnKeyChange);
             master._Dashboard_NT.AddKeyListener(RIGHTSPEEDKEY, OnKeyChange);
+
+            // Set the maximum velocity to auto update whenever it's changed.
+            MaxVelocity = master.Constants.MaxRPM;
+            master.Constants.ConstantsUpdated += (sender, e) => MaxVelocity = master.Constants.MaxRPM;
         }
 
         /// <summary>
         /// Called when the velocity key's value is changed
         /// </summary>
         /// <param name="newValue">The new value for </param>
-        private void OnKeyChange(Value newValue)
+        private void OnKeyChange(string key, Value newValue)
         {
             PropertyChanged(this, new PropertyChangedEventArgs("Degrees"));
             PropertyChanged(this, new PropertyChangedEventArgs("Velocity"));

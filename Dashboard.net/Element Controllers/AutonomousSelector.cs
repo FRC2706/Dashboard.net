@@ -109,7 +109,7 @@ namespace Dashboard.net.Element_Controllers
 
 
         #region Event Listeners
-        protected override void OnMainWindowSet(object sender, EventArgs e)
+        protected override void OnMainWindowSet(object sender, MainWindow e)
         {
             // Get the auto list object from the mainwindow to be able to work with id.
             AutoList = master._MainWindow.AutoList;
@@ -176,14 +176,14 @@ namespace Dashboard.net.Element_Controllers
         /// Function called by the NetworkTables listener when the autonomous modes key changes.
         /// </summary>
         /// <param name="newAutoModes">The new value of the automodes key</param>
-        private void OnAutoModesChanged(Value newAutoModes)
+        private void OnAutoModesChanged(string key, string newAutoModes)
         {
-            if (newAutoModes == null || !NTInterface.IsValidValue(newAutoModes)) return;
+            if (string.IsNullOrEmpty(newAutoModes)) return;
             Dictionary<string, string> tempAutoModes;
             // If they're not read properly, error.
             try
             {
-                tempAutoModes = JsonConvert.DeserializeObject<Dictionary<string, string>>(newAutoModes.GetString());
+                tempAutoModes = JsonConvert.DeserializeObject<Dictionary<string, string>>(newAutoModes);
             }
             catch (JsonReaderException)
             {

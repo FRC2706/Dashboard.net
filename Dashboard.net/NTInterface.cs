@@ -1,6 +1,7 @@
 ﻿using NetworkTables;
 using NetworkTables.Tables;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -90,9 +91,25 @@ namespace Dashboard.net
             return goodAddress;
         }
 
+        /// <summary>
+        /// Checks the given networktables value to make sure that it's valid
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <returns>True if it's valid, false otherwise</returns>
         public static bool IsValidValue(Value value)
         {
-            return (value.Type != NtType.Unassigned);
+            return (value != null && value.Type != NtType.Unassigned);
+        }
+
+        /// <summary>
+        /// Ensures that the given networktables value is of the expected type
+        /// </summary>
+        /// <param name="value">The value from networktables</param>
+        /// <param name="expectedType">The expected value type</param>
+        /// <returns></returns>
+        public static bool IsValidValue(Value value, NtType expectedType)
+        {
+            return (value != null && value.Type == expectedType);
         }
 
         /// <summary>
@@ -195,13 +212,23 @@ namespace Dashboard.net
 
         /// <summary>
         /// Calls the changed event for all the subscribed functions
+        /// This is required because only values from within SmartDashboard network table seem to get notified of updates when the dashboard
+        /// initially connects
         /// </summary>
         private void CallChangedMethodsForAll()
         {
             // Call all the values changes events in the list so that the change function is called on connect.
-            foreach (KeyValuePair<string, Action<Value>> kv in ListenerFunctions)
+            foreach (DictionaryEntry kv in ListenerFunctions)
             {
-                kv.Value(GetValue(kv.Key));
+                string key = (string)kv.Key;
+
+                // If the key is from the smart dashboard, don't bother with it since they get notified anyway
+                if (GetTableName(key) == "SmartDashboard") continue;
+
+                // Get the value.
+                Value value = GetValue(key);
+                // Call the function
+                CallFunction(key, value, kv.Value);
             }
         }
 
@@ -209,7 +236,9 @@ namespace Dashboard.net
         /// Connects the dashboard to the robot with the given address.
         /// </summary>
         /// <param name="connectAddress">The address to try connecting to.</param>
-        public async void Connect(string connectAddress)
+        /// <param name="functionToExecuteOnConnect">The function to call IMMEDIATELY when the robot is connected.
+        /// Faster than waiting for the event to run.</param>
+        public async void Connect(string connectAddress, Action<bool> functionToExecuteOnConnect = null)
         {
             IsConnecting = true;
 
@@ -220,6 +249,8 @@ namespace Dashboard.net
 
             CancellationTokenSource cts = new CancellationTokenSource();
             bool connected = await Task.Run<bool>(() => ConnectAsync(cts.Token));
+            // Call the action that was requested to be executed on connect, if it's not null
+            functionToExecuteOnConnect?.Invoke(connected);
 
             IsConnecting = false;
 
@@ -230,7 +261,7 @@ namespace Dashboard.net
             {
                 await Task.Run(PopulateTablesAsync);
                 // Call changed events
-                CallChangedMethodsForAll();
+                 CallChangedMethodsForAll();
             }
         }
 
@@ -248,8 +279,8 @@ namespace Dashboard.net
         }
         #endregion
 
-        private Dictionary<string, Action<Value>> ListenerFunctions 
-            = new Dictionary<string, Action<Value>>();
+        private Hashtable ListenerFunctions 
+            = new Hashtable();
         private Dictionary<string, ITable> Tables = 
             new Dictionary<string, ITable>();
         /// <summary>
@@ -258,9 +289,86 @@ namespace Dashboard.net
         /// </summary>
         /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
         /// <param name="functionToExecute">The function to fire when the value changes.</param>
-        public void AddKeyListener(string key, Action<Value> functionToExecute)
+        public void AddKeyListener(string key, Action<string, Value> functionToExecute)
         {
-            // Don't allow the same key to have two listeners TODO allow this functionality later on?
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        public void AddKeyListener(string key, Action<string, bool> functionToExecute)
+        {
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        public void AddKeyListener(string key, Action<string, string> functionToExecute)
+        {
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        public void AddKeyListener(string key, Action<string, string[]> functionToExecute)
+        {
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        public void AddKeyListener(string key, Action<string, byte[]> functionToExecute)
+        {
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        public void AddKeyListener(string key, Action<string, double> functionToExecute)
+        {
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        public void AddKeyListener(string key, Action<string, double[]> functionToExecute)
+        {
+            AddKeyListenerInternal(key, functionToExecute);
+        }
+
+        /// <summary>
+        /// Function that listens for the given key to change and then calls
+        /// the given function when it changes within the smart dashboard table.
+        /// </summary>
+        /// <param name="key">The key location to monitor. The format should be [sub table key]/[value key]</param>
+        /// <param name="functionToExecute">The function to fire when the value changes.</param>
+        private void AddKeyListenerInternal<T>(string key, Action<string, T> functionToExecute)
+        {
+            // TODO Don't allow the same key to have two listeners TODO allow this functionality later on?
             if (ListenerFunctions.ContainsKey(key)) return;
             string subtablePath = GetSubTablePath(key);
 
@@ -284,7 +392,6 @@ namespace Dashboard.net
             }
         }
 
-
         #region Event Listeners
         /// <summary>
         /// Listens for changes in the SmartDashboard table and then calls the function listening.
@@ -307,7 +414,51 @@ namespace Dashboard.net
         /// <param name="value">The new value for that key</param>
         private void NTValueChanged(string key, Value value)
         {
-            ListenerFunctions[key](value);
+            if (ListenerFunctions.ContainsKey(key))
+            {
+                object functionToBeExecuted = ListenerFunctions[key];
+
+                CallFunction(key, value, functionToBeExecuted);
+            }
+        }
+
+        /// <summary>
+        /// Attempts to convert the functionToBeExecuted to one of the networktables Action<string, type> methods. 
+        /// </summary>
+        /// <param name="key">The key of networktables that was changed</param>
+        /// <param name="value">The new value for that key</param>
+        /// <param name="functionToBeExecuted">The action to be called with the updated value.</param>
+        private static void CallFunction(string key, Value value, object functionToBeExecuted)
+        {
+            // Convert and call the method if it matches any of the supported types.
+            if (functionToBeExecuted is Action<string, Value> action)
+            {
+                action(key, value);
+            }
+            else if (functionToBeExecuted is Action<string, bool> boolAction)
+            {
+                if (IsValidValue(value, NtType.Boolean)) boolAction(key, value.GetBoolean());
+            }
+            else if (functionToBeExecuted is Action<string, string> stringAction)
+            {
+                if (IsValidValue(value, NtType.String)) stringAction(key, value.GetString());
+            }
+            else if (functionToBeExecuted is Action<string, byte[]> byteArrayAction)
+            {
+                if (IsValidValue(value, NtType.Raw)) byteArrayAction(key, value.GetRaw());
+            }
+            else if (functionToBeExecuted is Action<string, double> doubleAction)
+            {
+                if (IsValidValue(value, NtType.Double)) doubleAction(key, value.GetDouble());
+            }
+            else if (functionToBeExecuted is Action<string, double[]> doubleArrayAction)
+            {
+                if (IsValidValue(value, NtType.DoubleArray)) doubleArrayAction(key, value.GetDoubleArray());
+            }
+            else if (functionToBeExecuted is Action<string, string[]> stringArrayAction)
+            {
+                if (IsValidValue(value, NtType.StringArray)) stringArrayAction(key, value.GetStringArray());
+            }
         }
 
         private bool previousConnectedState = false;
@@ -327,9 +478,9 @@ namespace Dashboard.net
             if (!arg3) mainDispatcher.Invoke(() => ConnectionEvent?.Invoke(this, IsConnected));
         }
 
-        protected void OnMainWindowSet(object sender, EventArgs e)
+        protected void OnMainWindowSet(object sender, MainWindow e)
         {
-            mainDispatcher = master._MainWindow.Dispatcher;
+            mainDispatcher = e.Dispatcher;
         }
 
         #endregion
@@ -401,7 +552,7 @@ namespace Dashboard.net
 
             // Open the table and get the value
             Value value = GetTable(table).GetValue(key, new Value());
-            if (value.Type == NtType.Unassigned) return null;
+            if (!IsValidValue(value)) return null;
             return value;
         }
 
@@ -414,7 +565,7 @@ namespace Dashboard.net
         public double GetDouble(string path)
         {
             Value value = GetValue(path);
-            double doubleValue = (value != null && value.Type == NtType.Double) ? value.GetDouble() : 0;
+            double doubleValue = (IsValidValue(value, NtType.Double)) ? value.GetDouble() : 0;
             return doubleValue;
         }
 
@@ -427,7 +578,7 @@ namespace Dashboard.net
         public string GetString(string path)
         {
             Value value = GetValue(path);
-            string stringValue = (value != null && value.Type == NtType.String) ? value.GetString() : "";
+            string stringValue = (IsValidValue(value, NtType.String)) ? value.GetString() : "";
             return stringValue;
         }
 
@@ -440,7 +591,7 @@ namespace Dashboard.net
         public bool GetBool(string path)
         {
             Value value = GetValue(path);
-            bool boolValue = (value != null && value.Type == NtType.Boolean) ? value.GetBoolean() : false;
+            bool boolValue = (IsValidValue(value, NtType.Boolean)) ? value.GetBoolean() : false;
             return boolValue;
         }
 
@@ -453,8 +604,21 @@ namespace Dashboard.net
         public string[] GetStringArray(string path)
         {
             Value value = GetValue(path);
-            string[] stringArrValue = (value != null && value.Type == NtType.StringArray) ? value.GetStringArray() : null;
+            string[] stringArrValue = (IsValidValue(value, NtType.StringArray)) ? value.GetStringArray() : null;
             return stringArrValue;
+        }
+
+        /// <summary>
+        /// Gets the byte array value at the specified networktables path.
+        /// Example paths are SmartDashboard/autonomous/selected_modes
+        /// </summary>
+        /// <param name="path">The path to that value. Example: SmartDashboard/autonomous/selected_modes</param>
+        /// <returns>The byte array at the given networktablese path. Returns null if there are any errors.</returns>
+        public byte[] GetByteArray(string path)
+        {
+            Value value = GetValue(path);
+            byte[] byteArrayValue = (IsValidValue(value, NtType.Raw)) ? value.GetRaw() : null;
+            return byteArrayValue;
         }
 
         /// <summary>
@@ -466,7 +630,7 @@ namespace Dashboard.net
         public double[] GetDoubleArray(string path)
         {
             Value value = GetValue(path);
-            double[] doubleArrValue = (value != null && value.Type == NtType.DoubleArray) ? value.GetDoubleArray() : null;
+            double[] doubleArrValue = (IsValidValue(value, NtType.DoubleArray)) ? value.GetDoubleArray() : null;
             return doubleArrValue;
         }
 
@@ -532,6 +696,16 @@ namespace Dashboard.net
         public void SetBool(string path, bool value)
         {
             SetValue(path, Value.MakeBoolean(value));
+        }
+
+        /// <summary>
+        /// Sets the networktables value at the given path to the given byte array.
+        /// </summary>
+        /// <param name="path">The path to the networktables value to be set.</param>
+        /// <param name="value">The bye array value to set the path to.</param>
+        public void SetByteArray(string path, byte[] value)
+        {
+            SetValue(path, Value.MakeRaw(value));
         }
 
         /// <summary>

@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using Dashboard.net.DataHandlers;
 using NetworkTables;
 
 namespace Dashboard.net.Element_Controllers
@@ -123,7 +124,7 @@ namespace Dashboard.net.Element_Controllers
             set
             {
                 _isEnabled = value;
-                master._DataFileIO.WriteCautionerData(DataToSave);
+                DataDealer.WriteCautionerData(DataToSave);
             }
         }
  
@@ -182,13 +183,13 @@ namespace Dashboard.net.Element_Controllers
             };
 
             // Set the initial state of the enabled boolean from the data file
-            Hashtable cautionerData = master._DataFileIO.ReadCautionerData();
+            Hashtable cautionerData = DataDealer.ReadCautionerData();
             if (cautionerData == null)
             {
                 _isEnabled = true;
                 IgnoreList = new ObservableCollection<string>();
 
-                master._DataFileIO.WriteCautionerData(DataToSave);
+                DataDealer.WriteCautionerData(DataToSave);
             }
             else
             {
@@ -201,15 +202,15 @@ namespace Dashboard.net.Element_Controllers
             master._Dashboard_NT.AddKeyListener(NTADDKEY, OnNTKWarningAdded);
             master._Dashboard_NT.AddKeyListener(NTREMOVEKEY, OnNTWarningRemoved);
             // Add a listener to the currrent warnings networktable property in case another program changes it.
-            master._Dashboard_NT.AddKeyListener(NTCURRENTWARNINGS, (Value value) => UpdateNTArray());
+            master._Dashboard_NT.AddKeyListener(NTCURRENTWARNINGS, (string key, Value value) => UpdateNTArray());
 
             // Listen for key changes in the cubeIn boolean
             master._Dashboard_NT.AddKeyListener(CUBESTATUSKEY, CubeStatusChanged);
         }
 
-        private void CubeStatusChanged(Value value)
+        private void CubeStatusChanged(string key, bool value)
         {
-            PowerCubeBrightness = (value != null && value.GetBoolean()) ? POWERCUBELIT : POWERCUBEDIMMED;
+            PowerCubeBrightness = (value) ? POWERCUBELIT : POWERCUBEDIMMED;
         }
 
         #region Networktables stuff
@@ -221,29 +222,24 @@ namespace Dashboard.net.Element_Controllers
         /// <summary>
         /// Removes the warning from the warnings queue from input from the networktables table
         /// </summary>
-        /// <param name="obj"></param>
-        private void OnNTWarningRemoved(Value obj)
+        /// <param name="warningToRemove"></param>
+        private void OnNTWarningRemoved(string key, string warningToRemove)
         {
             // Confirm that the object type is a string
-            if (obj == null || obj.Type != NtType.String) return;
-            string warningText = obj.GetString();
-            if (!NtAddedWarnings.Contains(warningText)) return;
+            if (!NtAddedWarnings.Contains(warningToRemove)) return;
 
             // Stop showing the warnings
-            StopWarning(obj.GetString(), true);
+            StopWarning(warningToRemove, true);
         }
 
         /// <summary>
         /// Adds a warning from the networktables Warnings subtable by listening for the key to change.
         /// </summary>
-        /// <param name="obj"></param>
-        private void OnNTKWarningAdded(Value obj)
+        /// <param name="warningToDisplay"></param>
+        private void OnNTKWarningAdded(string key, string warningToDisplay)
         {
-            // Confirm that the object type is a string
-            if (obj == null || obj.Type != NtType.String) return;
-
             // Begin displaying the warning
-            SetWarning(obj.GetString(), true);
+            SetWarning(warningToDisplay, true);
         }
 
         /// <summary>
@@ -274,11 +270,11 @@ namespace Dashboard.net.Element_Controllers
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected override void OnMainWindowSet(object sender, EventArgs e)
+        protected override void OnMainWindowSet(object sender, MainWindow e)
         {
-            storyboard = (Storyboard)master._MainWindow.FindResource("animate_caution");
-            master._MainWindow.Master_Caution.MouseRightButtonDown += IgnoreListViewer_MouseRightButtonDown;
-            ignoreListViewer = master._MainWindow.IgnoreListViewer;
+            storyboard = (Storyboard)e.FindResource("animate_caution");
+            e.Master_Caution.MouseRightButtonDown += IgnoreListViewer_MouseRightButtonDown;
+            ignoreListViewer = e.IgnoreListViewer;
             ignoreListViewer.SelectionChanged += IgnoreListViewer_SelectionChanged;
         }
 
@@ -449,7 +445,7 @@ namespace Dashboard.net.Element_Controllers
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsWarning"));
             UpdateNTArray();
 
-            master._DataFileIO.WriteCautionerData(DataToSave);
+            DataDealer.WriteCautionerData(DataToSave);
         }
     }
 }

@@ -1,11 +1,19 @@
-﻿using Dashboard.net.Element_Controllers;
+﻿using Dashboard.net.DataHandlers;
+using Dashboard.net.Element_Controllers;
+using Dashboard.net.RobotLogging;
 using System;
+using System.Collections.ObjectModel;
 
 namespace Dashboard.net
 {
     public class Master
     {
-        public event EventHandler MainWindowSet;
+        public event EventHandler<MainWindow> MainWindowSet;
+
+        /// <summary>
+        /// The current instance of the master class
+        /// </summary>
+        public static Master currentInstance;
 
         private MainWindow masterWindow;
         public MainWindow _MainWindow
@@ -17,10 +25,11 @@ namespace Dashboard.net
             set
             {
                 masterWindow = value;
-                MainWindowSet?.Invoke(this, new EventArgs());
+                MainWindowSet?.Invoke(this, masterWindow);
             }
         }
 
+        public ConstantMaster Constants { get; private set; }
         public NTInterface _Dashboard_NT { get; private set; }
         public AutonomousSelector _AutoSelector { get; private set; }
         public Timer _Timer { get; private set; }
@@ -31,10 +40,20 @@ namespace Dashboard.net
         public ConnectionUI _ConnectionUI { get; private set; }
         public Cautioner _Cautioner { get; private set; }
         public Element_Controllers.Checklist ChecklistHandler { get; private set; }
-        public DataDealer _DataFileIO { get; private set; } = new DataDealer();
+        public MiscOperations _MiscOperations { get; private set; }
+
+        /// <summary>
+        /// The interface that will be logging the logs from the robot.
+        /// </summary>
+        public RobotLogInterface RobotLogger {get; private set;}
 
         public Master()
         {
+            currentInstance = this;
+
+            // Make constants first so that all the others have access to it right away
+            Constants = new ConstantMaster();
+
             _Dashboard_NT = new NTInterface(this);
             _AutoSelector = new AutonomousSelector(this);
             _Timer = new Timer(this);
@@ -45,6 +64,9 @@ namespace Dashboard.net
             _ConnectionUI = new ConnectionUI(this);
             _Cautioner = new Cautioner(this);
             ChecklistHandler = new Element_Controllers.Checklist(this);
+            _MiscOperations = new MiscOperations(this);
+
+            RobotLogger = new RobotLogInterface();
         }
     }
 }
