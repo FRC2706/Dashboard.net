@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Data;
 
@@ -11,6 +12,9 @@ namespace Dashboard.net
     {
         public MainWindow()
         {
+            // We do not want this application to run if there are multiple instances of it.
+            if (IsApplicationAlreadyRuning()) Application.Current.Shutdown();
+
             InitializeComponent();
 
             ((Master)Grid.DataContext)._MainWindow = this;
@@ -29,6 +33,12 @@ namespace Dashboard.net
 
             // Manually shut down application
             Application.Current.Shutdown();
+        }
+
+        // Determines if the application is already running
+        private bool IsApplicationAlreadyRuning()
+        {
+            return Process.GetProcessesByName("Dashboard.net").Length > 1;
         }
     }
 
