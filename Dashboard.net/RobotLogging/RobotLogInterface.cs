@@ -157,34 +157,39 @@ namespace Dashboard.net.RobotLogging
         {
             // Get the logs
             byte[] rawLogsToSave = networktablesInterface.GetByteArray(NTLOGKEY);
-            // Convert the logs to a string
-            string logsToSave = System.Text.Encoding.UTF8.GetString(rawLogsToSave);
 
-            // Only save logs if there's anything to save.
-            if (!string.IsNullOrWhiteSpace(logsToSave))
+            // Only do stuff if the data isn't null
+            if (rawLogsToSave != null)
             {
-                // Set the name for the logs right away.
-                string matchNum = GetMatchNumber();
+                // Convert the logs to a string
+                string logsToSave = System.Text.Encoding.UTF8.GetString(rawLogsToSave);
 
-                if (!string.IsNullOrWhiteSpace(matchNum))
+                // Only save logs if there's anything to save.
+                if (!string.IsNullOrWhiteSpace(logsToSave))
                 {
-                    RobotLogSaver.LogName = matchNum;
+                    // Set the name for the logs right away.
+                    string matchNum = GetMatchNumber();
+
+                    if (!string.IsNullOrWhiteSpace(matchNum))
+                    {
+                        RobotLogSaver.LogName = matchNum;
+                    }
+                    // If the log name is empty and the match number is also empty, use a timestamp
+                    else if (string.IsNullOrEmpty(RobotLogSaver.LogName))
+                    {
+                        // Set it to the date as a last resort.
+                        RobotLogSaver.LogName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+                    }
+                    // Save the logs to the file.
+                    RobotLogSaver.SaveLogData(logsToSave);
                 }
-                // If the log name is empty and the match number is also empty, use a timestamp
-                else if (string.IsNullOrEmpty(RobotLogSaver.LogName))
-                {
-                    // Set it to the date as a last resort.
-                    RobotLogSaver.LogName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-                }
-                // Save the logs to the file.
-                RobotLogSaver.SaveLogData(logsToSave);
+
+                // Delete the logs in networktables now that they've been saved.
+                DeleteNTLogs();
+
+                // Set the save to false after we're done saving
+                networktablesInterface.SetBool(NTSAVEKEY, false);
             }
-
-            // Delete the logs in networktables now that they've been saved.
-            DeleteNTLogs();
-
-            // Set the save to false after we're done saving
-            networktablesInterface.SetBool(NTSAVEKEY, false);
         }
         /// <summary>
         ///  Opens the log folder up in Windows explorer.
